@@ -1,3 +1,5 @@
+export { Amenities } from "./amenities/Amenities";
+export type { AmenitiesContent, AmenityScene } from "./amenities/types";
 export { Architecture } from "./architecture/Architecture";
 export type { ArchitectureBreakpoint, ArchitectureContent } from "./architecture/types";
 export { Hero } from "./hero/Hero";

@@ -1,6 +1,13 @@
-import { Architecture, Hero, LoadingScreen, Navigation, Storytelling } from "@cinematic/section-library";
+import {
+  Amenities,
+  Architecture,
+  Hero,
+  LoadingScreen,
+  Navigation,
+  Storytelling,
+} from "@cinematic/section-library";
 
-import { architecture, hero, loading, navigation, story } from "../content/site";
+import { amenities, architecture, hero, loading, navigation, story } from "../content/site";
 
 export default async function HomePage({
   searchParams,
@@ -17,6 +24,7 @@ export default async function HomePage({
         <Hero content={hero} />
         <Storytelling content={story} />
         <Architecture content={architecture} />
+        <Amenities content={amenities} />
       </main>
     </>
   );

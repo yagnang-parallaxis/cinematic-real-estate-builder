@@ -1,4 +1,5 @@
 import type {
+  AmenitiesContent,
   ArchitectureContent,
   HeroContent,
   LoadingContent,
@@ -116,4 +117,64 @@ export const architecture: ArchitectureContent = {
   imageSrc:
     "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=2400&q=80",
   cta: { label: "Book a call", href: "#visit" },
+};
+
+export const amenities: AmenitiesContent = {
+  eyebrow: "A life, considered",
+  heading: "Every day, somewhere to be.",
+  headingLines: ["Every day,", "somewhere to be."],
+  scenes: [
+    {
+      id: "garden",
+      caption: "A garden of its own",
+      imageSrc:
+        "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=2400&q=80",
+      hotspots: [
+        {
+          id: "old-tree",
+          label: "Built around what was already there",
+          description: "The plan was drawn after the tree, not the other way around.",
+          x: 46,
+          y: 32,
+        },
+        {
+          id: "outdoor-table",
+          label: "A table just past the glass",
+          description: "Indoor and outdoor dining share one long sightline.",
+          x: 78,
+          y: 62,
+        },
+      ],
+    },
+    {
+      id: "pool",
+      caption: "Where evenings gather",
+      imageSrc:
+        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2400&q=80",
+      hotspots: [
+        {
+          id: "long-pool",
+          label: "A pool built for the whole day",
+          description: "Long enough for laps at dawn and for doing nothing by dusk.",
+          x: 48,
+          y: 72,
+        },
+      ],
+    },
+    {
+      id: "living",
+      caption: "Light, kept for the mornings",
+      imageSrc:
+        "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=2400&q=80",
+      hotspots: [
+        {
+          id: "reading-corner",
+          label: "A corner for slow mornings",
+          description: "Deep enough for one chair, or two, depending on the day.",
+          x: 22,
+          y: 60,
+        },
+      ],
+    },
+  ],
 };
