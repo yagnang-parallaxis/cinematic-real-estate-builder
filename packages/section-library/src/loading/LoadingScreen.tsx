@@ -45,10 +45,16 @@ export function LoadingScreen({
 
   return (
     <div
-      className="bg-background fixed inset-0 z-[70] flex flex-col items-center justify-center gap-8 px-6"
+      className="bg-background animate-loader-out fixed inset-0 z-[70] flex flex-col items-center justify-center gap-8 px-6"
       role="status"
       aria-live="polite"
       aria-busy="true"
+      style={{ animationDelay: forceVisible ? "9999s" : `${content.maxDurationMs}ms` }}
+      onAnimationEnd={() => {
+        if (!forceVisible) {
+          setVisible(false);
+        }
+      }}
     >
       <Animated type="textReveal" config={{ duration: 0.8 }}>
         <p className="t-label text-primary">{content.brand}</p>

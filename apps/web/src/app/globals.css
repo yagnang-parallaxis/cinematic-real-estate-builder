@@ -21,3 +21,15 @@ body {
   background: color-mix(in oklab, var(--primary) 40%, transparent);
   color: var(--foreground);
 }
+
+@keyframes loader-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+.animate-loader-out {
+  animation: loader-out 0.45s ease forwards;
+}

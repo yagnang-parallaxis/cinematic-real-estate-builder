@@ -1,3 +1,5 @@
+export { Hero } from "./hero/Hero";
+export type { HeroContent } from "./hero/types";
 export { LoadingScreen } from "./loading/LoadingScreen";
 export type { LoadingContent } from "./loading/types";
 export { Navigation } from "./navigation/Navigation";
