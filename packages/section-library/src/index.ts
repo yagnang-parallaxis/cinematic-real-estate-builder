@@ -8,5 +8,7 @@ export { LoadingScreen } from "./loading/LoadingScreen";
 export type { LoadingContent } from "./loading/types";
 export { Navigation } from "./navigation/Navigation";
 export type { NavigationContent, NavigationLink, NavTone } from "./navigation/types";
+export { ResidenceTypes } from "./residence-types/ResidenceTypes";
+export type { ResidenceType, ResidenceTypesContent } from "./residence-types/types";
 export { Storytelling } from "./story/Storytelling";
 export type { StoryBeat, StoryContent } from "./story/types";

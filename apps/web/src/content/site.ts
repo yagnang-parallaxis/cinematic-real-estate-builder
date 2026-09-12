@@ -4,6 +4,7 @@ import type {
   HeroContent,
   LoadingContent,
   NavigationContent,
+  ResidenceTypesContent,
   StoryContent,
 } from "@cinematic/section-library";
 
@@ -175,6 +176,45 @@ export const amenities: AmenitiesContent = {
           y: 60,
         },
       ],
+    },
+  ],
+};
+
+export const residenceTypes: ResidenceTypesContent = {
+  eyebrow: "Residences",
+  types: [
+    {
+      id: "garden",
+      name: "Garden residence",
+      bedrooms: "3",
+      areaRange: "128 – 148 m²",
+      description:
+        "A private basement level and direct access to the shared garden, for a household that wants its own entrance.",
+      imageSrc:
+        "https://images.unsplash.com/photo-1600585153490-76fb20a32601?auto=format&fit=crop&w=1800&q=80",
+      cta: { label: "Explore garden residences", href: "/residences?type=garden" },
+    },
+    {
+      id: "harbor",
+      name: "Harbor residence",
+      bedrooms: "2",
+      areaRange: "97 – 104 m²",
+      description:
+        "Step directly onto a terrace that opens toward the water, with the communal garden just beyond.",
+      imageSrc:
+        "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&w=1800&q=80",
+      cta: { label: "Explore harbor residences", href: "/residences?type=harbor" },
+    },
+    {
+      id: "penthouse",
+      name: "Penthouse residence",
+      bedrooms: "3",
+      areaRange: "164 – 198 m²",
+      description:
+        "The top level of the building, under a high ceiling, with a rooftop solarium reached by its own stair.",
+      imageSrc:
+        "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1800&q=80",
+      cta: { label: "Explore penthouse residences", href: "/residences?type=penthouse" },
     },
   ],
 };
