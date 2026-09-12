@@ -4,7 +4,16 @@ import { Animated } from "@cinematic/animation-engine";
 import { cn } from "@cinematic/ui";
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 
-import type { NavigationContent } from "./types";
+import { BrandMark, BrandRing, ScrollChevron } from "./BrandMark";
+import { HoverSlide } from "./HoverSlide";
+import {
+  formatProgressLabel,
+  overlayLinks,
+  readSectionTones,
+  resolveNavTone,
+  scrollProgress,
+} from "./logic";
+import type { NavigationContent, NavigationLink, NavTone } from "./types";
 
 function getFocusable(root: HTMLElement) {
   return [
@@ -12,6 +21,20 @@ function getFocusable(root: HTMLElement) {
       'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
     ),
   ];
+}
+
+function linkText(link: NavigationLink) {
+  if (link.lines) {
+    return (
+      <>
+        {link.lines[0]}
+        <br />
+        {link.lines[1]}
+      </>
+    );
+  }
+
+  return link.label;
 }
 
 export function Navigation({
@@ -23,24 +46,28 @@ export function Navigation({
 }) {
   const [open, setOpen] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [tone, setTone] = useState<NavTone>("on-dark");
   const overlayRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuId = useId();
+  const menuLinks = overlayLinks(content);
+  const progressLabel = formatProgressLabel(progress);
 
   useEffect(() => {
-    if (!content.showProgress) {
-      return;
-    }
-
-    const onScroll = () => {
+    const sync = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(max <= 0 ? 0 : window.scrollY / max);
+      setProgress(scrollProgress(window.scrollY, max));
+      setTone(resolveNavTone(readSectionTones(), window.scrollY + 48));
     };
 
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [content.showProgress]);
+    sync();
+    window.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("resize", sync);
+    return () => {
+      window.removeEventListener("scroll", sync);
+      window.removeEventListener("resize", sync);
+    };
+  }, []);
 
   useEffect(() => {
     if (!open) {
@@ -94,92 +121,114 @@ export function Navigation({
 
   return (
     <>
-      <a
-        href="#content"
-        className="t-label bg-primary text-primary-foreground sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[80] focus:px-4 focus:py-2"
-      >
+      <a href="#content" className="nav-skip t-label sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[80] focus:px-4 focus:py-2">
         Skip to content
       </a>
-      <header className="fixed inset-x-0 top-0 z-50">
-        <nav
-          aria-label="Primary"
-          className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 md:px-10"
+      <div className="nav-chrome" data-nav-contrast={tone}>
+        <a
+          href={content.homeHref}
+          className="nav-logo"
+          aria-label={`${content.brand} — back to top`}
         >
-          <a href={content.homeHref} className="t-label text-foreground">
-            {content.brand}
-          </a>
-          <ul className="hidden items-center gap-8 lg:flex">
-            {content.links.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  className={cn(
-                    "t-label text-muted-foreground hover:text-foreground transition-colors",
-                    currentPath === link.href && "text-foreground",
-                  )}
-                  aria-current={currentPath === link.href ? "page" : undefined}
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-            {content.contact ? (
-              <li>
-                <a href={content.contact.href} className="t-label text-muted-foreground">
-                  {content.contact.label}
-                </a>
-              </li>
+          <BrandRing className="nav-logo-ring" />
+          <BrandMark className="nav-logo-mark" />
+        </a>
+
+        <nav aria-label="Primary" className="nav-rail">
+          <div className="nav-rail-desk">
+            {content.primary ? (
+              <a
+                href={content.primary.href}
+                className="nav-primary"
+                aria-current={currentPath === content.primary.href ? "page" : undefined}
+              >
+                <HoverSlide className="t-h6">{linkText(content.primary)}</HoverSlide>
+              </a>
             ) : null}
             {content.cta ? (
-              <li>
-                <a href={content.cta.href} className="t-label text-primary">
-                  {content.cta.label}
-                </a>
-              </li>
+              <a href={content.cta.href} className="nav-action">
+                <HoverSlide className="t-label">{content.cta.label}</HoverSlide>
+              </a>
             ) : null}
-          </ul>
+            {content.contact ? (
+              <a href={content.contact.href} className="nav-action nav-action-tight">
+                <HoverSlide className="t-label">{content.contact.label}</HoverSlide>
+              </a>
+            ) : null}
+          </div>
+
           <button
             ref={triggerRef}
             type="button"
-            className="t-label text-foreground lg:hidden"
+            className="nav-menu-btn"
             aria-expanded={open}
             aria-controls={menuId}
             onClick={() => setOpen((value) => !value)}
           >
-            {open ? "Close" : "Menu"}
+            <HoverSlide className="t-label">{open ? "Close" : "Menu"}</HoverSlide>
+            <span className={cn("nav-menu-ico", open && "is-open")} aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
           </button>
         </nav>
+
         {content.showProgress ? (
-          <div className="bg-border h-px w-full" aria-hidden="true">
-            <div className="bg-primary h-full" style={{ width: `${progress * 100}%` }} />
-          </div>
+          <>
+            <div className="nav-progress" aria-hidden="true">
+              <div className="nav-progress-track" style={{ ["--progress" as string]: `${progress * 100}%` }}>
+                <div className="nav-progress-fill" />
+                <div className="nav-progress-rest" />
+                <div className="nav-progress-thumb">
+                  <span className="t-label">{progressLabel}</span>
+                </div>
+              </div>
+            </div>
+            <a href="#content" className="nav-scroll">
+              <ScrollChevron className="nav-scroll-arrow" />
+              <span className="t-label">{content.scrollLabel ?? "Scroll"}</span>
+            </a>
+          </>
         ) : null}
-      </header>
+      </div>
+
       {open ? (
         <div
           ref={overlayRef}
           id={menuId}
-          className="bg-background fixed inset-0 z-40 flex flex-col justify-end px-6 py-10 lg:hidden"
+          className="nav-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label={content.overlayTitle ?? "Menu"}
           onKeyDown={trapFocus}
         >
-          <Animated type="menuReveal" config={{ duration: 0.45, direction: "up" }}>
-            <p className="t-caption text-muted-foreground mb-10 max-w-xs">
-              {content.mobileTagline}
-            </p>
-            <ul className="space-y-5">
-              {content.links.map((link) => (
-                <li key={link.href}>
-                  <a href={link.href} className="t-h2" onClick={closeAndReturn}>
-                    {link.label}
+          <Animated type="fadeUp" config={{ duration: 0.45, distance: 24 }} className="nav-overlay-panel">
+            <div className="nav-overlay-title">
+              {content.overlayAccent ? (
+                <p className="t-accent nav-overlay-accent">{content.overlayAccent}</p>
+              ) : null}
+              <p className="t-h1">{content.overlayTitle ?? "Menu"}</p>
+            </div>
+            <ul className="nav-overlay-list">
+              {menuLinks.map((link) => (
+                <li key={`${link.label}-${link.href}`}>
+                  <a
+                    href={link.href}
+                    className="nav-overlay-link"
+                    aria-current={currentPath === link.href ? "page" : undefined}
+                    onClick={closeAndReturn}
+                  >
+                    <HoverSlide className="t-h6" align="center">
+                      {link.label}
+                    </HoverSlide>
                   </a>
                 </li>
               ))}
             </ul>
-            {content.cta ? (
-              <a href={content.cta.href} className="t-label text-primary mt-10 inline-block">
-                {content.cta.label}
-              </a>
-            ) : null}
+            <div className="nav-overlay-mark">
+              <BrandMark />
+            </div>
           </Animated>
         </div>
       ) : null}

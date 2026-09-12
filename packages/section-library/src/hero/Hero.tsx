@@ -4,7 +4,7 @@ import type { HeroContent } from "./types";
 
 export function Hero({ content }: { content: HeroContent }) {
   return (
-    <section className="relative flex min-h-screen items-end overflow-hidden">
+    <section data-nav-tone="on-dark" className="relative flex min-h-screen items-end overflow-hidden">
       <img
         src={content.imageSrc}
         alt={content.imageAlt}

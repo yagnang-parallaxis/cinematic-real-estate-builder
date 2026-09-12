@@ -13,7 +13,7 @@ export interface ArchitectureContent {
 
 export function Architecture({ content }: { content: ArchitectureContent }) {
   return (
-    <section id="architecture" className="relative min-h-[100svh] overflow-hidden">
+    <section id="architecture" data-nav-tone="on-dark" className="relative min-h-[100svh] overflow-hidden">
       <Animated
         type="parallax"
         config={{ intensity: 0.8, direction: "up" }}

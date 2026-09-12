@@ -29,7 +29,7 @@ export function HorizontalGallery({ content }: { content: HorizontalGalleryConte
   };
 
   return (
-    <section id="walk" className="py-24">
+    <section id="walk" data-nav-tone="on-dark" className="py-24">
       <div className="mx-auto mb-10 flex max-w-6xl flex-col gap-4 px-6 md:px-10 md:flex-row md:items-end md:justify-between">
         <div className="max-w-xl space-y-4">
           <Animated type="textReveal" className="t-label text-primary">

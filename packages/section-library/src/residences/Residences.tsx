@@ -36,7 +36,7 @@ export function Residences({ content }: { content: ResidencesContent }) {
       : content.residences.filter((item) => item.type === filter);
 
   return (
-    <section id="residences" className="mx-auto max-w-6xl px-6 py-24 md:px-10">
+    <section id="residences" data-nav-tone="on-dark" className="mx-auto max-w-6xl px-6 py-24 md:px-10">
       <div className="mb-10 flex flex-col gap-6 md:mb-14 md:flex-row md:items-end md:justify-between">
         <div className="max-w-xl space-y-4">
           <Animated type="textReveal" className="t-label text-primary">

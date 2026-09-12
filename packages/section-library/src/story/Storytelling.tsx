@@ -15,7 +15,7 @@ export interface StoryContent {
 
 export function Storytelling({ content }: { content: StoryContent }) {
   return (
-    <section id="story" className="mx-auto grid max-w-6xl gap-12 px-6 py-24 md:px-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+    <section id="story" data-nav-tone="on-dark" className="mx-auto grid max-w-6xl gap-12 px-6 py-24 md:px-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
       <div className="lg:sticky lg:top-24">
         <Animated type="imageReveal" config={{ duration: 1.1, direction: "left" }}>
           <img src={content.imageSrc} alt={content.imageAlt} className="aspect-4/5 w-full object-cover" />

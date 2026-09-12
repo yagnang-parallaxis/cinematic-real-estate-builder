@@ -84,7 +84,7 @@ export function Gallery({ content }: { content: GalleryContent }) {
   };
 
   return (
-    <section id="gallery" className="mx-auto max-w-6xl px-6 py-24 md:px-10">
+    <section id="gallery" data-nav-tone="on-dark" className="mx-auto max-w-6xl px-6 py-24 md:px-10">
       <div className="mb-10 flex flex-col gap-4 md:mb-14 md:flex-row md:items-end md:justify-between">
         <div className="max-w-xl space-y-4">
           <Animated type="textReveal" className="t-label text-primary">

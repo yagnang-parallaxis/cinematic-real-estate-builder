@@ -12,15 +12,13 @@ import type {
 export const navigation: NavigationContent = {
   brand: "Aurelia",
   homeHref: "/",
-  links: [
-    { label: "Residences", href: "#residences" },
-    { label: "Architecture", href: "#architecture" },
-    { label: "Gallery", href: "#gallery" },
-    { label: "Location", href: "#location" },
-  ],
+  primary: { label: "Select a residence", href: "#residences", lines: ["Select a", "residence"] },
+  links: [],
   cta: { label: "Book a visit", href: "#visit" },
   contact: { label: "Contact", href: "#visit" },
-  mobileTagline: "Eighteen residences above a quiet harbor.",
+  overlayAccent: "The",
+  overlayTitle: "Menu",
+  scrollLabel: "Scroll",
   showProgress: true,
 };
 
