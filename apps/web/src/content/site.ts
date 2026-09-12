@@ -1,4 +1,5 @@
 import type {
+  ArchitectureContent,
   HeroContent,
   LoadingContent,
   NavigationContent,
@@ -59,4 +60,18 @@ export const story: StoryContent = {
       body: "From the road, Aurelia is a dark timber wall and a single opening. The garden and the water are kept for the people who live here.",
     },
   ],
+};
+
+export const architecture: ArchitectureContent = {
+  eyebrow: "Architecture",
+  heading: "Stone that remembers the tide.",
+  quote:
+    "We kept the rooms long and the openings few, so the house would feel like it had always been looking at the water.",
+  attribution: "Lena Voss",
+  credit: "Studio North",
+  materials:
+    "Dark timber, limewashed stone, and bronze that will dull in the salt air. Nothing that asks to stay new.",
+  imageSrc:
+    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=2400&q=80",
+  cta: { label: "Book a visit", href: "#visit" },
 };
