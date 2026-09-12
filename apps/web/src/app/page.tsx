@@ -1,6 +1,7 @@
 import {
   Amenities,
   Architecture,
+  Footer,
   Hero,
   LoadingScreen,
   Navigation,
@@ -11,6 +12,7 @@ import {
 import {
   amenities,
   architecture,
+  footer,
   hero,
   loading,
   navigation,
@@ -35,6 +37,7 @@ export default async function HomePage({
         <ResidenceTypes content={residenceTypes} />
         <Architecture content={architecture} />
         <Amenities content={amenities} />
+        <Footer content={footer} />
       </main>
     </>
   );

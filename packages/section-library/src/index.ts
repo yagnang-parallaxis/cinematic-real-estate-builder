@@ -2,6 +2,8 @@ export { Amenities } from "./amenities/Amenities";
 export type { AmenitiesContent, AmenityScene } from "./amenities/types";
 export { Architecture } from "./architecture/Architecture";
 export type { ArchitectureBreakpoint, ArchitectureContent } from "./architecture/types";
+export { Footer } from "./footer/Footer";
+export type { FooterContent, FooterLink } from "./footer/types";
 export { Hero } from "./hero/Hero";
 export type { HeroContent, HeroHotspot, HeroVariant } from "./hero/types";
 export { LoadingScreen } from "./loading/LoadingScreen";

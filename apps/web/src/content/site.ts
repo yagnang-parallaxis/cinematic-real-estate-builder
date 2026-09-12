@@ -1,6 +1,7 @@
 import type {
   AmenitiesContent,
   ArchitectureContent,
+  FooterContent,
   HeroContent,
   LoadingContent,
   NavigationContent,
@@ -217,4 +218,24 @@ export const residenceTypes: ResidenceTypesContent = {
       cta: { label: "Explore penthouse residences", href: "/residences?type=penthouse" },
     },
   ],
+};
+
+export const footer: FooterContent = {
+  ctaEyebrow: "Visit",
+  ctaHeadingLines: ["Come see", "the water"],
+  ctaSubheading: "A short conversation is enough to know if it fits.",
+  ctaBackgroundSrc:
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=80",
+  ctaAction: { label: "Book a call", href: "#visit" },
+  phone: "+1 (555) 010-0142",
+  phoneHref: "tel:+15550100142",
+  officeLabel: "Sales office",
+  officeAddress: "12 Harbor Path, North Coast",
+  officeMapHref: "https://maps.google.com/?q=Harbor+Path",
+  brand: "Aurelia Residences",
+  legalLinks: [
+    { label: "Privacy policy", href: "#" },
+    { label: "Terms of use", href: "#" },
+  ],
+  credit: { label: "Studio North", href: "#" },
 };
