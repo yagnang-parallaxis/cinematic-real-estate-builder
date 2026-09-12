@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 
 import {
   formatProgressLabel,
+  formatSectionIndex,
   overlayLinks,
   resolveNavTone,
+  resolveSectionIndex,
   scrollProgress,
 } from "./logic";
 import type { NavigationContent } from "./types";
@@ -89,5 +91,36 @@ describe("resolveNavTone", () => {
 
   it("falls back to on-dark when no section is under the probe", () => {
     expect(resolveNavTone([], 80)).toBe("on-dark");
+  });
+});
+
+describe("resolveSectionIndex", () => {
+  const sections = [
+    { top: 0, bottom: 900 },
+    { top: 900, bottom: 1800 },
+    { top: 1800, bottom: 2700 },
+  ];
+
+  it("counts sections one-based, matching the reference's scene counter", () => {
+    expect(resolveSectionIndex(sections, 80)).toBe(1);
+    expect(resolveSectionIndex(sections, 1100)).toBe(2);
+    expect(resolveSectionIndex(sections, 1900)).toBe(3);
+  });
+
+  it("falls back to the first scene when no section is under the probe", () => {
+    expect(resolveSectionIndex([], 80)).toBe(1);
+  });
+});
+
+describe("formatSectionIndex", () => {
+  it("pads a one-based scene index to two digits", () => {
+    expect(formatSectionIndex(1)).toBe("01");
+    expect(formatSectionIndex(7)).toBe("07");
+    expect(formatSectionIndex(12)).toBe("12");
+  });
+
+  it("never renders below scene 01", () => {
+    expect(formatSectionIndex(0)).toBe("01");
+    expect(formatSectionIndex(-3)).toBe("01");
   });
 });

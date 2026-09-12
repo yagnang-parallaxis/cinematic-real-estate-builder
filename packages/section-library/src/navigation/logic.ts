@@ -37,6 +37,18 @@ export function resolveNavTone(
   return match?.tone ?? "on-dark";
 }
 
+export function resolveSectionIndex(
+  sections: { top: number; bottom: number }[],
+  probeY: number,
+): number {
+  const index = sections.findIndex((section) => probeY >= section.top && probeY < section.bottom);
+  return index === -1 ? 1 : index + 1;
+}
+
+export function formatSectionIndex(index: number): string {
+  return String(Math.max(1, index)).padStart(2, "0");
+}
+
 export function readSectionTones(root: ParentNode = document): { top: number; bottom: number; tone: NavTone }[] {
   return [...root.querySelectorAll<HTMLElement>("[data-nav-tone]")].map((node) => {
     const rect = node.getBoundingClientRect();

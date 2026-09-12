@@ -7,10 +7,11 @@ import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { BrandMark, BrandRing, ScrollChevron } from "./BrandMark";
 import { HoverSlide } from "./HoverSlide";
 import {
-  formatProgressLabel,
+  formatSectionIndex,
   overlayLinks,
   readSectionTones,
   resolveNavTone,
+  resolveSectionIndex,
   scrollProgress,
 } from "./logic";
 import type { NavigationContent, NavigationLink, NavTone } from "./types";
@@ -47,17 +48,21 @@ export function Navigation({
   const [open, setOpen] = useState(false);
   const [progress, setProgress] = useState(0);
   const [tone, setTone] = useState<NavTone>("on-dark");
+  const [sceneIndex, setSceneIndex] = useState(1);
   const overlayRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuId = useId();
   const menuLinks = overlayLinks(content);
-  const progressLabel = formatProgressLabel(progress);
+  const sceneLabel = formatSectionIndex(sceneIndex);
 
   useEffect(() => {
     const sync = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
+      const sections = readSectionTones();
+      const probeY = window.scrollY + 48;
       setProgress(scrollProgress(window.scrollY, max));
-      setTone(resolveNavTone(readSectionTones(), window.scrollY + 48));
+      setTone(resolveNavTone(sections, probeY));
+      setSceneIndex(resolveSectionIndex(sections, probeY));
     };
 
     sync();
@@ -181,7 +186,7 @@ export function Navigation({
                 <div className="nav-progress-fill" />
                 <div className="nav-progress-rest" />
                 <div className="nav-progress-thumb">
-                  <span className="t-label">{progressLabel}</span>
+                  <span className="t-label">{sceneLabel}</span>
                 </div>
               </div>
             </div>
