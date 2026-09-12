@@ -6,7 +6,8 @@ export {
 } from "./horizontal-gallery/HorizontalGallery";
 export { Gallery, type GalleryContent, type GalleryItem } from "./gallery/Gallery";
 export { Architecture, type ArchitectureContent } from "./architecture/Architecture";
-export { Storytelling, type StoryContent } from "./story/Storytelling";
+export { Storytelling } from "./story/Storytelling";
+export type { StoryBeat, StoryContent } from "./story/types";
 export { Hero } from "./hero/Hero";
 export type { HeroContent, HeroHotspot, HeroVariant } from "./hero/types";
 export { LoadingScreen } from "./loading/LoadingScreen";
