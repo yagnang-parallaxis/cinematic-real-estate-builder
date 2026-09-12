@@ -22,4 +22,19 @@ async function capture(name, viewport) {
 
 await capture("desktop", { width: 1440, height: 900 });
 await capture("mobile", { width: 390, height: 844 });
+
+const mobileMenu = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await mobileMenu.goto(url, { waitUntil: "networkidle" });
+const menuButton = mobileMenu.getByRole("button", { name: "Menu" });
+const loader = mobileMenu.locator('[role="status"][aria-busy="true"]');
+if ((await menuButton.count()) && !(await loader.count())) {
+  await menuButton.click();
+  await mobileMenu.waitForTimeout(500);
+  await mobileMenu.screenshot({
+    path: path.join(outDir, "mobile-menu.png"),
+    fullPage: true,
+  });
+}
+await mobileMenu.close();
+
 await browser.close();

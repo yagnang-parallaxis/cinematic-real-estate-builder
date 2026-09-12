@@ -1,4 +1,4 @@
-import type { NavigationContent } from "@cinematic/section-library";
+import type { LoadingContent, NavigationContent } from "@cinematic/section-library";
 
 export const navigation: NavigationContent = {
   brand: "Aurelia",
@@ -13,4 +13,11 @@ export const navigation: NavigationContent = {
   contact: { label: "Contact", href: "#visit" },
   mobileTagline: "Eighteen residences above a quiet harbor.",
   showProgress: true,
+};
+
+export const loading: LoadingContent = {
+  brand: "Aurelia",
+  tagline: "Eighteen residences above a quiet harbor.",
+  progressStyle: "bar",
+  maxDurationMs: 1800,
 };

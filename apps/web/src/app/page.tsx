@@ -1,6 +1,6 @@
-import { Navigation } from "@cinematic/section-library";
+import { LoadingScreen, Navigation } from "@cinematic/section-library";
 
-import { navigation } from "../content/site";
+import { loading, navigation } from "../content/site";
 
 const roles = [
   {
@@ -26,9 +26,16 @@ const roles = [
   },
 ] as const;
 
-export default function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ loader?: string }>;
+}) {
+  const params = await searchParams;
+
   return (
     <>
+      <LoadingScreen content={loading} forceVisible={params.loader === "1"} />
       <Navigation content={navigation} />
       <main
         id="content"
