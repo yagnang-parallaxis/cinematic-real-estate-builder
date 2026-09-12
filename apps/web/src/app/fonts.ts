@@ -1,15 +1,22 @@
-import { Cormorant_Garamond, Outfit } from "next/font/google";
+import { Archivo, Great_Vibes, Italiana } from "next/font/google";
 
-export const displayFont = Cormorant_Garamond({
+export const displayFont = Italiana({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: "400",
   variable: "--font-display-next",
   display: "swap",
 });
 
-export const bodyFont = Outfit({
+export const bodyFont = Archivo({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "700"],
   variable: "--font-body-next",
+  display: "swap",
+});
+
+export const accentFont = Great_Vibes({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-accent-next",
   display: "swap",
 });
