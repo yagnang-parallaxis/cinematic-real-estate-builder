@@ -7,6 +7,8 @@ export {
 export { Gallery, type GalleryContent, type GalleryItem } from "./gallery/Gallery";
 export { Architecture } from "./architecture/Architecture";
 export type { ArchitectureBreakpoint, ArchitectureContent } from "./architecture/types";
+export { Amenities } from "./amenities/Amenities";
+export type { AmenitiesContent, AmenityScene } from "./amenities/types";
 export { Storytelling } from "./story/Storytelling";
 export type { StoryBeat, StoryContent } from "./story/types";
 export { Hero } from "./hero/Hero";

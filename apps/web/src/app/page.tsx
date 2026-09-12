@@ -1,4 +1,5 @@
 import {
+  Amenities,
   Architecture,
   Gallery,
   Hero,
@@ -10,6 +11,7 @@ import {
 } from "@cinematic/section-library";
 
 import {
+  amenities,
   architecture,
   gallery,
   hero,
@@ -35,6 +37,7 @@ export default async function HomePage({
         <Hero content={hero} />
         <Storytelling content={story} />
         <Architecture content={architecture} />
+        <Amenities content={amenities} />
         <Gallery content={gallery} />
         <HorizontalGallery content={walk} />
         <Residences content={residences} />
