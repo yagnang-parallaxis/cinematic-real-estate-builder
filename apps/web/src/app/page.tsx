@@ -5,10 +5,20 @@ import {
   HorizontalGallery,
   LoadingScreen,
   Navigation,
+  Residences,
   Storytelling,
 } from "@cinematic/section-library";
 
-import { architecture, gallery, hero, loading, navigation, story, walk } from "../content/site";
+import {
+  architecture,
+  gallery,
+  hero,
+  loading,
+  navigation,
+  residences,
+  story,
+  walk,
+} from "../content/site";
 
 export default async function HomePage({
   searchParams,
@@ -27,6 +37,7 @@ export default async function HomePage({
         <Architecture content={architecture} />
         <Gallery content={gallery} />
         <HorizontalGallery content={walk} />
+        <Residences content={residences} />
       </main>
     </>
   );

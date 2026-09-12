@@ -1,3 +1,4 @@
+export { Residences, type ResidenceCard, type ResidencesContent } from "./residences/Residences";
 export {
   HorizontalGallery,
   type HorizontalGalleryContent,

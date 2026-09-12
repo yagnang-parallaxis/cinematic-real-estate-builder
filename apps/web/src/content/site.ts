@@ -3,6 +3,7 @@ import type {
   GalleryContent,
   HeroContent,
   HorizontalGalleryContent,
+  ResidencesContent,
   LoadingContent,
   NavigationContent,
   StoryContent,
@@ -135,6 +136,50 @@ export const walk: HorizontalGalleryContent = {
       src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=80",
       alt: "The house facing the inlet at dusk.",
       caption: "The water",
+    },
+  ],
+};
+
+export const residences: ResidencesContent = {
+  eyebrow: "Residences",
+  heading: "Eighteen homes, three plans.",
+  empty: "No residences match this type.",
+  residences: [
+    {
+      id: "a3",
+      name: "A3",
+      type: "Harbor",
+      bedrooms: 2,
+      area: "128 m² interior",
+      outdoor: "18 m² terrace",
+      status: "Available",
+      imageSrc:
+        "https://images.unsplash.com/photo-1600585153490-76fb20a32601?auto=format&fit=crop&w=1400&q=80",
+      imageAlt: "A two-bedroom harbor residence with a long window.",
+    },
+    {
+      id: "b2",
+      name: "B2",
+      type: "Garden",
+      bedrooms: 3,
+      area: "164 m² interior",
+      outdoor: "42 m² garden",
+      status: "Reserved",
+      imageSrc:
+        "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&w=1400&q=80",
+      imageAlt: "A three-bedroom garden residence opening to planting.",
+    },
+    {
+      id: "c1",
+      name: "C1",
+      type: "Penthouse",
+      bedrooms: 3,
+      area: "198 m² interior",
+      outdoor: "36 m² terrace",
+      status: "Available",
+      imageSrc:
+        "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1400&q=80",
+      imageAlt: "A penthouse living room under a high ceiling.",
     },
   ],
 };
