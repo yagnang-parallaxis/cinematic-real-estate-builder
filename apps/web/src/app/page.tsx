@@ -2,12 +2,13 @@ import {
   Architecture,
   Gallery,
   Hero,
+  HorizontalGallery,
   LoadingScreen,
   Navigation,
   Storytelling,
 } from "@cinematic/section-library";
 
-import { architecture, gallery, hero, loading, navigation, story } from "../content/site";
+import { architecture, gallery, hero, loading, navigation, story, walk } from "../content/site";
 
 export default async function HomePage({
   searchParams,
@@ -25,6 +26,7 @@ export default async function HomePage({
         <Storytelling content={story} />
         <Architecture content={architecture} />
         <Gallery content={gallery} />
+        <HorizontalGallery content={walk} />
       </main>
     </>
   );

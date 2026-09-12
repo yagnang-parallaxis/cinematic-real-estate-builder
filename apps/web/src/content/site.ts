@@ -2,6 +2,7 @@ import type {
   ArchitectureContent,
   GalleryContent,
   HeroContent,
+  HorizontalGalleryContent,
   LoadingContent,
   NavigationContent,
   StoryContent,
@@ -106,6 +107,34 @@ export const gallery: GalleryContent = {
       src: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
       alt: "An evening terrace looking toward still water.",
       caption: "Terrace",
+    },
+  ],
+};
+
+export const walk: HorizontalGalleryContent = {
+  eyebrow: "A walk",
+  heading: "From the street to the water.",
+  hint: "Drag to see more",
+  items: [
+    {
+      src: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1800&q=80",
+      alt: "A timber doorway opening into a pale hall.",
+      caption: "The street door",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=1800&q=80",
+      alt: "A dining table under a long window.",
+      caption: "The dining room",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=80",
+      alt: "A stair in dark timber with a high window.",
+      caption: "The stair",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=80",
+      alt: "The house facing the inlet at dusk.",
+      caption: "The water",
     },
   ],
 };
