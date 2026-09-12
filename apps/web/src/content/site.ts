@@ -1,5 +1,6 @@
 import type {
   ArchitectureContent,
+  GalleryContent,
   HeroContent,
   LoadingContent,
   NavigationContent,
@@ -74,4 +75,37 @@ export const architecture: ArchitectureContent = {
   imageSrc:
     "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=2400&q=80",
   cta: { label: "Book a visit", href: "#visit" },
+};
+
+export const gallery: GalleryContent = {
+  eyebrow: "Gallery",
+  heading: "Rooms and the light they keep.",
+  hint: "Drag to see more",
+  items: [
+    {
+      src: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1800&q=80",
+      alt: "A pale living room with a low sofa and a wide window.",
+      caption: "The long room",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=1200&q=80",
+      alt: "A stone kitchen with a timber island and pendant lights.",
+      caption: "Kitchen",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?auto=format&fit=crop&w=1200&q=80",
+      alt: "A bedroom with linen bedding and a view of trees.",
+      caption: "Bedroom",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=80",
+      alt: "A bathroom with a freestanding tub and stone walls.",
+      caption: "Bath",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
+      alt: "An evening terrace looking toward still water.",
+      caption: "Terrace",
+    },
+  ],
 };

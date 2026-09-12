@@ -1,3 +1,4 @@
+export { Gallery, type GalleryContent, type GalleryItem } from "./gallery/Gallery";
 export { Architecture, type ArchitectureContent } from "./architecture/Architecture";
 export { Storytelling, type StoryContent } from "./story/Storytelling";
 export { Hero } from "./hero/Hero";
