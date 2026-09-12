@@ -24,9 +24,13 @@ export const navigation: NavigationContent = {
 
 export const loading: LoadingContent = {
   brand: "Aurelia",
-  tagline: "Eighteen residences above a quiet harbor.",
+  wordmark: ["Aurelia", "Residences"],
+  place: "Harbor",
+  leftCaption: "North",
+  rightCaption: "Coast",
+  tagline: "Eighteen residences\nabove a quiet harbor.",
   progressStyle: "bar",
-  maxDurationMs: 1400,
+  maxDurationMs: 2000,
 };
 
 export const hero: HeroContent = {
