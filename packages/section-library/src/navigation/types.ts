@@ -16,6 +16,5 @@ export interface NavigationContent {
   overlayAccent?: string;
   overlayTitle?: string;
   scrollLabel?: string;
-  mobileTagline?: string;
   showProgress?: boolean;
 }

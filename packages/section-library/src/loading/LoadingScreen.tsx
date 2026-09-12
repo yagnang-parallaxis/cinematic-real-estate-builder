@@ -4,7 +4,7 @@ import { Animated } from "@cinematic/animation-engine";
 import { cn } from "@cinematic/ui";
 import { useEffect, useState } from "react";
 
-import { BrandMark } from "../navigation/BrandMark";
+import { BrandMark } from "../shared/BrandMark";
 import { LoaderArch, LoaderFrame } from "./LoaderArt";
 import { loaderProgress, shouldHoldLoader } from "./logic";
 import type { LoadingContent } from "./types";
@@ -60,12 +60,7 @@ export function LoadingScreen({
   }
 
   return (
-    <div
-      className={cn("loader", leaving && "is-leaving")}
-      role="status"
-      aria-live="polite"
-      aria-busy="true"
-    >
+    <div className={cn("loader", leaving && "is-leaving")} role="status" aria-live="polite" aria-busy="true">
       <LoaderFrame className="loader-frame" />
       <LoaderArch className="loader-arch" />
 
@@ -75,11 +70,7 @@ export function LoadingScreen({
         </div>
 
         <div className="loader-lockup">
-          {content.leftCaption ? (
-            <p className="loader-flank">{content.leftCaption}</p>
-          ) : (
-            <span />
-          )}
+          {content.leftCaption ? <p className="loader-flank">{content.leftCaption}</p> : <span />}
           <div className="loader-wordmark">
             <Animated
               type="textReveal"
@@ -100,11 +91,7 @@ export function LoadingScreen({
               </Animated>
             ) : null}
           </div>
-          {content.rightCaption ? (
-            <p className="loader-flank">{content.rightCaption}</p>
-          ) : (
-            <span />
-          )}
+          {content.rightCaption ? <p className="loader-flank">{content.rightCaption}</p> : <span />}
         </div>
 
         <div className="loader-bottom">

@@ -4,8 +4,8 @@ import { Animated } from "@cinematic/animation-engine";
 import { cn } from "@cinematic/ui";
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 
-import { BrandMark, BrandRing, ScrollChevron } from "./BrandMark";
-import { HoverSlide } from "./HoverSlide";
+import { BrandMark, BrandRing, ScrollChevron } from "../shared/BrandMark";
+import { HoverSlide } from "../shared/HoverSlide";
 import {
   formatSectionIndex,
   overlayLinks,
@@ -126,15 +126,14 @@ export function Navigation({
 
   return (
     <>
-      <a href="#content" className="nav-skip t-label sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[80] focus:px-4 focus:py-2">
+      <a
+        href="#content"
+        className="nav-skip t-label sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[80] focus:px-4 focus:py-2"
+      >
         Skip to content
       </a>
       <div className="nav-chrome" data-nav-contrast={tone}>
-        <a
-          href={content.homeHref}
-          className="nav-logo"
-          aria-label={`${content.brand} — back to top`}
-        >
+        <a href={content.homeHref} className="nav-logo" aria-label={`${content.brand} — back to top`}>
           <BrandRing className="nav-logo-ring" />
           <BrandMark className="nav-logo-mark" />
         </a>

@@ -8,11 +8,6 @@ export function scrollProgress(scrollY: number, maxScroll: number): number {
   return Math.min(1, Math.max(0, scrollY / maxScroll));
 }
 
-export function formatProgressLabel(progress: number): string {
-  const value = Math.min(99, Math.max(0, Math.floor(progress * 100)));
-  return String(value).padStart(2, "0");
-}
-
 function sameLink(a: NavigationLink, b: NavigationLink) {
   return a.href === b.href && a.label === b.label;
 }
@@ -49,7 +44,9 @@ export function formatSectionIndex(index: number): string {
   return String(Math.max(1, index)).padStart(2, "0");
 }
 
-export function readSectionTones(root: ParentNode = document): { top: number; bottom: number; tone: NavTone }[] {
+export function readSectionTones(
+  root: ParentNode = document,
+): { top: number; bottom: number; tone: NavTone }[] {
   return [...root.querySelectorAll<HTMLElement>("[data-nav-tone]")].map((node) => {
     const rect = node.getBoundingClientRect();
     return {

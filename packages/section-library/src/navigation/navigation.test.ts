@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  formatProgressLabel,
   formatSectionIndex,
   overlayLinks,
   resolveNavTone,
@@ -15,7 +14,7 @@ const sample: NavigationContent = {
   homeHref: "/",
   primary: { label: "Select a residence", href: "#residences", lines: ["Select a", "residence"] },
   links: [],
-  cta: { label: "Book a visit", href: "#visit" },
+  cta: { label: "Book a call", href: "#visit" },
   contact: { label: "Contact", href: "#visit" },
   overlayAccent: "The",
   overlayTitle: "Menu",
@@ -44,20 +43,12 @@ describe("scrollProgress", () => {
   });
 });
 
-describe("formatProgressLabel", () => {
-  it("renders a two-digit readout matching the reference counter", () => {
-    expect(formatProgressLabel(0)).toBe("00");
-    expect(formatProgressLabel(0.42)).toBe("42");
-    expect(formatProgressLabel(1)).toBe("99");
-  });
-});
-
 describe("overlayLinks", () => {
   it("starts with Home and then the same actions as the desktop chrome", () => {
     expect(overlayLinks(sample).map((link) => link.label)).toEqual([
       "Home",
       "Select a residence",
-      "Book a visit",
+      "Book a call",
       "Contact",
     ]);
   });
@@ -70,7 +61,7 @@ describe("overlayLinks", () => {
 
     expect(overlayLinks(homePrimary).map((link) => `${link.label}:${link.href}`)).toEqual([
       "Home:/",
-      "Book a visit:#visit",
+      "Book a call:#visit",
       "Contact:#visit",
     ]);
   });

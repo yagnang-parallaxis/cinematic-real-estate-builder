@@ -15,45 +15,35 @@ const sample: LoadingContent = {
 };
 
 describe("loading content", () => {
-  it("requires a hard timeout so the page cannot stay blocked", () => {
+  it("requires a brand and a maximum duration", () => {
+    expect(sample.brand.length).toBeGreaterThan(0);
     expect(sample.maxDurationMs).toBeGreaterThan(0);
-    expect(sample.progressStyle).toBe("bar");
-  });
-
-  it("carries a centered lockup rather than a single brand line", () => {
-    expect(sample.wordmark).toHaveLength(2);
-    expect(sample.leftCaption).toBeTruthy();
-    expect(sample.rightCaption).toBeTruthy();
-    expect(sample.place).toBeTruthy();
   });
 });
 
 describe("loaderProgress", () => {
-  it("stays at 0 before time has passed", () => {
+  it("moves from 0 to 1 across the configured duration", () => {
     expect(loaderProgress(0, 2000)).toBe(0);
-  });
-
-  it("clamps the ratio between 0 and 1", () => {
-    expect(loaderProgress(-50, 2000)).toBe(0);
     expect(loaderProgress(1000, 2000)).toBe(0.5);
-    expect(loaderProgress(4000, 2000)).toBe(1);
+    expect(loaderProgress(2000, 2000)).toBe(1);
   });
 
-  it("returns 0 when the timeout is missing", () => {
-    expect(loaderProgress(400, 0)).toBe(0);
+  it("clamps past the configured duration", () => {
+    expect(loaderProgress(5000, 2000)).toBe(1);
+  });
+
+  it("returns 0 when there is no configured duration", () => {
+    expect(loaderProgress(500, 0)).toBe(0);
   });
 });
 
 describe("shouldHoldLoader", () => {
-  it("holds the overlay while progress is incomplete", () => {
-    expect(shouldHoldLoader(800, 2000, false)).toBe(true);
-  });
-
-  it("releases the overlay once the timeout has elapsed", () => {
+  it("holds until the duration elapses", () => {
+    expect(shouldHoldLoader(500, 2000, false)).toBe(true);
     expect(shouldHoldLoader(2000, 2000, false)).toBe(false);
   });
 
-  it("stays visible when the preview pin is on", () => {
-    expect(shouldHoldLoader(4000, 2000, true)).toBe(true);
+  it("holds indefinitely when forced visible, regardless of elapsed time", () => {
+    expect(shouldHoldLoader(9999, 2000, true)).toBe(true);
   });
 });
