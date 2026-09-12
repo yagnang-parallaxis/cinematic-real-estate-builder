@@ -1,4 +1,4 @@
 {
   "extends": "@cinematic/typescript-config/react-library.json",
-  "include": ["src"]
+  "include": ["src", "vitest.config.ts"]
 }
