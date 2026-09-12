@@ -1,0 +1,11 @@
+node_modules
+.turbo
+.next
+dist
+coverage
+pnpm-lock.yaml
+docs
+era-residence
+www.era-residence.com
+*.min.js
+*.min.css

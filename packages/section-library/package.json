@@ -1,0 +1,26 @@
+{
+  "name": "@cinematic/section-library",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@cinematic/animation-engine": "workspace:*",
+    "@cinematic/schemas": "workspace:*",
+    "@cinematic/types": "workspace:*",
+    "@cinematic/ui": "workspace:*"
+  },
+  "devDependencies": {
+    "@cinematic/typescript-config": "workspace:*",
+    "@types/react": "^19.1.12",
+    "typescript": "^5.9.2"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

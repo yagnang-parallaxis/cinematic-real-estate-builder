@@ -1,0 +1,31 @@
+{
+  "name": "@cinematic/builder",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3001",
+    "build": "next build",
+    "start": "next start --port 3001",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@cinematic/animation-engine": "workspace:*",
+    "@cinematic/schemas": "workspace:*",
+    "@cinematic/section-library": "workspace:*",
+    "@cinematic/types": "workspace:*",
+    "@cinematic/ui": "workspace:*",
+    "next": "^16.3.5",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@cinematic/typescript-config": "workspace:*",
+    "@tailwindcss/postcss": "^4.1.13",
+    "@types/node": "^22.18.1",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "tailwindcss": "^4.1.13",
+    "tw-animate-css": "^1.3.8",
+    "typescript": "^5.9.2"
+  }
+}
