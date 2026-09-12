@@ -46,17 +46,29 @@ export function Hero({ content }: { content: HeroContent }) {
   return (
     <section id="hero" data-nav-tone="on-dark" className="hero" data-hero-variant={variant}>
       <div className="hero-media" aria-hidden="true">
-        <img
-          src={day.src}
-          alt=""
-          className={cn("hero-image", variant === "day" && "is-active")}
-        />
-        {content.nightImageSrc ? (
+        <Animated
+          type="imageZoom"
+          config={{ trigger: "on-load", duration: 9, intensity: 1.08 }}
+          className="hero-image-zoom"
+        >
           <img
-            src={night.src}
+            src={day.src}
             alt=""
-            className={cn("hero-image", variant === "night" && "is-active")}
+            className={cn("hero-image", variant === "day" && "is-active")}
           />
+        </Animated>
+        {content.nightImageSrc ? (
+          <Animated
+            type="imageZoom"
+            config={{ trigger: "on-load", duration: 9, delay: 0.15, intensity: 1.08 }}
+            className="hero-image-zoom"
+          >
+            <img
+              src={night.src}
+              alt=""
+              className={cn("hero-image", variant === "night" && "is-active")}
+            />
+          </Animated>
         ) : null}
         <div className="hero-grade hero-grade-top" />
         <div className="hero-grade hero-grade-bot" />

@@ -712,6 +712,7 @@
 }
 
 .hero-media,
+.hero-image-zoom,
 .hero-image {
   position: absolute;
   inset: 0;
