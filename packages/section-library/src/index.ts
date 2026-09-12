@@ -5,7 +5,8 @@ export {
   type HorizontalGalleryItem,
 } from "./horizontal-gallery/HorizontalGallery";
 export { Gallery, type GalleryContent, type GalleryItem } from "./gallery/Gallery";
-export { Architecture, type ArchitectureContent } from "./architecture/Architecture";
+export { Architecture } from "./architecture/Architecture";
+export type { ArchitectureBreakpoint, ArchitectureContent } from "./architecture/types";
 export { Storytelling } from "./story/Storytelling";
 export type { StoryBeat, StoryContent } from "./story/types";
 export { Hero } from "./hero/Hero";
