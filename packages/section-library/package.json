@@ -13,7 +13,8 @@
     "@cinematic/animation-engine": "workspace:*",
     "@cinematic/schemas": "workspace:*",
     "@cinematic/types": "workspace:*",
-    "@cinematic/ui": "workspace:*"
+    "@cinematic/ui": "workspace:*",
+    "lenis": "^1.3.26"
   },
   "devDependencies": {
     "@cinematic/typescript-config": "workspace:*",

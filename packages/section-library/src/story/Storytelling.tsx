@@ -83,7 +83,7 @@ export function Storytelling({ content }: { content: StoryContent }) {
   };
 
   return (
-    <section id="story" data-nav-tone="on-light" className="story">
+    <section id="story" data-tone="light" data-nav-tone="on-light" className="story">
       <div className="story-intro">
         <Animated
           type="textReveal"

@@ -34,7 +34,7 @@ function Scene({ scene, intro }: { scene: AmenityScene; intro?: SceneIntro }) {
   }, [openPin]);
 
   return (
-    <section id={`amenity-${scene.id}`} data-nav-tone="on-dark" className="amenity-scene">
+    <section id={`amenity-${scene.id}`} data-tone="media" data-nav-tone="on-media" className="amenity-scene">
       <div className="amenity-media" aria-hidden="true">
         <Animated
           type="imageZoom"

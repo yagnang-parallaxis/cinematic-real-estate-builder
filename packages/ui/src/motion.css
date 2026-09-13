@@ -1,0 +1,371 @@
+/*
+ * Shared motion and layout primitives: the section shell, the reveal family,
+ * parallax layers, and the circular CTA. Individual sections compose these
+ * rather than restating the mechanics.
+ */
+
+/* Section shell */
+
+.section {
+  position: relative;
+}
+
+.section-clip {
+  overflow: hidden;
+}
+
+/*
+ * Tone handoff. Rather than cutting hard between a light and a dark section,
+ * the outgoing section fades a plate of the incoming tone across its own seam.
+ */
+.section-seam {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: clamp(4rem, 12vh, 11rem);
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--seam-bg));
+}
+
+.section-seam[data-seam-tone="light"] {
+  --seam-bg: var(--paper);
+}
+
+.section-seam[data-seam-tone="light-deep"] {
+  --seam-bg: var(--paper-deep);
+}
+
+.section-seam[data-seam-tone="color"] {
+  --seam-bg: var(--tide);
+}
+
+.section-seam[data-seam-tone="brand"] {
+  --seam-bg: var(--shell);
+}
+
+.section-seam[data-seam-tone="dark"] {
+  --seam-bg: var(--ink);
+}
+
+.section-seam[data-seam-tone="cellar"] {
+  --seam-bg: var(--cellar);
+}
+
+.section-seam[data-seam-tone="media"] {
+  --seam-bg: var(--ink-deep);
+}
+
+/* Shared section furniture */
+
+.section-shell {
+  position: relative;
+  z-index: 2;
+  padding-inline: var(--nav-offset);
+}
+
+.section-measure {
+  width: min(100%, 42rem);
+  margin-inline: auto;
+}
+
+.section-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.section-scrim-top {
+  background: linear-gradient(to bottom, rgb(0 0 0 / 0.42), transparent 38%);
+}
+
+.section-scrim-bottom {
+  background: linear-gradient(to top, rgb(0 0 0 / 0.58), transparent 46%);
+}
+
+.on-media-text {
+  text-shadow: 0 1px 18px rgb(0 0 0 / 0.45);
+}
+
+/* Reveal family */
+
+.reveal {
+  --reveal-dur: var(--dur-l);
+  --reveal-delay: 0s;
+  --reveal-stagger: 0s;
+}
+
+/* Mask: content unmasks upward from behind a clip edge. */
+.reveal[data-reveal="mask"] {
+  clip-path: inset(0 0 110% 0);
+  transform: translateY(0.22em);
+  transition:
+    clip-path var(--reveal-dur) var(--ease-out) var(--reveal-delay),
+    transform var(--reveal-dur) var(--ease-out) var(--reveal-delay);
+}
+
+.reveal[data-reveal="mask"][data-revealed="true"] {
+  clip-path: inset(0 0 -25% 0);
+  transform: translateY(0);
+}
+
+/* A multi-line heading unmasks a line at a time. */
+.reveal-lines[data-reveal="mask"] {
+  clip-path: none;
+  transform: none;
+  transition: none;
+}
+
+.reveal-line {
+  display: block;
+  overflow: hidden;
+}
+
+.reveal-line-inner {
+  display: block;
+  transform: translateY(105%);
+  transition: transform var(--reveal-dur) var(--ease-out);
+}
+
+.reveal-lines[data-revealed="true"] .reveal-line-inner {
+  transform: translateY(0);
+}
+
+.reveal-lines .reveal-line:nth-child(1) .reveal-line-inner {
+  transition-delay: calc(var(--reveal-delay));
+}
+
+.reveal-lines .reveal-line:nth-child(2) .reveal-line-inner {
+  transition-delay: calc(var(--reveal-delay) + var(--reveal-stagger));
+}
+
+.reveal-lines .reveal-line:nth-child(3) .reveal-line-inner {
+  transition-delay: calc(var(--reveal-delay) + var(--reveal-stagger) * 2);
+}
+
+.reveal-lines .reveal-line:nth-child(4) .reveal-line-inner {
+  transition-delay: calc(var(--reveal-delay) + var(--reveal-stagger) * 3);
+}
+
+/* Block: body copy and grouped content arrive as one unit. */
+.reveal[data-reveal="block"] {
+  opacity: 0;
+  transform: translateY(1.25rem);
+  transition:
+    opacity var(--reveal-dur) var(--ease-out) var(--reveal-delay),
+    transform var(--reveal-dur) var(--ease-out) var(--reveal-delay);
+}
+
+.reveal[data-reveal="block"][data-revealed="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Line: a rule draws itself along its own length. */
+.reveal[data-reveal="line"] {
+  transform: scale(1, 0);
+  transform-origin: top center;
+  transition: transform var(--reveal-dur) var(--ease-in-out) var(--reveal-delay);
+}
+
+.reveal[data-reveal="line"][data-revealed="true"] {
+  transform: scale(1, 1);
+}
+
+/* Media: the photograph slides up inside a frame that stays put. */
+.reveal[data-reveal="media"] {
+  overflow: hidden;
+}
+
+.reveal[data-reveal="media"] > * {
+  transform: translateY(12%) scale(1.12);
+  transition: transform calc(var(--reveal-dur) * 1.2) var(--ease-out) var(--reveal-delay);
+}
+
+.reveal[data-reveal="media"][data-revealed="true"] > * {
+  transform: translateY(0) scale(1);
+}
+
+/* Direct-child stagger for grouped reveals. */
+.reveal[data-reveal-stagger="true"][data-reveal="block"] > * {
+  opacity: 0;
+  transform: translateY(1rem);
+  transition:
+    opacity var(--reveal-dur) var(--ease-out),
+    transform var(--reveal-dur) var(--ease-out);
+}
+
+.reveal[data-reveal-stagger="true"][data-reveal="block"][data-revealed="true"] > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal[data-reveal-stagger="true"][data-reveal="block"] > *:nth-child(1) {
+  transition-delay: calc(var(--reveal-delay));
+}
+
+.reveal[data-reveal-stagger="true"][data-reveal="block"] > *:nth-child(2) {
+  transition-delay: calc(var(--reveal-delay) + var(--reveal-stagger));
+}
+
+.reveal[data-reveal-stagger="true"][data-reveal="block"] > *:nth-child(3) {
+  transition-delay: calc(var(--reveal-delay) + var(--reveal-stagger) * 2);
+}
+
+.reveal[data-reveal-stagger="true"][data-reveal="block"] > *:nth-child(4) {
+  transition-delay: calc(var(--reveal-delay) + var(--reveal-stagger) * 3);
+}
+
+.reveal[data-reveal-stagger="true"][data-reveal="block"] > *:nth-child(5) {
+  transition-delay: calc(var(--reveal-delay) + var(--reveal-stagger) * 4);
+}
+
+.reveal[data-reveal-stagger="true"][data-reveal="block"] > *:nth-child(6) {
+  transition-delay: calc(var(--reveal-delay) + var(--reveal-stagger) * 5);
+}
+
+/* Parallax layers */
+
+.parallax {
+  --parallax-shift: 0%;
+  will-change: transform;
+}
+
+.parallax[data-parallax="bed"],
+.parallax[data-parallax="accent"] {
+  translate: 0 var(--parallax-shift);
+}
+
+/* An image layer is overscaled so its drift never exposes a frame edge. */
+.parallax[data-parallax="image"] {
+  position: absolute;
+  inset: -8% 0;
+  translate: 0 var(--parallax-shift);
+}
+
+.parallax[data-parallax="image"] > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Circular CTA */
+
+.circle-cta {
+  --magnet-x: 0px;
+  --magnet-y: 0px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  color: inherit;
+  cursor: pointer;
+  aspect-ratio: 1;
+}
+
+.circle-cta-sm {
+  width: calc(136vw / var(--type-scale-ratio));
+}
+
+.circle-cta-md {
+  width: calc(168vw / var(--type-scale-ratio));
+}
+
+.circle-cta-lg {
+  width: calc(208vw / var(--type-scale-ratio));
+}
+
+.circle-cta-ring {
+  position: absolute;
+  inset: 0;
+  border: 1px solid color-mix(in oklab, currentColor 55%, transparent);
+  border-radius: 50%;
+  transition:
+    border-color var(--dur-s) var(--ease-out),
+    scale var(--dur-m) var(--ease-out);
+}
+
+.circle-cta-label {
+  position: relative;
+  z-index: 1;
+  max-width: 74%;
+  text-align: center;
+  translate: var(--magnet-x) var(--magnet-y);
+  transition: translate var(--dur-s) var(--ease-out);
+}
+
+@media (min-width: 992px) {
+  .circle-cta:hover .circle-cta-ring {
+    border-color: currentColor;
+    scale: 1.04;
+  }
+}
+
+.circle-cta:focus-visible .circle-cta-ring {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+/* Marquee: a continuously drifting strip used for decorative layers. */
+
+.marquee {
+  display: flex;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  flex: none;
+  gap: var(--marquee-gap, 0px);
+  animation: marquee-drift var(--marquee-dur, 90s) linear infinite;
+}
+
+.marquee-track[data-direction="right"] {
+  animation-direction: reverse;
+}
+
+.marquee-list {
+  display: flex;
+  flex: none;
+  gap: var(--marquee-gap, 0px);
+}
+
+@keyframes marquee-drift {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Drag affordance shown only where the strip is swiped rather than scrolled. */
+
+.drag-hint {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  opacity: 0.65;
+}
+
+@media (min-width: 992px) {
+  .drag-hint {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-line-inner,
+  .reveal[data-reveal="media"] > *,
+  .reveal[data-reveal-stagger="true"][data-reveal="block"] > * {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .marquee-track {
+    animation: none;
+  }
+
+  .circle-cta-label,
+  .circle-cta-ring {
+    transition: none;
+  }
+}

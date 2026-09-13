@@ -25,7 +25,7 @@ export function Architecture({ content }: { content: ArchitectureContent }) {
   };
 
   return (
-    <section id="architecture" data-nav-tone="on-dark" className="architecture">
+    <section id="architecture" data-tone="media" data-nav-tone="on-media" className="architecture">
       <Animated type="parallax" config={{ intensity: 0.6, direction: "up" }} className="architecture-media">
         <img src={content.imageSrc} alt="" className="architecture-image" />
       </Animated>

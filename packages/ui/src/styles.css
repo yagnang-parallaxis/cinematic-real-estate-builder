@@ -1,10 +1,11 @@
 @import "tw-animate-css";
+@import "./motion.css";
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(0.145 0.012 75);
-  --foreground: oklch(0.95 0.012 85);
+  --background: var(--paper);
+  --foreground: var(--ink);
   --card: oklch(0.18 0.012 75);
   --card-foreground: oklch(0.95 0.012 85);
   --popover: oklch(0.18 0.012 75);
@@ -50,6 +51,75 @@
   --hover-ease: cubic-bezier(0.25, 1, 0.5, 1);
   --nav-ink: var(--foreground);
   --nav-line: color-mix(in oklab, var(--foreground) 20%, transparent);
+
+  /* Motion */
+  --dur-s: 0.4s;
+  --dur-m: 0.8s;
+  --dur-l: 1.2s;
+  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+
+  /* Palette lanes. Aurelia reads as paper, harbour ink, and two coastal accents. */
+  --paper: oklch(0.945 0.016 88);
+  --paper-deep: oklch(0.915 0.024 86);
+  --ink: oklch(0.213 0.028 245);
+  --ink-deep: oklch(0.168 0.026 248);
+  --tide: oklch(0.858 0.038 225);
+  --shell: oklch(0.878 0.042 42);
+  --cellar: oklch(0.268 0.062 338);
+}
+
+/*
+ * Tone system. Every section declares one tone; the tone rebinds the same
+ * background/foreground pair so section internals never hard-code a colour,
+ * and the fixed nav can read the tone under it to pick its own contrast.
+ */
+[data-tone] {
+  background: var(--tone-bg);
+  color: var(--tone-fg);
+}
+
+[data-tone="light"] {
+  --tone-bg: var(--paper);
+  --tone-fg: var(--ink);
+  --tone-line: color-mix(in oklab, var(--ink) 16%, transparent);
+}
+
+[data-tone="light-deep"] {
+  --tone-bg: var(--paper-deep);
+  --tone-fg: var(--ink);
+  --tone-line: color-mix(in oklab, var(--ink) 16%, transparent);
+}
+
+[data-tone="color"] {
+  --tone-bg: var(--tide);
+  --tone-fg: var(--ink-deep);
+  --tone-line: color-mix(in oklab, var(--ink-deep) 20%, transparent);
+}
+
+[data-tone="brand"] {
+  --tone-bg: var(--shell);
+  --tone-fg: var(--ink-deep);
+  --tone-line: color-mix(in oklab, var(--ink-deep) 20%, transparent);
+}
+
+[data-tone="dark"] {
+  --tone-bg: var(--ink);
+  --tone-fg: var(--paper);
+  --tone-line: color-mix(in oklab, var(--paper) 22%, transparent);
+}
+
+[data-tone="cellar"] {
+  --tone-bg: var(--cellar);
+  --tone-fg: var(--paper);
+  --tone-line: color-mix(in oklab, var(--paper) 22%, transparent);
+}
+
+/* Photography carries its own tone: transparent plate, light type, own scrims. */
+[data-tone="media"] {
+  --tone-bg: var(--ink-deep);
+  --tone-fg: var(--paper);
+  --tone-line: color-mix(in oklab, var(--paper) 26%, transparent);
 }
 
 @theme inline {
@@ -212,16 +282,32 @@
   color: var(--nav-ink);
 }
 
+.nav-chrome {
+  transition:
+    color var(--dur-m) var(--ease-in-out),
+    text-shadow var(--dur-m) var(--ease-in-out);
+}
+
+/* Contrast follows the tone of whichever section sits under the fixed chrome. */
 .nav-chrome[data-nav-contrast="on-dark"],
-.nav-chrome[data-nav-contrast="on-color"] {
-  --nav-ink: var(--foreground);
-  --nav-line: color-mix(in oklab, var(--foreground) 20%, transparent);
+.nav-chrome[data-nav-contrast="on-cellar"] {
+  --nav-ink: var(--paper);
+  --nav-line: color-mix(in oklab, var(--paper) 24%, transparent);
 }
 
 .nav-chrome[data-nav-contrast="on-light"],
+.nav-chrome[data-nav-contrast="on-light-deep"],
+.nav-chrome[data-nav-contrast="on-color"],
 .nav-chrome[data-nav-contrast="on-brand"] {
-  --nav-ink: oklch(0.18 0.02 75);
-  --nav-line: color-mix(in oklab, oklch(0.18 0.02 75) 12%, transparent);
+  --nav-ink: var(--ink);
+  --nav-line: color-mix(in oklab, var(--ink) 16%, transparent);
+}
+
+/* Over photography there is no guaranteed contrast, so the chrome gets a scrim. */
+.nav-chrome[data-nav-contrast="on-media"] {
+  --nav-ink: var(--paper);
+  --nav-line: color-mix(in oklab, var(--paper) 30%, transparent);
+  text-shadow: 0 1px 16px rgb(0 0 0 / 0.55);
 }
 
 .nav-skip:focus {
@@ -419,8 +505,8 @@
   inset: 0;
   z-index: 70;
   display: flex;
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--ink);
+  color: var(--paper);
 }
 
 .nav-overlay-panel {
@@ -560,8 +646,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--ink);
+  color: var(--paper);
   overflow: hidden;
 }
 
@@ -696,7 +782,8 @@
   height: 100svh;
   min-height: 100svh;
   overflow: hidden;
-  color: var(--foreground);
+  color: var(--tone-fg);
+  background: var(--tone-bg);
 }
 
 .hero-media,
@@ -831,7 +918,7 @@
 .hero-cta-ring {
   position: absolute;
   inset: 0;
-  border: 1px solid color-mix(in oklab, var(--foreground) 70%, transparent);
+  border: 1px solid color-mix(in oklab, currentColor 70%, transparent);
   border-radius: 50%;
 }
 
@@ -867,7 +954,7 @@
   position: absolute;
   inset: 40%;
   border-radius: 50%;
-  background: var(--foreground);
+  background: var(--paper);
   transition: inset 0.8s var(--hover-ease);
 }
 
@@ -879,7 +966,7 @@
 .hero-pin-pulse {
   position: absolute;
   inset: 0;
-  border: 1px solid var(--foreground);
+  border: 1px solid var(--paper);
   border-radius: 50%;
   animation: hero-pin-pulse 2.4s var(--hover-ease) infinite;
 }
@@ -894,8 +981,9 @@
   left: var(--space-24);
   width: min(22rem, 56vw);
   padding: var(--space-24);
-  background: color-mix(in oklab, var(--background) 82%, transparent);
-  color: var(--foreground);
+  background: color-mix(in oklab, var(--paper) 92%, transparent);
+  color: var(--ink);
+  text-shadow: none;
   backdrop-filter: blur(8px);
   translate: 0 -100%;
 }
@@ -965,8 +1053,8 @@
 /* Storytelling */
 
 .story {
-  color: oklch(0.18 0.02 75);
-  background: oklch(0.93 0.028 85);
+  color: var(--tone-fg);
+  background: var(--tone-bg);
 }
 
 .story-intro,
@@ -1170,7 +1258,8 @@
   flex-direction: column;
   justify-content: flex-end;
   overflow: hidden;
-  color: var(--foreground);
+  color: var(--tone-fg);
+  background: var(--tone-bg);
 }
 
 .architecture-media,
@@ -1228,7 +1317,7 @@
 }
 
 .architecture-quote {
-  border-left: 1px solid color-mix(in oklab, var(--foreground) 35%, transparent);
+  border-left: 1px solid color-mix(in oklab, currentColor 35%, transparent);
   padding-left: var(--space-24);
 }
 
@@ -1265,7 +1354,7 @@
 .architecture-cta-ring {
   position: absolute;
   inset: 0;
-  border: 1px solid color-mix(in oklab, var(--foreground) 70%, transparent);
+  border: 1px solid color-mix(in oklab, currentColor 70%, transparent);
   border-radius: 50%;
 }
 
@@ -1305,7 +1394,8 @@
   flex-direction: column;
   justify-content: flex-end;
   overflow: hidden;
-  color: var(--foreground);
+  color: var(--tone-fg);
+  background: var(--tone-bg);
 }
 
 .amenity-media,
@@ -1386,7 +1476,7 @@
   position: absolute;
   inset: 40%;
   border-radius: 50%;
-  background: var(--foreground);
+  background: var(--paper);
   transition: inset 0.8s var(--hover-ease);
 }
 
@@ -1398,7 +1488,7 @@
 .amenity-pin-pulse {
   position: absolute;
   inset: 0;
-  border: 1px solid var(--foreground);
+  border: 1px solid var(--paper);
   border-radius: 50%;
   animation: amenity-pin-pulse 2.4s var(--hover-ease) infinite;
 }
@@ -1413,8 +1503,9 @@
   left: var(--space-24);
   width: min(22rem, 56vw);
   padding: var(--space-24);
-  background: color-mix(in oklab, var(--background) 82%, transparent);
-  color: var(--foreground);
+  background: color-mix(in oklab, var(--paper) 92%, transparent);
+  color: var(--ink);
+  text-shadow: none;
   backdrop-filter: blur(8px);
   translate: 0 -100%;
 }
@@ -1459,8 +1550,8 @@
 /* Residence types */
 
 .residence-types {
-  color: oklch(0.18 0.02 75);
-  background: oklch(0.93 0.028 85);
+  color: var(--tone-fg);
+  background: var(--tone-bg);
 }
 
 .residence-types-browser {
@@ -1585,8 +1676,8 @@
 /* Footer */
 
 .footer {
-  color: var(--foreground);
-  background: oklch(0.2 0.03 75);
+  color: var(--tone-fg);
+  background: var(--tone-bg);
 }
 
 .footer-cta {

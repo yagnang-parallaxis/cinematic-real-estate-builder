@@ -29,7 +29,7 @@ export function ResidenceTypes({ content }: { content: ResidenceTypesContent }) 
   const dragX = useRef<number | null>(null);
 
   return (
-    <section id="residence-types" data-nav-tone="on-light" className="residence-types">
+    <section id="residence-types" data-tone="light" data-nav-tone="on-light" className="residence-types">
       <div
         className="residence-types-browser"
         onPointerDown={(event) => {

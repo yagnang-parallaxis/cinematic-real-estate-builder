@@ -44,7 +44,7 @@ export function Hero({ content }: { content: HeroContent }) {
   };
 
   return (
-    <section id="hero" data-nav-tone="on-dark" data-hero-variant={variant}>
+    <section id="hero" data-tone="media" data-nav-tone="on-media" data-hero-variant={variant}>
       <Animated type="pinnedSection" config={{ distance: 1 }} className="hero">
         <div className="hero-media" aria-hidden="true">
           <img src={day.src} alt="" className={cn("hero-image", variant === "day" && "is-active")} />

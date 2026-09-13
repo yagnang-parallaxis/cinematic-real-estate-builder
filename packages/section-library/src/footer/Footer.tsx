@@ -9,8 +9,8 @@ import type { FooterContent } from "./types";
 
 export function Footer({ content }: { content: FooterContent }) {
   return (
-    <section id="footer" data-nav-tone="on-color" className="footer">
-      <div className="footer-cta">
+    <section id="footer" data-tone="dark" data-nav-tone="on-dark" className="footer">
+      <div className="footer-cta" data-nav-tone="on-media">
         <img src={content.ctaBackgroundSrc} alt="" className="footer-cta-image" aria-hidden="true" />
         <div className="footer-cta-grade" />
         <div className="footer-cta-copy">

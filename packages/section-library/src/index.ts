@@ -14,3 +14,15 @@ export { ResidenceTypes } from "./residence-types/ResidenceTypes";
 export type { ResidenceType, ResidenceTypesContent } from "./residence-types/types";
 export { Storytelling } from "./story/Storytelling";
 export type { StoryBeat, StoryContent } from "./story/types";
+
+/* Shared primitives */
+export { CircleCta } from "./shared/CircleCta";
+export { Parallax } from "./shared/Parallax";
+export type { ParallaxRole } from "./shared/Parallax";
+export { Reveal, RevealLines } from "./shared/Reveal";
+export type { RevealProps, RevealVariant } from "./shared/Reveal";
+export { Section } from "./shared/Section";
+export type { SectionProps } from "./shared/Section";
+export { SmoothScroll } from "./shared/SmoothScroll";
+export { isMediaTone, navContrastForTone, SECTION_TONES } from "./shared/tone";
+export type { NavContrast, SectionTone } from "./shared/tone";
