@@ -91,19 +91,19 @@ export const story: StoryContent = {
   caption: "Designed as a community, not a complex.",
   beats: [
     {
-      title: "A community of eighteen",
+      title: "Boutique Concept",
       body: "A boutique gated community of eighteen residences, designed around privacy, wellbeing and quiet harbour living.",
       imageSrc: "/hero/gated-community-day.webp",
       imageAlt: "The courtyard and residences in afternoon light.",
     },
     {
-      title: "Houses, not a stack",
-      body: "Each home keeps its own path from the garden and its own slice of light. Nothing is stacked that cannot still feel like a house.",
+      title: "Built to Stay",
+      body: "Stone, timber and a courtyard that will take the weather. The houses are made to be lived in for decades, not seasons.",
       imageSrc: "/hero/concept-garden.jpg",
       imageAlt: "A quiet living room — a house, not a corridor of doors.",
     },
     {
-      title: "A place to return to",
+      title: "Made to Return",
       body: "Rooms turn toward the water, so the day is read in reflections rather than in a corridor of doors.",
       imageSrc: "/hero/gated-community-night.webp",
       imageAlt: "The courtyard at dusk, pool lights on and residences lit.",

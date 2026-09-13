@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  STORY_AUTO_MS,
+  canAutoAdvance,
   clampBeats,
   formatBeatNumber,
   formatSlideLabel,
@@ -8,6 +10,9 @@ import {
   prevIndex,
   slideProgress,
   swipeStep,
+  titleEnterDelay,
+  titleOutDuration,
+  titleWords,
   wrapIndex,
 } from "./logic";
 import type { StoryBeat, StoryContent } from "./types";
@@ -126,6 +131,46 @@ describe("slideProgress", () => {
 
   it("is 0 when the list is empty", () => {
     expect(slideProgress(0, 0)).toBe(0);
+  });
+});
+
+describe("titleWords", () => {
+  it("splits a display title into words for staggered animation", () => {
+    expect(titleWords("Built to Stay")).toEqual(["Built", "to", "Stay"]);
+  });
+
+  it("ignores extra space", () => {
+    expect(titleWords("  Boutique  Concept ")).toEqual(["Boutique", "Concept"]);
+  });
+});
+
+describe("titleEnterDelay", () => {
+  it("lets the first title start immediately", () => {
+    expect(titleEnterDelay(null)).toBe(0);
+  });
+
+  it("waits for the outgoing title to leave before the next one enters", () => {
+    const outgoing = "Boutique Concept";
+    expect(titleOutDuration(outgoing)).toBeGreaterThanOrEqual(560);
+    expect(titleEnterDelay(outgoing)).toBeGreaterThan(titleOutDuration(outgoing));
+  });
+});
+
+describe("canAutoAdvance", () => {
+  const ready = { inView: true, reducedMotion: false, count: 3 };
+
+  it("keeps rotating while the chapter is on screen, even with the pointer over it", () => {
+    expect(canAutoAdvance(ready)).toBe(true);
+    expect(canAutoAdvance({ ...ready, inView: false })).toBe(false);
+    expect(canAutoAdvance({ ...ready, reducedMotion: true })).toBe(false);
+    expect(canAutoAdvance({ ...ready, count: 1 })).toBe(false);
+  });
+});
+
+describe("STORY_AUTO_MS", () => {
+  it("holds each plate briefly, then steps on", () => {
+    expect(STORY_AUTO_MS).toBeGreaterThanOrEqual(4000);
+    expect(STORY_AUTO_MS).toBeLessThanOrEqual(5000);
   });
 });
 
