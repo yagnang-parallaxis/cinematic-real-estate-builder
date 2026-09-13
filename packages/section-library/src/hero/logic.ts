@@ -15,6 +15,16 @@ export function clampHotspots(hotspots: HeroHotspot[] = []): HeroHotspot[] {
   return hotspots.slice(0, 4);
 }
 
+/**
+ * How far the brand lockup and sentence have left — 0 at the top of the page,
+ * 1 after a short first-viewport travel. Scroll back reverses the same curve.
+ */
+export function brandLeaveProgress(scrollY: number, viewH: number): number {
+  const travel = Math.max(1, viewH * 0.38);
+  const t = Math.min(1, Math.max(0, scrollY / travel));
+  return t * t * (3 - 2 * t);
+}
+
 export function magneticOffset(
   clientX: number,
   clientY: number,

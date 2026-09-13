@@ -12,6 +12,7 @@ import {
 
 import { detectBreakpoint } from "../responsive";
 import { prefersReducedMotion } from "../reduced-motion";
+import { animationEffectKey } from "./effect-key";
 import { createGsapRuntime } from "./gsap-runtime";
 import { playAnimation } from "./play";
 import { resolveAnimation } from "./resolve";
@@ -80,6 +81,16 @@ export function Animated({
 }: AnimatedProps) {
   const ref = useRef<HTMLElement | null>(null);
   const context = useAnimationContext();
+  const resolvedProfile = profile ?? context.profile;
+  const resolvedBreakpoint = breakpoint ?? context.breakpoint;
+  const resolvedReduced = reducedMotion ?? context.reducedMotion;
+  const effectKey = animationEffectKey(
+    type,
+    config,
+    resolvedProfile,
+    resolvedBreakpoint,
+    resolvedReduced,
+  );
 
   useEffect(() => {
     const element = ref.current;
@@ -92,9 +103,9 @@ export function Animated({
     const resolved = resolveAnimation({
       type,
       config,
-      profile: profile ?? context.profile,
-      breakpoint: breakpoint ?? context.breakpoint ?? detectBreakpoint(),
-      reducedMotion: reducedMotion ?? context.reducedMotion ?? prefersReducedMotion(),
+      profile: resolvedProfile,
+      breakpoint: resolvedBreakpoint ?? detectBreakpoint(),
+      reducedMotion: resolvedReduced ?? prefersReducedMotion(),
     });
 
     void createGsapRuntime().then((runtime) => {
@@ -108,7 +119,9 @@ export function Animated({
       cancelled = true;
       handle.kill();
     };
-  }, [type, config, profile, breakpoint, reducedMotion, context]);
+    // effectKey is the value identity of type + config + motion context.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- config is compared by key
+  }, [effectKey]);
 
   return (
     <Component ref={ref} className={className} style={style}>

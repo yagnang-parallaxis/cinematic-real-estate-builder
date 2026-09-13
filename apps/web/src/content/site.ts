@@ -52,21 +52,11 @@ export const hero: HeroContent = {
   dayLabel: "by day",
   nightLabel: "by night",
   cta: { label: "Select a residence", href: "/residences" },
-  imageSrc:
-    "https://cdn.prod.website-files.com/6a068da7ad91b057365bf967/6a25da81dce540a251389928_era-residence_gated-community_day.webp",
+  imageSrc: "/hero/gated-community-day.webp",
   imageAlt: "Sunlit gated courtyard with a turquoise pool, stone residences and open sky.",
-  nightImageSrc:
-    "https://cdn.prod.website-files.com/6a068da7ad91b057365bf967/6a25da81dce540a251389928_era-residence_gated-community_day.webp",
-  nightImageAlt: "The courtyard after the light softens across the pool and stone.",
+  nightImageSrc: "/hero/gated-community-night.webp",
+  nightImageAlt: "The courtyard at dusk, pool lights on and residences lit against the night sky.",
   hotspots: [
-    {
-      id: "stone",
-      label: "Stone that lasts",
-      description:
-        "Limewashed stone and dark timber, chosen to weather the salt rather than stay new.",
-      x: 57.5,
-      y: 62.5,
-    },
     {
       id: "light",
       label: "Light through the rooms",
@@ -75,12 +65,20 @@ export const hero: HeroContent = {
       y: 58.3,
     },
     {
+      id: "stone",
+      label: "Stone that lasts",
+      description:
+        "Limewashed stone and dark timber, chosen to weather the salt rather than stay new.",
+        x: 57.5,
+        y: 62.5,
+    },
+    {
       id: "street",
       label: "The quiet street wall",
       description:
         "From the road, only a timber wall and a single opening. The water is kept for the people who live here.",
-      x: 76.6,
-      y: 73.2,
+        x: 76.6,
+        y: 73.2,
     },
   ],
 };

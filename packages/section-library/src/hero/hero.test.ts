@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { clampHotspots, magneticOffset, resolveHeroMedia } from "./logic";
+import { brandLeaveProgress, clampHotspots, magneticOffset, resolveHeroMedia } from "./logic";
 import type { HeroContent } from "./types";
 
 const sample: HeroContent = {
@@ -21,22 +21,22 @@ const sample: HeroContent = {
       id: "stone",
       label: "Stone that lasts",
       description: "Limewashed stone and timber.",
-      x: 57,
-      y: 62,
+      x: 50,
+      y: 49,
     },
     {
       id: "light",
       label: "Light through the rooms",
       description: "Rooms turn toward the water.",
-      x: 27,
-      y: 58,
+      x: 32,
+      y: 47,
     },
     {
       id: "street",
       label: "The quiet street wall",
       description: "A single opening to the garden.",
-      x: 76,
-      y: 73,
+      x: 77,
+      y: 42,
     },
   ],
 };
@@ -89,6 +89,24 @@ describe("clampHotspots", () => {
       { id: "five", label: "Five", description: "Five.", x: 20, y: 20 },
     ];
     expect(clampHotspots(extra)).toHaveLength(4);
+  });
+});
+
+describe("brandLeaveProgress", () => {
+  it("is fully present at the top of the page", () => {
+    expect(brandLeaveProgress(0, 800)).toBe(0);
+  });
+
+  it("is fully gone after a short first-viewport travel", () => {
+    expect(brandLeaveProgress(800, 800)).toBe(1);
+  });
+
+  it("reverses as scroll returns toward the top", () => {
+    const leaving = brandLeaveProgress(200, 800);
+    const returning = brandLeaveProgress(80, 800);
+    expect(leaving).toBeGreaterThan(0);
+    expect(leaving).toBeLessThan(1);
+    expect(returning).toBeLessThan(leaving);
   });
 });
 

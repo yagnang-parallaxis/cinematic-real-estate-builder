@@ -1,4 +1,5 @@
 export { Animated, AnimationProvider, useAnimationContext } from "./core/Animated";
+export { animationEffectKey } from "./core/effect-key";
 export { playAnimation } from "./core/play";
 export { getAnimationMeta, getEffect, listAnimationTypes } from "./core/registry";
 export { describeAnimation, resolveAnimation } from "./core/resolve";

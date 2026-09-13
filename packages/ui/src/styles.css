@@ -1065,6 +1065,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--nav-offset) var(--nav-offset) var(--space-32);
+  pointer-events: none;
 }
 
 .hero-station-brand {
@@ -1072,7 +1073,7 @@
   padding-top: calc(var(--nav-offset) * 1.6);
 }
 
-.hero-station-nav {
+.hero-station-mid {
   justify-content: center;
 }
 
@@ -1123,7 +1124,8 @@
   object-position: center center;
 }
 
-.hero-media.is-held .hero-grade {
+.hero-media.is-held .hero-grade,
+.hero-media.is-held .hero-pins {
   height: var(--hero-runway);
   top: calc(100svh - var(--hero-runway));
   right: 0;
@@ -1145,7 +1147,7 @@
 }
 
 .home-open.is-held .hero-station-brand,
-.home-open.is-held .hero-station-nav {
+.home-open.is-held .hero-station-mid {
   visibility: hidden;
 }
 
@@ -1166,10 +1168,6 @@
 
 .hero-image.is-active {
   opacity: 1;
-}
-
-#hero[data-hero-variant="night"] .hero-image.is-active {
-  filter: brightness(0.42) saturate(0.7) contrast(1.12);
 }
 
 .hero-grade {
@@ -1208,25 +1206,15 @@
 }
 
 .hero-copy-brand {
+  --hero-brand-out: 0;
   margin-top: clamp(1rem, 4vh, 2.5rem);
+  gap: clamp(2.5rem, 8vh, 5.5rem);
+  transform: translate3d(0, calc(var(--hero-brand-out) * -3.25rem), 0);
+  opacity: calc(1 - var(--hero-brand-out));
+  will-change: transform, opacity;
 }
 
-/*
- * A plate under the lockup. The reference category solves this by choosing a
- * photograph with sky where the type goes; a plate solves it for any
- * photograph, which is what an authored template needs.
- */
-.hero-lockup::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: -14% -20%;
-  background: radial-gradient(
-    ellipse 60% 56% at 50% 46%,
-    rgb(0 0 0 / 0.52),
-    rgb(0 0 0 / 0.24) 56%,
-    transparent 82%
-  );
+.hero-copy-brand.is-away {
   pointer-events: none;
 }
 
@@ -1254,27 +1242,23 @@
   transform: rotate(-7deg);
 }
 
-/*
- * The day/night navigators sit mid-image as their own station, so the phrase
- * reads across the photograph rather than competing with the brand lockup.
- */
+/* Centered under the lockup — one line, not full-bleed. */
 .hero-sentence-wrap {
   display: flex;
   width: 100%;
   justify-content: center;
-  text-shadow: 0 1px 18px rgb(0 0 0 / 0.45);
 }
 
 .hero-sentence {
   display: flex;
   width: max-content;
-  max-width: min(84vw, 56rem);
-  flex-wrap: wrap;
-  align-items: baseline;
+  max-width: 100%;
+  align-items: center;
   justify-content: center;
-  gap: var(--space-48);
+  gap: clamp(5.5rem, 14vw, 12rem);
   font-size: var(--hero-sentence);
   text-align: center;
+  white-space: nowrap;
 }
 
 .hero-tabs {
@@ -1298,16 +1282,10 @@
 }
 
 .hero-tab-rule {
-  width: calc(64vw / var(--type-scale-ratio));
+  width: clamp(2.5rem, 6vw, 5.5rem);
   height: 1px;
-  background: linear-gradient(90deg, transparent, currentColor 50%, transparent);
-  background-size: 200% 100%;
-  background-position: 100% 0;
-  transition: background-position 0.8s cubic-bezier(0.76, 0, 0.24, 1);
-}
-
-.hero-tab-rule.is-night {
-  background-position: 0 0;
+  background: currentColor;
+  opacity: 0.88;
 }
 
 .hero-cta-wrap {
@@ -1324,6 +1302,7 @@
   height: var(--hero-circle);
   place-items: center;
   padding: var(--space-48);
+  pointer-events: auto;
   color: inherit;
 }
 
@@ -1344,8 +1323,17 @@
 
 .hero-pins {
   position: absolute;
-  inset: 0;
+  top: 0;
+  right: 0;
+  left: 0;
   z-index: 2;
+  height: var(--hero-runway);
+  pointer-events: none;
+}
+
+.home-open.is-arch-covered .hero-pins {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .hero-pin {
@@ -1359,6 +1347,7 @@
   width: calc(32vw / var(--type-scale-ratio));
   height: calc(32vw / var(--type-scale-ratio));
   translate: -50% -50%;
+  pointer-events: auto;
   cursor: pointer;
 }
 
@@ -1393,6 +1382,7 @@
   left: var(--space-24);
   width: min(22rem, 56vw);
   padding: var(--space-24);
+  pointer-events: auto;
   background: color-mix(in oklab, var(--paper) 92%, transparent);
   color: var(--ink);
   text-shadow: none;
@@ -1438,11 +1428,10 @@
     margin-top: var(--space-16);
   }
 
-  /* The phrase reads down the frame at this width rather than across it. */
   .hero-sentence {
-    max-width: 88vw;
-    flex-direction: column;
-    gap: var(--space-4);
+    flex-wrap: wrap;
+    white-space: normal;
+    gap: var(--space-16) var(--space-24);
   }
 
   .hero-place {
@@ -1452,6 +1441,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hero-copy-brand {
+    transform: none;
+  }
+
   .hero-image,
   .hero-tab-rule,
   .hero-cta-label,
