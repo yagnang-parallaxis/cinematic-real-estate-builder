@@ -27,7 +27,7 @@ export function Vista({ content }: { content: VistaContent }) {
   const cite = vistaCite(content);
 
   return (
-    <section id="vista" data-tone="color" data-nav-tone="on-color" className="vista">
+    <section id="vista" data-tone="color" data-nav-tone="on-media" className="vista">
       <div className="vista-stage">
         <Animated
           type="parallax"

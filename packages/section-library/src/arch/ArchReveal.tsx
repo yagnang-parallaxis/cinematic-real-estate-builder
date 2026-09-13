@@ -15,6 +15,7 @@ import {
   archTextPath,
   curvedTextOpacity,
   curvedWordSpacingEm,
+  archNavTone,
   hidesHeroChrome,
   interiorOpacity,
   pinProgress,
@@ -244,8 +245,7 @@ export function ArchReveal({
       id={content.id}
       aria-label={content.label}
       data-tone={content.tone}
-      /* Photograph remains above the arc, so the nav stays on the image. */
-      data-nav-tone="on-media"
+      data-nav-tone={archNavTone(progress)}
       data-arch-scrub={scrubbing ? "true" : undefined}
       data-arch-covered={overCta ? "true" : undefined}
       className="arch"

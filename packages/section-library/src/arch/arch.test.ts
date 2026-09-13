@@ -20,6 +20,7 @@ import {
   clampProgress,
   coversStage,
   curvedTextOpacity,
+  archNavTone,
   hidesHeroChrome,
   curvedWordSpacingEm,
   interiorOpacity,
@@ -315,6 +316,14 @@ describe("hidesHeroChrome", () => {
   it("hides the foot chrome once the arc covers the lower stage", () => {
     expect(hidesHeroChrome(0.55)).toBe(true);
     expect(hidesHeroChrome(1)).toBe(true);
+  });
+});
+
+describe("archNavTone", () => {
+  it("keeps the seal white on the photograph, then black on the tide", () => {
+    expect(archNavTone(0.2)).toBe("on-media");
+    expect(archNavTone(0.55)).toBe("on-color");
+    expect(archNavTone(1)).toBe("on-color");
   });
 });
 

@@ -261,6 +261,11 @@ export function hidesHeroChrome(progress: number): boolean {
   return clampProgress(progress) >= 0.5;
 }
 
+/** White on the photograph; black once the tide plate is under the seal. */
+export function archNavTone(progress: number): "on-media" | "on-color" {
+  return hidesHeroChrome(progress) ? "on-color" : "on-media";
+}
+
 function ramp(value: number, start: number, end: number): number {
   if (end <= start) {
     return clampProgress(value) >= end ? 1 : 0;
