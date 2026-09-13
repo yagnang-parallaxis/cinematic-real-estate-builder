@@ -232,8 +232,8 @@ export function archInteriorTop(
   stageHeight: number,
 ): number {
   const apexY = geometry.floorY - geometry.height;
-  const clearsLettering = apexY + inset * 2.4;
-  return Math.max(clearsLettering, stageHeight * 0.36);
+  const clearsLettering = apexY + inset * 2.2;
+  return Math.max(clearsLettering, stageHeight * 0.52);
 }
 
 /** Lettering arrives once the bump is large enough to carry it. */

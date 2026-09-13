@@ -243,10 +243,10 @@ describe("archInteriorTop", () => {
     expect(archInteriorTop(g, inset, STAGE.height)).toBeGreaterThan(apexY);
   });
 
-  it("settles near the upper third once the panel has closed", () => {
+  it("sits just under the lettering once the panel has closed", () => {
     const top = archInteriorTop(archGeometry(1, STAGE), inset, STAGE.height);
-    expect(top).toBeGreaterThan(STAGE.height * 0.35);
-    expect(top).toBeLessThan(STAGE.height * 0.5);
+    expect(top).toBeGreaterThan(STAGE.height * 0.48);
+    expect(top).toBeLessThan(STAGE.height * 0.58);
   });
 });
 
