@@ -1,13 +1,4 @@
-import type { OvertureContent, StatementContent } from "@cinematic/section-library";
-
-export const overture: OvertureContent = {
-  eyebrow: "Aurelia Residences",
-  lines: ["Eighteen houses", "on one quiet slope"],
-  imageSrc:
-    "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1800&q=80",
-  imageAlt: "A pale stone hallway opening onto a garden through a tall arched doorway.",
-  caption: "North Harbour — completion 2028",
-};
+import type { StatementContent } from "@cinematic/section-library";
 
 export const conceptCallout: StatementContent = {
   id: "concept-callout",

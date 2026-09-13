@@ -11,7 +11,6 @@ import {
   Location,
   LoadingScreen,
   Navigation,
-  Overture,
   ResidenceTypes,
   Statement,
 } from "@cinematic/section-library";
@@ -24,7 +23,7 @@ import { concept } from "../content/concept";
 import { enquiry } from "../content/enquiry";
 import { interiors } from "../content/interiors";
 import { location } from "../content/location";
-import { closingView, conceptCallout, overture, residenceFigures } from "../content/passages";
+import { closingView, conceptCallout, residenceFigures } from "../content/passages";
 import {
   architecture,
   footer,
@@ -47,7 +46,6 @@ export default async function HomePage({
       <Navigation content={navigation} />
       <main id="content">
         <HomeOpen hero={hero} arch={storyArch} />
-        <Overture content={overture} />
         <Statement content={conceptCallout} />
         <Concept content={concept} />
         <Location content={location} />

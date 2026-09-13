@@ -11,7 +11,6 @@ import {
   archPath,
   archTextInset,
   archTextPath,
-  capOpacity,
   coversStage,
   curvedTextOpacity,
   curvedWordSpacingEm,
@@ -191,10 +190,6 @@ export function ArchReveal({
         {content.enterFrom ? (
           <div className="arch-enter" data-seam-tone={content.enterFrom} aria-hidden="true" />
         ) : null}
-
-        {/* Closes the top corners, which no dome can reach on its own. It sits
-            under the drawing below, so it never paints over the lettering. */}
-        <div className="arch-cap" style={{ opacity: capOpacity(progress) }} aria-hidden="true" />
 
         <svg
           className="arch-svg"

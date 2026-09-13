@@ -238,7 +238,23 @@ export function Hero({ content }: { content: HeroContent }) {
               onMouseMove={onCtaMove}
               onMouseLeave={() => setPull({ x: 0, y: 0 })}
             >
-              <span className="hero-cta-ring" aria-hidden="true" />
+              <span className="hero-cta-ring-rest" aria-hidden="true" />
+              <svg className="hero-cta-ring" viewBox="0 0 100 100" aria-hidden="true">
+                <path
+                  className="hero-cta-ring-arc"
+                  pathLength="100"
+                  d="M99 50 A 49 49 0 0 1 1 50"
+                  strokeDasharray="100"
+                  strokeDashoffset="100"
+                />
+                <path
+                  className="hero-cta-ring-arc"
+                  pathLength="100"
+                  d="M1 50 A 49 49 0 0 1 99 50"
+                  strokeDasharray="100"
+                  strokeDashoffset="100"
+                />
+              </svg>
               <span
                 className="hero-cta-label t-label"
                 style={{ transform: `translate(${pull.x}px, ${pull.y}px)` }}

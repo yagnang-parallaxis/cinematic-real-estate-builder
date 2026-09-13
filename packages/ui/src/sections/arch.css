@@ -16,6 +16,7 @@
   --arch-flank-gap: calc(96vw / var(--type-scale-ratio));
   position: relative;
   z-index: 1;
+  pointer-events: none;
 }
 
 /*

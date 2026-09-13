@@ -49,7 +49,7 @@ export function HomeOpen({
       media.classList.toggle("is-held", held);
 
       if (!held) {
-        media.style.setProperty("--hero-zoom", "1");
+        root.style.setProperty("--hero-zoom", "1");
         return;
       }
 
@@ -76,7 +76,7 @@ export function HomeOpen({
         const eased = throughArch * throughArch * (3 - 2 * throughArch);
         zoom = 1 + leadZoom + eased * archZoom;
       }
-      media.style.setProperty("--hero-zoom", zoom.toFixed(4));
+      root.style.setProperty("--hero-zoom", zoom.toFixed(4));
     };
 
     const onScroll = () => {
@@ -98,7 +98,7 @@ export function HomeOpen({
       root.classList.remove("is-held");
       root.classList.remove("is-arch-covered");
       media.classList.remove("is-held");
-      media.style.removeProperty("--hero-zoom");
+      root.style.removeProperty("--hero-zoom");
     };
   }, [arch.id]);
 

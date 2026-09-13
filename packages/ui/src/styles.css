@@ -1137,7 +1137,10 @@
   position: fixed;
   inset: 0;
   z-index: 2;
-  padding-bottom: calc(var(--space-48) * 2);
+  padding-bottom: var(--space-48);
+  transform: scale(var(--hero-zoom, 1));
+  transform-origin: center center;
+  will-change: transform;
 }
 
 /* Dome has closed over the plate — CTA stays under it, not interactive. */
@@ -1306,11 +1309,55 @@
   color: inherit;
 }
 
+.hero-cta-ring-rest {
+  position: absolute;
+  inset: 0;
+  border: 1px solid color-mix(in oklab, currentColor 46%, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+  transition: opacity 0.55s var(--hover-ease);
+}
+
 .hero-cta-ring {
   position: absolute;
   inset: 0;
-  border: 1px solid color-mix(in oklab, currentColor 70%, transparent);
-  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.hero-cta-ring-arc {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.15;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 0.8s var(--hover-ease);
+}
+
+.hero-cta:hover .hero-cta-ring-rest,
+.hero-cta:focus-visible .hero-cta-ring-rest {
+  opacity: 0.2;
+}
+
+.hero-cta:hover .hero-cta-ring-arc,
+.hero-cta:focus-visible .hero-cta-ring-arc {
+  stroke-dashoffset: 0;
+}
+
+@media (min-width: 992px) {
+  .hero-cta:hover .hover-slide > .hover-slide-layer,
+  .hero-cta:focus-visible .hover-slide > .hover-slide-layer {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  .hero-cta:hover .hover-slide > .hover-slide-layer-2,
+  .hero-cta:focus-visible .hover-slide > .hover-slide-layer-2 {
+    transform: translateY(-100%);
+    opacity: 1;
+  }
 }
 
 .hero-cta-label {
@@ -1443,6 +1490,21 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-copy-brand {
     transform: none;
+  }
+
+  .hero-cta-ring-rest,
+  .hero-cta-ring-arc {
+    transition: none;
+  }
+
+  .hero-cta-ring-arc {
+    opacity: 0;
+  }
+
+  .hero-cta:hover .hero-cta-ring-rest,
+  .hero-cta:focus-visible .hero-cta-ring-rest {
+    opacity: 1;
+    border-width: 1.5px;
   }
 
   .hero-image,
