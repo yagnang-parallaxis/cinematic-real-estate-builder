@@ -1,3 +1,9 @@
+"use client";
+
+import { useId } from "react";
+
+import { sealRingText } from "../navigation/logic";
+
 export function BrandMark({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 40 40" fill="none" aria-hidden="true" className={className}>
@@ -12,17 +18,27 @@ export function BrandMark({ className }: { className?: string }) {
   );
 }
 
-export function BrandRing({ className }: { className?: string }) {
+/**
+ * Circular wordmark around the mark. The ring itself is rotated by the
+ * parent via `--seal-turn`; the star stays still.
+ */
+export function BrandSeal({ label, className }: { label: string; className?: string }) {
+  const pathId = `brand-seal-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const text = sealRingText(label);
+
   return (
     <svg viewBox="0 0 120 120" fill="none" aria-hidden="true" className={className}>
-      <circle
-        cx="60"
-        cy="60"
-        r="56"
-        stroke="currentColor"
-        strokeWidth="0.75"
-        strokeDasharray="1 5"
-      />
+      <defs>
+        <path
+          id={pathId}
+          d="M 60 60 m 0 -46 a 46 46 0 1 1 0 92 a 46 46 0 1 1 0 -92"
+        />
+      </defs>
+      <text className="nav-logo-seal-text">
+        <textPath href={`#${pathId}`} startOffset="0%">
+          {text}
+        </textPath>
+      </text>
     </svg>
   );
 }

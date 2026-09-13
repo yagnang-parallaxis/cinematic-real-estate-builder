@@ -6,6 +6,10 @@ import {
   resolveNavTone,
   resolveSectionIndex,
   scrollProgress,
+  sealDirectionFromVelocity,
+  sealRingText,
+  sealSpinRate,
+  stepSealAngle,
 } from "./logic";
 import type { NavigationContent } from "./types";
 
@@ -113,5 +117,61 @@ describe("formatSectionIndex", () => {
   it("never renders below scene 01", () => {
     expect(formatSectionIndex(0)).toBe("01");
     expect(formatSectionIndex(-3)).toBe("01");
+  });
+});
+
+describe("sealRingText", () => {
+  it("repeats the name so the ring reads continuously", () => {
+    expect(sealRingText("Aurelia Residences")).toBe(
+      "AURELIA RESIDENCES  ·  AURELIA RESIDENCES  ·  ",
+    );
+  });
+
+  it("collapses stray space and ignores an empty label", () => {
+    expect(sealRingText("  aurelia   residences ")).toBe(
+      "AURELIA RESIDENCES  ·  AURELIA RESIDENCES  ·  ",
+    );
+    expect(sealRingText("   ")).toBe("");
+  });
+});
+
+describe("sealDirectionFromVelocity", () => {
+  it("holds the current direction while the page is still", () => {
+    expect(sealDirectionFromVelocity(0, 1)).toBe(1);
+    expect(sealDirectionFromVelocity(0, -1)).toBe(-1);
+  });
+
+  it("turns right when scrolling down, left when scrolling up", () => {
+    expect(sealDirectionFromVelocity(80, -1)).toBe(1);
+    expect(sealDirectionFromVelocity(-80, 1)).toBe(-1);
+  });
+});
+
+describe("sealSpinRate", () => {
+  it("idles clockwise by default", () => {
+    expect(sealSpinRate(0, 1)).toBeGreaterThan(0);
+  });
+
+  it("idles left after an upward scroll", () => {
+    expect(sealSpinRate(0, -1)).toBeLessThan(0);
+  });
+
+  it("runs faster right as downward scroll speeds up", () => {
+    expect(sealSpinRate(200, 1)).toBeGreaterThan(sealSpinRate(80, 1));
+    expect(sealSpinRate(200, 1)).toBeGreaterThan(sealSpinRate(0, 1));
+  });
+
+  it("runs faster left as upward scroll speeds up", () => {
+    expect(sealSpinRate(-200, -1)).toBeLessThan(sealSpinRate(-80, -1));
+  });
+});
+
+describe("stepSealAngle", () => {
+  it("advances the angle by the rate over time", () => {
+    expect(stepSealAngle(10, 12, 1000)).toBeCloseTo(22, 5);
+  });
+
+  it("ignores a broken step", () => {
+    expect(stepSealAngle(40, Number.NaN, 16)).toBe(40);
   });
 });

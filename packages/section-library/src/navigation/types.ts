@@ -8,6 +8,8 @@ export type NavTone = "on-dark" | "on-light" | "on-color" | "on-brand";
 
 export interface NavigationContent {
   brand: string;
+  /** Written around the seal. Falls back to `brand` when omitted. */
+  sealLabel?: string;
   homeHref: string;
   primary?: NavigationLink;
   links: NavigationLink[];

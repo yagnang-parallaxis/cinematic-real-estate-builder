@@ -353,20 +353,32 @@
   color: inherit;
 }
 
-.nav-logo-ring,
+.nav-logo-seal,
 .nav-logo-mark {
   grid-area: 1 / 1;
 }
 
-.nav-logo-ring {
+.nav-logo-seal {
   width: 100%;
   height: 100%;
-  animation: nav-logo-spin 40s linear infinite;
+  transform: rotate(var(--seal-turn, 0deg));
+  transform-origin: center;
+  will-change: transform;
+}
+
+.nav-logo-seal-text {
+  fill: currentColor;
+  font-family: var(--font-body);
+  font-size: 8.6px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  word-spacing: 0.35em;
+  text-transform: uppercase;
 }
 
 .nav-logo-mark {
-  width: 40%;
-  height: 40%;
+  width: 34%;
+  height: 34%;
 }
 
 .nav-rail {
@@ -581,12 +593,6 @@
   height: var(--nav-mark);
 }
 
-@keyframes nav-logo-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 /* HoverSlide */
 
 .hover-slide {
@@ -662,8 +668,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nav-logo-ring {
-    animation: none;
+  .nav-logo-seal {
+    transform: none;
+    will-change: auto;
   }
 
   .nav-menu-ico span {

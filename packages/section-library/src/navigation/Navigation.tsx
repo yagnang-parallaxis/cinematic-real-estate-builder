@@ -6,7 +6,7 @@ import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 
 import { EnquiryTrigger } from "../enquiry/EnquiryTrigger";
 import { useEnquiry } from "../enquiry/EnquiryProvider";
-import { BrandMark, BrandRing, ScrollChevron } from "../shared/BrandMark";
+import { BrandMark, BrandSeal, ScrollChevron } from "../shared/BrandMark";
 import { HoverSlide } from "../shared/HoverSlide";
 import {
   formatSectionIndex,
@@ -15,7 +15,11 @@ import {
   resolveNavTone,
   resolveSectionIndex,
   scrollProgress,
+  sealDirectionFromVelocity,
+  sealSpinRate,
+  stepSealAngle,
 } from "./logic";
+import type { SealDirection } from "./logic";
 import type { NavigationContent, NavigationLink, NavTone } from "./types";
 
 function getFocusable(root: HTMLElement) {
@@ -59,7 +63,10 @@ export function Navigation({
   const sceneLabel = formatSectionIndex(sceneIndex);
 
   useEffect(() => {
-    const sync = () => {
+    const calm = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const logo = document.querySelector<HTMLElement>(".nav-logo");
+
+    const syncChrome = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const sections = readSectionTones();
       const probeY = window.scrollY + 48;
@@ -68,12 +75,66 @@ export function Navigation({
       setSceneIndex(resolveSectionIndex(sections, probeY));
     };
 
-    sync();
-    window.addEventListener("scroll", sync, { passive: true });
-    window.addEventListener("resize", sync);
+    let angle = 0;
+    let direction: SealDirection = 1;
+    let velocity = 0;
+    let lastY = window.scrollY;
+    let lastScrollT = performance.now();
+    let lastTickT = lastScrollT;
+    let lastScrollAt = lastScrollT;
+    let frame = 0;
+
+    const writeTurn = (value: number) => {
+      logo?.style.setProperty("--seal-turn", `${value.toFixed(2)}deg`);
+    };
+
+    const sampleScroll = () => {
+      const now = performance.now();
+      const y = window.scrollY;
+      const dt = now - lastScrollT;
+      if (dt > 0) {
+        const instant = ((y - lastY) / dt) * 1000;
+        velocity = velocity * 0.65 + instant * 0.35;
+      }
+      lastY = y;
+      lastScrollT = now;
+      lastScrollAt = now;
+      syncChrome();
+    };
+
+    const tick = (now: number) => {
+      const dt = Math.min(48, now - lastTickT);
+      lastTickT = now;
+
+      if (now - lastScrollAt > 90) {
+        velocity *= 0.86;
+        if (Math.abs(velocity) < 2) {
+          velocity = 0;
+        }
+      }
+
+      if (!calm.matches) {
+        direction = sealDirectionFromVelocity(velocity, direction);
+        angle = stepSealAngle(angle, sealSpinRate(velocity, direction), dt);
+        writeTurn(angle);
+      } else {
+        writeTurn(0);
+      }
+
+      frame = requestAnimationFrame(tick);
+    };
+
+    syncChrome();
+    writeTurn(0);
+    frame = requestAnimationFrame(tick);
+    window.addEventListener("scroll", sampleScroll, { passive: true });
+    window.addEventListener("resize", syncChrome);
+
     return () => {
-      window.removeEventListener("scroll", sync);
-      window.removeEventListener("resize", sync);
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", sampleScroll);
+      window.removeEventListener("resize", syncChrome);
+      logo?.style.removeProperty("--seal-turn");
     };
   }, []);
 
@@ -137,7 +198,7 @@ export function Navigation({
       </a>
       <div className="nav-chrome" data-nav-contrast={tone}>
         <a href={content.homeHref} className="nav-logo" aria-label={`${content.brand} — back to top`}>
-          <BrandRing className="nav-logo-ring" />
+          <BrandSeal label={content.sealLabel ?? content.brand} className="nav-logo-seal" />
           <BrandMark className="nav-logo-mark" />
         </a>
 

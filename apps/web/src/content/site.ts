@@ -10,6 +10,7 @@ import type {
 
 export const navigation: NavigationContent = {
   brand: "Aurelia",
+  sealLabel: "Aurelia Residences",
   homeHref: "/",
   primary: { label: "Select a residence", href: "/residences", lines: ["Select a", "residence"] },
   links: [],

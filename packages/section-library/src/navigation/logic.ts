@@ -44,6 +44,91 @@ export function formatSectionIndex(index: number): string {
   return String(Math.max(1, index)).padStart(2, "0");
 }
 
+/** Clockwise idle, in degrees per second. */
+export const SEAL_IDLE_DEG_PER_SEC = 26;
+
+/** Extra degrees per second per pixel-per-second of scroll. */
+export const SEAL_VELOCITY_GAIN = 0.14;
+
+/** Cap on the scroll-driven boost so a flick cannot smear the type. */
+export const SEAL_VELOCITY_MAX = 280;
+
+/** Scroll speed that counts as a direction change, in px/s. */
+export const SEAL_DIRECTION_THRESHOLD = 24;
+
+/** +1 clockwise (right), −1 counter-clockwise (left). */
+export type SealDirection = 1 | -1;
+
+export function sealDirectionFromVelocity(
+  velocityPxPerSec: number,
+  current: SealDirection,
+  threshold = SEAL_DIRECTION_THRESHOLD,
+): SealDirection {
+  if (!Number.isFinite(velocityPxPerSec)) {
+    return current;
+  }
+
+  if (velocityPxPerSec > threshold) {
+    return 1;
+  }
+
+  if (velocityPxPerSec < -threshold) {
+    return -1;
+  }
+
+  return current;
+}
+
+/**
+ * Instantaneous spin rate. Idle holds a constant turn in the last direction.
+ * While the page is moving, scroll speed adds to that turn — faster down,
+ * faster right; faster up, faster left.
+ */
+export function sealSpinRate(
+  velocityPxPerSec: number,
+  direction: SealDirection,
+  idle = SEAL_IDLE_DEG_PER_SEC,
+  gain = SEAL_VELOCITY_GAIN,
+  max = SEAL_VELOCITY_MAX,
+  threshold = SEAL_DIRECTION_THRESHOLD,
+): number {
+  const hold = direction * idle;
+  const speed = Number.isFinite(velocityPxPerSec) ? velocityPxPerSec : 0;
+
+  if (Math.abs(speed) < threshold) {
+    return hold;
+  }
+
+  const boost = Math.max(-max, Math.min(max, speed * gain));
+  const driven = hold + boost;
+  /* Never stall mid-scroll — keep at least the idle in the live direction. */
+  if (Math.sign(driven) !== 0 && Math.sign(driven) !== direction) {
+    return hold;
+  }
+
+  return Math.abs(driven) < idle ? hold : driven;
+}
+
+export function stepSealAngle(angle: number, rateDegPerSec: number, dtMs: number): number {
+  if (!Number.isFinite(angle) || !Number.isFinite(rateDegPerSec) || !Number.isFinite(dtMs)) {
+    return Number.isFinite(angle) ? angle : 0;
+  }
+
+  return angle + rateDegPerSec * (Math.max(0, dtMs) / 1000);
+}
+
+/**
+ * Two passes around the ring so the name reads continuously, Era-style.
+ */
+export function sealRingText(label: string): string {
+  const cleaned = label.replace(/\s+/g, " ").trim().toUpperCase();
+  if (!cleaned) {
+    return "";
+  }
+
+  return `${cleaned}  ·  ${cleaned}  ·  `;
+}
+
 export function readSectionTones(
   root: ParentNode = document,
 ): { top: number; bottom: number; tone: NavTone }[] {
