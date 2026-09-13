@@ -1,12 +1,9 @@
 "use client";
 
-import { CircleCta } from "../shared/CircleCta";
 import { HoverSlide } from "../shared/HoverSlide";
-import { Parallax } from "../shared/Parallax";
 import { Reveal, RevealLines } from "../shared/Reveal";
 import { Section } from "../shared/Section";
-import { useEnquiry } from "../enquiry/EnquiryProvider";
-import { clampPin, isExternalChannel, normalizeChannels, normalizeSocials } from "./logic";
+import { isExternalChannel, normalizeChannels, normalizeSocials } from "./logic";
 import type { ContactContent, ContactSocialNetwork } from "./types";
 
 export type {
@@ -19,50 +16,6 @@ export type {
   ContactSocial,
   ContactSocialNetwork,
 } from "./types";
-
-function HarborChart() {
-  return (
-    <svg
-      className="contact-chart"
-      viewBox="0 0 1600 900"
-      fill="none"
-      aria-hidden="true"
-      preserveAspectRatio="xMidYMid slice"
-    >
-      <rect className="contact-chart-land" width="1600" height="900" />
-      <path
-        className="contact-chart-water"
-        d="M0 390C210 330 360 250 560 280C760 312 860 430 1040 410C1220 390 1360 300 1600 340V900H0V390Z"
-      />
-      <path
-        className="contact-chart-coast"
-        d="M-20 400C200 338 358 256 562 286C758 316 864 436 1042 416C1224 396 1364 306 1620 348"
-      />
-      <path
-        className="contact-chart-path"
-        d="M180 790C310 640 470 560 640 500C760 454 840 430 928 378"
-      />
-      <circle className="contact-chart-node" cx="180" cy="790" r="4" />
-      <circle className="contact-chart-yard" cx="928" cy="378" r="14" />
-      <text className="contact-chart-label" x="64" y="120">
-        Norhavn
-      </text>
-      <text className="contact-chart-caption" x="64" y="154">
-        North Harbour
-      </text>
-      <text className="contact-chart-caption" x="154" y="830">
-        The quay
-      </text>
-      <g className="contact-chart-compass" transform="translate(1488 110)">
-        <circle cx="0" cy="0" r="26" />
-        <path d="M0 -16V16M-16 0H16" />
-        <text x="0" y="-36">
-          N
-        </text>
-      </g>
-    </svg>
-  );
-}
 
 function SocialMark({ network }: { network: ContactSocialNetwork }) {
   if (network === "linkedin") {
@@ -94,15 +47,12 @@ function SocialMark({ network }: { network: ContactSocialNetwork }) {
 }
 
 /**
- * Direct-action contact channels, a social row, and an illustrated harbour
- * chart with one pulsing office pin. The enquiry form itself lives in the
- * sitewide modal — the circular CTA only opens it.
+ * Direct-action contact channels and a social row. The harbour chart and
+ * circular CTA were retired — the enquiry form still lives in the sitewide modal.
  */
 export function Contact({ content }: { content: ContactContent }) {
-  const { open } = useEnquiry();
   const channels = normalizeChannels(content.channels);
   const socials = normalizeSocials(content.socials);
-  const pin = clampPin(content.pin);
   const lines = content.headingLines ?? [content.heading];
 
   return (
@@ -164,37 +114,6 @@ export function Contact({ content }: { content: ContactContent }) {
             ))}
           </Reveal>
         ) : null}
-
-        <div className="contact-map">
-          <div className="contact-map-track">
-            <div className="contact-map-frame">
-              <Parallax role="image" className="contact-map-bed">
-                <img src={content.map.src} alt={content.map.alt} className="contact-map-image" />
-                <HarborChart />
-              </Parallax>
-
-              <div className="contact-pin" style={{ top: `${pin.y}%`, left: `${pin.x}%` }}>
-                <span className="contact-pin-dot" />
-                <span className="contact-pin-pulse" />
-                <span className="contact-pin-pulse contact-pin-pulse-late" />
-                <div className="contact-pin-card">
-                  <p className="t-label contact-pin-label">{pin.label}</p>
-                  <p className="t-caption contact-pin-hours">{pin.hours}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <p className="drag-hint t-label contact-map-hint">{content.dragHint}</p>
-        </div>
-
-        <Reveal variant="block" delay={0.08} threshold={0.01} className="contact-action">
-          <CircleCta
-            label={content.cta.label}
-            size="md"
-            onClick={() => open(content.cta.source ?? "contact")}
-          />
-        </Reveal>
       </div>
     </Section>
   );

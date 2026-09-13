@@ -1,65 +1,13 @@
 "use client";
 
-import { Animated } from "@cinematic/animation-engine";
-
-import { useEnquiry } from "../enquiry/EnquiryProvider";
 import { HoverSlide } from "../shared/HoverSlide";
 import { BrandMark } from "../shared/BrandMark";
 import { currentYear, joinLegalLinks } from "./logic";
 import type { FooterContent } from "./types";
 
 export function Footer({ content }: { content: FooterContent }) {
-  const { open } = useEnquiry();
   return (
     <section id="footer" data-tone="dark" data-nav-tone="on-dark" className="footer">
-      <div className="footer-cta" data-nav-tone="on-media">
-        <img
-          src={content.ctaBackgroundSrc}
-          alt=""
-          className="footer-cta-image"
-          aria-hidden="true"
-        />
-        <div className="footer-cta-grade" />
-        <div className="footer-cta-copy">
-          <Animated
-            type="textReveal"
-            config={{ duration: 0.8 }}
-            className="t-label footer-cta-eyebrow"
-          >
-            {content.ctaEyebrow}
-          </Animated>
-          <Animated
-            type="textReveal"
-            as="h2"
-            config={{ duration: 1 }}
-            className="t-display footer-cta-heading"
-          >
-            <span>
-              {content.ctaHeadingLines[0]}
-              <br />
-            </span>
-            <span>{content.ctaHeadingLines[1]}</span>
-          </Animated>
-          <Animated
-            type="fadeUp"
-            config={{ duration: 0.7, delay: 0.1 }}
-            className="t-h5 footer-cta-subheading"
-          >
-            {content.ctaSubheading}
-          </Animated>
-          <Animated type="fadeUp" config={{ duration: 0.6, delay: 0.16 }}>
-            <button
-              type="button"
-              className="footer-cta-action"
-              aria-haspopup="dialog"
-              onClick={() => open("footer")}
-            >
-              <HoverSlide>{content.ctaAction.label}</HoverSlide>
-            </button>
-          </Animated>
-        </div>
-      </div>
-
       <div className="footer-base">
         <a href={content.topHref ?? "#hero"} className="footer-top-link">
           <HoverSlide>To top</HoverSlide>
