@@ -12,6 +12,8 @@ export { ArchReveal } from "./arch/ArchReveal";
 export type { ArchRevealContent } from "./arch/types";
 export { Storytelling } from "./story/Storytelling";
 export type { StoryBeat, StoryContent } from "./story/types";
+export { Vista } from "./vista/Vista";
+export type { VistaContent } from "./vista/types";
 export { Concept } from "./concept/Concept";
 export type {
   ConceptBetweenPanel,

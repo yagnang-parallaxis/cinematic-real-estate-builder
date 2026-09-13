@@ -13,6 +13,7 @@
 @import "./sections/page-transition.css";
 @import "./sections/arch.css";
 @import "./sections/home-open.css";
+@import "./sections/vista.css";
 
 @custom-variant dark (&:is(.dark *));
 

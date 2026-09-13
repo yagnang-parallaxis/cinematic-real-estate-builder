@@ -14,6 +14,7 @@ import {
   ResidenceTypes,
   Statement,
   Storytelling,
+  Vista,
 } from "@cinematic/section-library";
 
 import { amenityBrowser } from "../content/amenity-browser";
@@ -34,6 +35,7 @@ import {
   residenceTypes,
   story,
 } from "../content/site";
+import { vista } from "../content/vista";
 
 export default async function HomePage({
   searchParams,
@@ -49,6 +51,7 @@ export default async function HomePage({
       <main id="content">
         <HomeOpen hero={hero} arch={storyArch} />
         <Storytelling content={story} />
+        <Vista content={vista} />
         <Concept content={concept} />
         <Location content={location} />
         <ResidenceTypes content={residenceTypes} />
