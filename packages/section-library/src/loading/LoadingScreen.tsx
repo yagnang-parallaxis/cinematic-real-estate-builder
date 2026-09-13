@@ -1,16 +1,23 @@
 "use client";
 
-import { Animated } from "@cinematic/animation-engine";
 import { cn } from "@cinematic/ui";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 
 import { BrandMark } from "../shared/BrandMark";
-import { LoaderArch, LoaderFrame } from "./LoaderArt";
-import { loaderProgress, shouldHoldLoader } from "./logic";
+import { clampHoldMs, taglineLines, wordmarkLines } from "./logic";
 import type { LoadingContent } from "./types";
 
 const EXIT_MS = 450;
 
+/**
+ * The screen that covers the page while it boots.
+ *
+ * Its entry is animated entirely in CSS. That is the whole point of this
+ * component: it is on screen *because* JavaScript has not finished, so nothing
+ * about its composition may wait for an effect to run — a scroll-entry reveal
+ * here would leave an empty field until hydration. JavaScript is used for one
+ * thing only, deciding when to leave.
+ */
 export function LoadingScreen({
   content,
   forceVisible = false,
@@ -18,104 +25,108 @@ export function LoadingScreen({
   content: LoadingContent;
   forceVisible?: boolean;
 }) {
-  const [progress, setProgress] = useState(forceVisible ? 0.42 : 0);
   const [leaving, setLeaving] = useState(false);
   const [mounted, setMounted] = useState(true);
-  const wordmark = content.wordmark ?? [content.brand];
+
+  const wordmark = wordmarkLines(content);
+  const tagline = taglineLines(content.tagline);
+  const holdMs = clampHoldMs(content.maxDurationMs);
 
   useEffect(() => {
     if (forceVisible) {
-      setMounted(true);
       setLeaving(false);
-      setProgress(0.42);
+      setMounted(true);
       return;
     }
 
-    const started = performance.now();
-    let frame = 0;
-    let exitTimer = 0;
+    const leave = window.setTimeout(() => setLeaving(true), holdMs);
+    const unmount = window.setTimeout(() => setMounted(false), holdMs + EXIT_MS);
 
-    const tick = (now: number) => {
-      const elapsed = now - started;
-      setProgress(loaderProgress(elapsed, content.maxDurationMs));
-
-      if (!shouldHoldLoader(elapsed, content.maxDurationMs, false)) {
-        setLeaving(true);
-        exitTimer = window.setTimeout(() => setMounted(false), EXIT_MS);
-        return;
-      }
-
-      frame = window.requestAnimationFrame(tick);
-    };
-
-    frame = window.requestAnimationFrame(tick);
     return () => {
-      window.cancelAnimationFrame(frame);
-      window.clearTimeout(exitTimer);
+      window.clearTimeout(leave);
+      window.clearTimeout(unmount);
     };
-  }, [content.maxDurationMs, forceVisible]);
+  }, [forceVisible, holdMs]);
 
   if (!mounted) {
     return null;
   }
 
   return (
-    <div className={cn("loader", leaving && "is-leaving")} role="status" aria-live="polite" aria-busy="true">
-      <LoaderFrame className="loader-frame" />
-      <LoaderArch className="loader-arch" />
-
+    <div
+      className={cn("loader", leaving && "is-leaving")}
+      /* The rule below the wordmark is animated over exactly this hold. */
+      style={{ "--loader-hold": `${holdMs}ms` } as CSSProperties}
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+    >
       <div className="loader-shell">
         <div className="loader-top">
           <BrandMark className="loader-mark" />
         </div>
 
-        <div className="loader-lockup">
-          {content.leftCaption ? <p className="loader-flank">{content.leftCaption}</p> : <span />}
-          <div className="loader-wordmark">
-            <Animated
-              type="textReveal"
-              config={{ duration: 0.9, trigger: "on-load" }}
-              as="p"
-              className="t-h2 loader-title"
-            >
-              {wordmark.map((line) => (
-                <span key={line}>
-                  {line}
-                  <br />
-                </span>
-              ))}
-            </Animated>
-            {content.place ? (
-              <Animated type="textReveal" config={{ duration: 0.8, delay: 0.08, trigger: "on-load" }}>
-                <p className="loader-place">{content.place}</p>
-              </Animated>
+        <div className="loader-middle">
+          <div className="loader-lockup">
+            {content.leftCaption ? (
+              <p className="t-label loader-flank loader-flank-left">{content.leftCaption}</p>
             ) : null}
-          </div>
-          {content.rightCaption ? <p className="loader-flank">{content.rightCaption}</p> : <span />}
-        </div>
 
-        <div className="loader-bottom">
-          {content.progressStyle === "bar" ? (
-            <div className="loader-progress" aria-hidden="true">
-              <div className="loader-progress-track">
-                <div className="loader-progress-fill" style={{ transform: `scaleY(${progress})` }} />
-              </div>
-            </div>
-          ) : null}
-          {content.tagline ? (
-            <Animated type="fadeUp" config={{ duration: 0.7, delay: 0.12, trigger: "on-load" }}>
-              <p className="t-label loader-tagline">
-                {content.tagline.split("\n").map((line) => (
-                  <span key={line}>
-                    {line}
-                    <br />
+            <div className="loader-wordmark">
+              <p className="t-h2 loader-title">
+                {wordmark.map((line, index) => (
+                  <span key={line} className="loader-title-line">
+                    <span
+                      className="loader-title-line-inner"
+                      style={{ "--line": index } as CSSProperties}
+                    >
+                      {line}
+                    </span>
                   </span>
                 ))}
               </p>
-            </Animated>
+
+              {/*
+               * The script crosses the wordmark's last line, so it sits over
+               * the lockup rather than inside a masked line — a clipped line
+               * would cut its swash off.
+               */}
+              {content.place ? <p className="loader-place">{content.place}</p> : null}
+            </div>
+
+            {content.rightCaption ? (
+              <p className="t-label loader-flank loader-flank-right">{content.rightCaption}</p>
+            ) : null}
+          </div>
+        </div>
+
+        {/*
+         * Progress + tagline live in the foot, not under the lockup. Keeping the
+         * rule out of the centred stack is what stops it painting through the
+         * hanging Harbor script on desktop.
+         */}
+        <div className="loader-foot">
+          {content.progressStyle === "bar" ? (
+            <div className="loader-progress" aria-hidden="true">
+              {/* The track draws itself downward; the fill inside carries the hold. */}
+              <div className="loader-progress-track">
+                <span className="loader-progress-fill" />
+              </div>
+            </div>
+          ) : null}
+
+          {tagline.length > 0 ? (
+            <p className="t-label loader-tagline">
+              {tagline.map((line) => (
+                <span key={line} className="loader-tagline-line">
+                  {line}
+                </span>
+              ))}
+            </p>
           ) : null}
         </div>
       </div>
+
       <span className="sr-only">Loading {content.brand}</span>
     </div>
   );

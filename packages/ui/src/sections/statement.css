@@ -1,0 +1,144 @@
+/* Statement: the page's editorial punctuation, in three variants. */
+
+.statement {
+  position: relative;
+}
+
+.statement-shell {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-24);
+  padding: var(--gutter-top) var(--gutter-x) calc(var(--nav-cell) + var(--space-48));
+  text-align: center;
+}
+
+.statement-eyebrow {
+  opacity: 0.72;
+}
+
+.statement-heading {
+  max-width: 20ch;
+}
+
+.statement-body {
+  width: min(100%, 34rem);
+  opacity: 0.84;
+}
+
+/* callout — a held sentence between two drifting accents */
+
+.statement-callout .statement-shell {
+  min-height: 72svh;
+  justify-content: center;
+}
+
+.statement-accents {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.statement-accent {
+  position: absolute;
+  width: clamp(7rem, calc(144vw / var(--type-scale-ratio)), 13rem);
+  aspect-ratio: 3 / 4;
+}
+
+.statement-accent img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.statement-accent-l {
+  top: 20%;
+  left: calc(var(--nav-offset) + var(--nav-cell) * 0.4);
+}
+
+.statement-accent-r {
+  right: calc(var(--nav-offset) + var(--nav-cell) * 0.4);
+  bottom: 14%;
+}
+
+/* figures — a claim answered by numbers */
+
+.statement-figures {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-48);
+  margin-top: var(--space-16);
+}
+
+.statement-figure {
+  text-align: center;
+}
+
+.statement-figure-value {
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.statement-figure-label {
+  margin-top: var(--space-4);
+  opacity: 0.64;
+}
+
+/* panorama — a closing line over a photograph */
+
+.statement-panorama .statement-shell {
+  min-height: 96svh;
+  justify-content: center;
+}
+
+.statement-panorama .statement-body {
+  width: min(100%, 30rem);
+  opacity: 0.95;
+}
+
+.statement-bed {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.statement-bed img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.statement-action {
+  margin-top: var(--space-24);
+}
+
+@media (max-width: 991px) {
+  .statement-shell {
+    padding: calc(var(--nav-cell) + var(--space-32)) var(--nav-offset) var(--space-48);
+    gap: var(--space-16);
+  }
+
+  .statement-heading {
+    max-width: none;
+  }
+
+  .statement-callout .statement-heading,
+  .statement-panorama .statement-heading {
+    font-size: var(--text-h2);
+  }
+
+  .statement-figures {
+    gap: var(--space-24);
+  }
+
+  /* The flanking accents have nowhere to drift at this width. */
+  .statement-accents {
+    display: none;
+  }
+
+  .statement-panorama .statement-shell {
+    min-height: 80svh;
+  }
+}

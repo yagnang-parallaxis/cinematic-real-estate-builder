@@ -32,7 +32,9 @@ page.on("console", (message) => {
 });
 
 await page.goto(url, { waitUntil: "load" });
-await page.waitForTimeout(3000);
+// The branded preloader holds first paint; wait it out before measuring.
+await page.waitForSelector(".loader", { state: "detached", timeout: 20000 }).catch(() => {});
+await page.waitForTimeout(1500);
 
 const total = await page.evaluate(() => document.body.scrollHeight);
 const steps = Math.min(40, Math.ceil(total / (height * 0.9)));

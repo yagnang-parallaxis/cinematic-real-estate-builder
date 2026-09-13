@@ -1,5 +1,18 @@
 @import "tw-animate-css";
 @import "./motion.css";
+@import "./sections/overture.css";
+@import "./sections/concept.css";
+@import "./sections/location.css";
+@import "./sections/amenity-browser.css";
+@import "./sections/interiors.css";
+@import "./sections/assurance.css";
+@import "./sections/statement.css";
+@import "./sections/enquiry.css";
+@import "./sections/contact.css";
+@import "./sections/residences.css";
+@import "./sections/page-transition.css";
+@import "./sections/arch.css";
+@import "./sections/home-open.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -24,6 +37,7 @@
   --ring: oklch(0.84 0.05 85);
   --radius: 0.25rem;
   --font-display-family: var(--font-display-next), "Times New Roman", serif;
+  --font-arch-family: var(--font-arch-next), "Bodoni MT", "Didot", "Times New Roman", serif;
   --font-body-family: var(--font-body-next), "Helvetica Neue", sans-serif;
   --font-accent-family: var(--font-accent-next), "Palatino Linotype", cursive;
   --type-scale-ratio: 16;
@@ -47,6 +61,9 @@
   --nav-offset: calc(48vw / var(--type-scale-ratio));
   --nav-cell: calc(136vw / var(--type-scale-ratio));
   --nav-mark: calc(48vw / var(--type-scale-ratio));
+  /* Columns and top band the fixed chrome occupies; section content clears these. */
+  --gutter-x: calc(var(--nav-offset) * 2 + var(--nav-cell));
+  --gutter-top: calc(var(--nav-offset) * 2 + var(--nav-cell));
   --hover-dur: 0.8s;
   --hover-ease: cubic-bezier(0.25, 1, 0.5, 1);
   --nav-ink: var(--foreground);
@@ -64,8 +81,8 @@
   --paper-deep: oklch(0.915 0.024 86);
   --ink: oklch(0.213 0.028 245);
   --ink-deep: oklch(0.168 0.026 248);
-  --tide: oklch(0.858 0.038 225);
-  --shell: oklch(0.878 0.042 42);
+  --tide: oklch(0.84 0.032 230);
+  --shell: oklch(0.893 0.028 58);
   --cellar: oklch(0.268 0.062 338);
 }
 
@@ -146,6 +163,7 @@
   --radius-lg: calc(var(--radius) + 4px);
   --radius-xl: calc(var(--radius) + 8px);
   --font-display: var(--font-display-family);
+  --font-arch: var(--font-arch-family);
   --font-body: var(--font-body-family);
   --font-accent: var(--font-accent-family);
 }
@@ -170,6 +188,8 @@
     --nav-offset: calc(24vw / var(--type-scale-ratio));
     --nav-cell: calc(80vw / var(--type-scale-ratio));
     --nav-mark: calc(32vw / var(--type-scale-ratio));
+    --gutter-x: var(--nav-offset);
+    --gutter-top: calc(var(--nav-offset) + var(--nav-cell));
   }
 }
 
@@ -352,7 +372,8 @@
 .nav-rail {
   top: var(--nav-offset);
   right: var(--nav-offset);
-  width: var(--nav-cell);
+  width: max-content;
+  max-width: min(34vw, 22rem);
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -370,10 +391,17 @@
 .nav-primary {
   color: inherit;
   text-align: right;
+  line-height: 1.04;
 }
 
 .nav-action {
   color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  text-align: inherit;
 }
 
 .nav-action-tight {
@@ -539,6 +567,15 @@
   text-align: center;
 }
 
+.nav-overlay-link {
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
 .nav-overlay-mark {
   width: var(--nav-mark);
   height: var(--nav-mark);
@@ -636,10 +673,34 @@
 
 /* Loading */
 
+/*
+ * Loading screen. One composition, assembled in order: the mark at the top
+ * gutter, the wordmark on the optical centre with the script crossing its last
+ * line, the two captions framing it at the page gutters, then — in the foot —
+ * a vertical rule that carries the hold, and the tagline at the bottom gutter.
+ *
+ * Every part of the entry is animated here rather than in JavaScript. The
+ * loader is on screen because the page has not booted yet, so its composition
+ * has to be complete on the first paint — a scroll-entry reveal would leave an
+ * empty field until hydration finished.
+ *
+ * The progress rule sits in the foot with the tagline, never in the centred
+ * lockup stack. That is what keeps it from painting through the Harbor script.
+ */
+
 .loader {
-  --loader-flank: calc(25vw / var(--type-scale-ratio));
-  --loader-place: calc(64vw / var(--type-scale-ratio));
-  --loader-bar: calc(96vw / var(--type-scale-ratio));
+  --loader-hold: 2000ms;
+  --loader-gutter: calc(96vw / var(--type-scale-ratio));
+  --loader-mark: calc(64vw / var(--type-scale-ratio));
+  --loader-title: calc(116vw / var(--type-scale-ratio));
+  --loader-flank: calc(20vw / var(--type-scale-ratio));
+  --loader-flank-track: 0.88em;
+  --loader-tagline: calc(14vw / var(--type-scale-ratio));
+  --loader-place: calc(96vw / var(--type-scale-ratio));
+  /* Script hang below the wordmark (translate + flourish overflow). */
+  --loader-place-hang: calc(var(--loader-place) * 0.75);
+  --loader-rule: calc(96vw / var(--type-scale-ratio));
+  --loader-rule-gap: calc(48vw / var(--type-scale-ratio));
   position: fixed;
   inset: 0;
   z-index: 90;
@@ -655,96 +716,230 @@
   animation: loader-out 0.45s var(--hover-ease) forwards;
 }
 
-.loader-frame {
-  position: absolute;
-  inset: var(--space-24);
-  width: calc(100% - var(--space-24) * 2);
-  height: calc(100% - var(--space-24) * 2);
-  color: var(--nav-line, color-mix(in oklab, var(--foreground) 20%, transparent));
-}
-
-.loader-arch {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: min(70vw, 60rem);
-  translate: -50% 0;
-  color: color-mix(in oklab, var(--foreground) 14%, transparent);
-}
-
 .loader-shell {
   position: relative;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-48);
-  width: min(90vw, 40rem);
+  display: grid;
+  width: 100%;
+  height: 100%;
+  /* The tagline sits closer to the foot than the mark does to the head. */
+  padding: var(--loader-gutter) var(--gutter-x) calc(var(--loader-gutter) * 0.62);
+  grid-template-rows: auto 1fr auto;
+  justify-items: center;
 }
 
 .loader-top {
-  width: var(--space-48);
-  height: var(--space-48);
+  width: var(--loader-mark);
+  height: var(--loader-mark);
+}
+
+.loader-middle {
+  display: flex;
+  min-height: 0;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--loader-rule-gap);
 }
 
 .loader-lockup {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  width: 100%;
   align-items: center;
   gap: var(--space-32);
-  width: 100%;
+  grid-template-areas: "flankleft wordmark flankright";
+  grid-template-columns: 1fr auto 1fr;
 }
 
 .loader-flank {
-  font-family: var(--font-body);
+  margin: 0;
   font-size: var(--loader-flank);
+  font-weight: 400;
+  letter-spacing: var(--loader-flank-track);
+  /* Letter-spacing trails the last glyph; pulling it back re-centres the word. */
+  margin-right: calc(var(--loader-flank-track) * -1);
   text-align: center;
-  opacity: 0.7;
+  opacity: 0.72;
+}
+
+.loader-flank-left {
+  grid-area: flankleft;
+}
+
+.loader-flank-right {
+  grid-area: flankright;
 }
 
 .loader-wordmark {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: relative;
+  grid-area: wordmark;
 }
 
-.loader-title {
+/*
+ * The place script is absolutely positioned, so reserve its hang in-flow so
+ * the centred lockup's box includes the swash.
+ */
+.loader-wordmark:has(.loader-place) {
+  padding-bottom: var(--loader-place-hang);
+}
+
+.loader .loader-title {
+  margin: 0;
+  font-size: var(--loader-title);
+  line-height: 1.04;
   text-align: center;
+  white-space: nowrap;
+}
+
+/* Each line is masked by its own frame, so the lines arrive one at a time. */
+.loader-title-line {
+  display: block;
+  overflow: hidden;
+}
+
+.loader-title-line-inner {
+  display: block;
 }
 
 .loader-place {
+  position: absolute;
+  bottom: var(--loader-place-hang);
+  left: 50%;
+  z-index: 1;
+  margin: 0;
   font-family: var(--font-accent);
   font-size: var(--loader-place);
   line-height: 1;
-  margin-top: calc(var(--space-24) * -1);
-  margin-left: calc(var(--space-32) * -1);
-  transform: rotate(-12deg);
+  /* Sits across the wordmark's last baseline, a shade right of its axis. */
+  translate: -40% 58%;
+  rotate: -7deg;
+  white-space: nowrap;
+  pointer-events: none;
 }
 
-.loader-bottom {
+.loader-progress {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-24);
+  justify-content: center;
 }
 
 .loader-progress-track {
   position: relative;
-  width: var(--loader-bar);
-  height: 1px;
-  background: color-mix(in oklab, currentColor 20%, transparent);
+  width: 1px;
+  height: var(--loader-rule);
+  background: color-mix(in oklab, currentColor 22%, transparent);
+  transform-origin: top center;
 }
 
 .loader-progress-fill {
   position: absolute;
   inset: 0;
-  transform-origin: left center;
   background: currentColor;
+  transform-origin: top center;
 }
 
 .loader-tagline {
+  margin: 0;
+  font-size: var(--loader-tagline);
+  letter-spacing: 0.14em;
+  line-height: 1.72;
   text-align: center;
-  opacity: 0.8;
+  opacity: 0.82;
+}
+
+.loader-tagline-line {
+  display: block;
+}
+
+/* Entry choreography */
+
+.loader-top,
+.loader-flank,
+.loader-place,
+.loader-tagline {
+  animation: loader-rise 0.9s var(--ease-out) both;
+}
+
+.loader-top {
+  animation-delay: 0s;
+}
+
+.loader-title-line-inner {
+  animation: loader-unmask 0.9s var(--ease-out) both;
+  animation-delay: calc(0.1s + var(--line, 0) * 0.14s);
+}
+
+.loader-place {
+  animation-delay: 0.42s;
+}
+
+.loader-flank-left {
+  animation-delay: 0.5s;
+}
+
+.loader-flank-right {
+  animation-delay: 0.56s;
+}
+
+.loader-progress-track {
+  animation: loader-draw 0.7s var(--ease-in-out) both;
+  animation-delay: 0.34s;
+}
+
+.loader-progress-fill {
+  animation: loader-fill var(--loader-hold) linear both;
+}
+
+.loader-tagline {
+  animation-delay: 0.62s;
+}
+
+@keyframes loader-rise {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes loader-unmask {
+  from {
+    transform: translateY(105%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes loader-draw {
+  from {
+    transform: scale(1, 0);
+  }
+
+  to {
+    transform: scale(1, 1);
+  }
+}
+
+@keyframes loader-fill {
+  from {
+    transform: scaleY(0);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
 }
 
 @keyframes loader-out {
@@ -754,20 +949,70 @@
   }
 }
 
+/*
+ * Compact: the wordmark takes the full width, so the two captions drop beneath
+ * it and hold its outer edges instead of flanking it.
+ */
+
 @media (max-width: 991px) {
   .loader {
-    --loader-flank: calc(19vw / var(--type-scale-ratio));
-    --loader-place: calc(48vw / var(--type-scale-ratio));
-    --loader-bar: calc(96vw / var(--type-scale-ratio));
+    --loader-gutter: calc(72vw / var(--type-scale-ratio));
+    --loader-mark: calc(40vw / var(--type-scale-ratio));
+    --loader-title: calc(54vw / var(--type-scale-ratio));
+    --loader-flank: calc(13vw / var(--type-scale-ratio));
+    --loader-flank-track: 0.5em;
+    --loader-tagline: calc(11vw / var(--type-scale-ratio));
+    --loader-place: calc(56vw / var(--type-scale-ratio));
+    --loader-place-hang: calc(var(--loader-place) * 0.7);
+    --loader-rule: calc(64vw / var(--type-scale-ratio));
+    --loader-rule-gap: calc(32vw / var(--type-scale-ratio));
+  }
+
+  .loader-shell {
+    padding-inline: var(--nav-offset);
+  }
+
+  .loader-lockup {
+    /* The script hangs below the wordmark, so the captions need clearance. */
+    gap: calc(64vw / var(--type-scale-ratio)) var(--space-16);
+    grid-template-areas:
+      "wordmark wordmark"
+      "flankleft flankright";
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .loader-flank-left {
+    justify-self: start;
+    text-align: left;
+  }
+
+  .loader-flank-right {
+    justify-self: end;
+    text-align: right;
   }
 
   .loader-place {
-    margin-top: calc(var(--space-16) * -1);
-    margin-left: calc(var(--space-16) * -1);
+    translate: -42% 55%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* The composition arrives complete; only the hold still passes. */
+  .loader-top,
+  .loader-flank,
+  .loader-place,
+  .loader-tagline,
+  .loader-title-line-inner,
+  .loader-progress-track {
+    animation-duration: 0.01ms;
+    animation-delay: 0ms;
+  }
+
+  /* A static, finished rule rather than one that crawls for two seconds. */
+  .loader-progress-fill {
+    animation: none;
+  }
+
   .loader.is-leaving {
     animation-duration: 0.01ms;
   }
@@ -776,26 +1021,138 @@
 /* Hero */
 
 .hero {
-  --hero-place: calc(120vw / var(--type-scale-ratio));
-  --hero-circle: calc(208vw / var(--type-scale-ratio));
+  /*
+   * Tall runway over one photograph (Era-style). Three stations, each a
+   * viewport: brand → navigators mid-image → CTA at the foot.
+   */
+  --hero-title: calc(120vw / var(--type-scale-ratio));
+  --hero-place: calc(88vw / var(--type-scale-ratio));
+  --hero-sentence: calc(26vw / var(--type-scale-ratio));
+  --hero-circle: calc(168vw / var(--type-scale-ratio));
+  /* ~1.8 viewports: brand → navigators → CTA. */
+  --hero-runway: 180svh;
+  --hero-station: 60svh;
   position: relative;
-  height: 100svh;
+  z-index: 1;
+  display: flex;
+  height: var(--hero-runway);
   min-height: 100svh;
-  overflow: hidden;
+  flex-direction: column;
+  overflow: visible;
   color: var(--tone-fg);
   background: var(--tone-bg);
 }
 
-.hero-media,
-.hero-image {
+.home-open .hero {
+  background: transparent;
+}
+
+.hero-station {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  width: 100%;
+  flex: 1 0 var(--hero-station);
+  min-height: var(--hero-station);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--nav-offset) var(--nav-offset) var(--space-32);
+}
+
+.hero-station-brand {
+  justify-content: flex-start;
+  padding-top: calc(var(--nav-offset) * 1.6);
+}
+
+.hero-station-nav {
+  justify-content: center;
+}
+
+.hero-station-cta {
+  justify-content: flex-end;
+  padding-bottom: var(--space-48);
+}
+
+/*
+ * Media fills the entire runway. As the section scrolls, the viewport travels
+ * down the photograph — sky, house, lawn — with the stations.
+ */
+.hero-media {
   position: absolute;
   inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/*
+ * After the CTA foot, hold the photograph AND the CTA so the arc overlaps
+ * them in place — elements do not scroll away over a static plate.
+ *
+ * Important: keep the image at the runway height and show the same foot
+ * window the visitor was already looking at. Shrinking the media to 100svh
+ * and changing object-position would re-crop the photo and feel like a jump.
+ */
+.hero-media.is-held {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  height: 100svh;
+  width: 100%;
+  overflow: hidden;
+  transform: scale(var(--hero-zoom, 1));
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.hero-media.is-held .hero-image {
+  width: 100%;
+  height: var(--hero-runway);
+  top: calc(100svh - var(--hero-runway));
+  right: 0;
+  bottom: auto;
+  left: 0;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.hero-media.is-held .hero-grade {
+  height: var(--hero-runway);
+  top: calc(100svh - var(--hero-runway));
+  right: 0;
+  bottom: auto;
+  left: 0;
+}
+
+.home-open.is-held .hero-station-cta {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  padding-bottom: calc(var(--space-48) * 2);
+}
+
+/* Dome has closed over the plate — CTA stays under it, not interactive. */
+.home-open.is-arch-covered .hero-station-cta {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.home-open.is-held .hero-station-brand,
+.home-open.is-held .hero-station-nav {
+  visibility: hidden;
+}
+
+.home-open.is-held .arch {
+  z-index: 3;
 }
 
 .hero-image {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center center;
   opacity: 0;
   transition: opacity 0.8s var(--hover-ease);
 }
@@ -815,59 +1172,110 @@
 }
 
 .hero-grade-top {
-  background: linear-gradient(to bottom, rgb(0 0 0 / 0.3), transparent 42%);
+  background: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 0.62),
+    rgb(0 0 0 / 0.34) 38%,
+    rgb(0 0 0 / 0.1) 62%,
+    transparent 78%
+  );
 }
 
 .hero-grade-bot {
   background: linear-gradient(to top, rgb(0 0 0 / 0.45), transparent 48%);
 }
 
+/*
+ * Copy carries no interaction of its own beyond the day/night toggle, which
+ * opts back in. Pins sit in the brand station so their % is first-viewport.
+ */
 .hero-copy {
   position: relative;
   z-index: 2;
   display: flex;
-  height: 100%;
+  width: 100%;
+  pointer-events: none;
   flex-direction: column;
   align-items: center;
-  padding: calc(var(--nav-cell) + var(--nav-offset)) var(--nav-offset)
-    calc(var(--hero-circle) + var(--space-48));
   text-shadow: 0 1px 18px rgb(0 0 0 / 0.45);
 }
 
+.hero-copy-brand {
+  margin-top: clamp(1rem, 4vh, 2.5rem);
+}
+
+/*
+ * A plate under the lockup. The reference category solves this by choosing a
+ * photograph with sky where the type goes; a plate solves it for any
+ * photograph, which is what an authored template needs.
+ */
+.hero-lockup::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -14% -20%;
+  background: radial-gradient(
+    ellipse 60% 56% at 50% 46%,
+    rgb(0 0 0 / 0.52),
+    rgb(0 0 0 / 0.24) 56%,
+    transparent 82%
+  );
+  pointer-events: none;
+}
+
 .hero-lockup {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: var(--space-48);
 }
 
-.hero-title {
+.hero .hero-title {
+  margin: 0;
+  font-size: var(--hero-title);
+  line-height: 0.96;
   text-align: center;
 }
 
 .hero-place {
+  align-self: center;
+  margin-top: -0.42em;
+  margin-right: -0.6em;
   font-family: var(--font-accent);
   font-size: var(--hero-place);
   line-height: 1;
-  margin-top: calc(var(--space-48) * -1);
-  margin-left: calc(var(--space-32) * -1);
-  transform: rotate(-12deg);
+  transform: rotate(-7deg);
+}
+
+/*
+ * The day/night navigators sit mid-image as their own station, so the phrase
+ * reads across the photograph rather than competing with the brand lockup.
+ */
+.hero-sentence-wrap {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  text-shadow: 0 1px 18px rgb(0 0 0 / 0.45);
 }
 
 .hero-sentence {
   display: flex;
-  width: min(72vw, 56rem);
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-24);
-  margin-top: var(--space-48);
+  width: max-content;
+  max-width: min(84vw, 56rem);
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: var(--space-48);
+  font-size: var(--hero-sentence);
   text-align: center;
 }
 
 .hero-tabs {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-16);
+  pointer-events: auto;
 }
 
 .hero-tab {
@@ -896,10 +1304,7 @@
 }
 
 .hero-cta-wrap {
-  position: absolute;
-  right: 0;
-  bottom: var(--space-48);
-  left: 0;
+  position: relative;
   z-index: 3;
   display: flex;
   justify-content: center;
@@ -1002,37 +1407,40 @@
 
 @media (max-width: 991px) {
   .hero {
+    --hero-title: calc(64vw / var(--type-scale-ratio));
     --hero-place: calc(48vw / var(--type-scale-ratio));
+    --hero-sentence: calc(20vw / var(--type-scale-ratio));
     --hero-circle: min(calc(120vw / var(--type-scale-ratio)), 16svh);
+    --hero-runway: 180svh;
+    --hero-station: 60svh;
   }
 
   .hero-pins {
     display: none;
   }
 
+  .hero-station {
+    padding-inline: var(--nav-offset);
+  }
+
+  .hero-station-brand {
+    padding-top: calc(var(--nav-cell) + var(--space-48));
+  }
+
   .hero-lockup {
     margin-top: var(--space-16);
   }
 
+  /* The phrase reads down the frame at this width rather than across it. */
   .hero-sentence {
-    width: min(88vw, 40rem);
-    margin-top: var(--space-16);
+    max-width: 88vw;
+    flex-direction: column;
+    gap: var(--space-4);
   }
 
   .hero-place {
-    margin-top: calc(var(--space-24) * -1);
-    margin-left: calc(var(--space-16) * -1);
-  }
-
-  .hero-copy {
-    padding-top: calc(var(--nav-cell) + var(--space-48));
-  }
-}
-
-@media (max-width: 599px) {
-  .hero-sentence {
-    flex-direction: column;
-    gap: var(--space-16);
+    margin-top: -0.3em;
+    margin-right: -0.4em;
   }
 }
 
@@ -1073,6 +1481,8 @@
 
 .story-title {
   width: 100%;
+  max-width: calc(100% - var(--gutter-x) * 2);
+  margin-inline: auto;
   text-align: center;
   line-height: 0.92;
 }
@@ -1133,8 +1543,8 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  justify-content: space-between;
-  gap: var(--space-16);
+  justify-content: center;
+  gap: var(--space-32);
 }
 
 .story-slide-top {
@@ -1184,6 +1594,7 @@
   justify-content: center;
   gap: var(--space-16);
   min-height: var(--space-48);
+  margin-top: var(--space-32);
 }
 
 .story-pag-btn {
@@ -1296,8 +1707,8 @@
   max-width: min(46rem, 58vw);
   flex-direction: column;
   gap: var(--space-32);
-  padding: calc(var(--nav-cell) + var(--nav-offset)) var(--nav-offset)
-    calc(var(--nav-cell) + var(--nav-offset) + var(--space-48));
+  padding: var(--gutter-top) var(--nav-offset)
+    calc(var(--nav-cell) + var(--nav-offset) + var(--space-48)) var(--gutter-x);
   text-shadow: 0 1px 18px rgb(0 0 0 / 0.45);
 }
 
@@ -1385,168 +1796,6 @@
   }
 }
 
-/* Amenities */
-
-.amenity-scene {
-  position: relative;
-  display: flex;
-  min-height: 100svh;
-  flex-direction: column;
-  justify-content: flex-end;
-  overflow: hidden;
-  color: var(--tone-fg);
-  background: var(--tone-bg);
-}
-
-.amenity-media,
-.amenity-image-zoom,
-.amenity-image {
-  position: absolute;
-  inset: 0;
-}
-
-.amenity-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.amenity-grade {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.amenity-grade-top {
-  background: linear-gradient(to bottom, rgb(0 0 0 / 0.4), transparent 40%);
-}
-
-.amenity-grade-bot {
-  background: linear-gradient(to top, rgb(0 0 0 / 0.55), transparent 46%);
-}
-
-.amenity-intro {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-24);
-  padding: calc(var(--nav-cell) + var(--nav-offset) * 3) var(--nav-offset) 0;
-  text-align: center;
-  text-shadow: 0 1px 18px rgb(0 0 0 / 0.45);
-}
-
-.amenity-eyebrow {
-  opacity: 0.75;
-}
-
-.amenity-caption-wrap {
-  position: relative;
-  z-index: 2;
-  padding: 0 var(--nav-offset) calc(var(--nav-cell) + var(--nav-offset) + var(--space-48));
-  text-shadow: 0 1px 18px rgb(0 0 0 / 0.45);
-}
-
-.amenity-caption {
-  opacity: 0.9;
-}
-
-.amenity-pins {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-}
-
-.amenity-pin {
-  position: absolute;
-  width: 0;
-  height: 0;
-}
-
-.amenity-pin-btn {
-  position: absolute;
-  width: calc(32vw / var(--type-scale-ratio));
-  height: calc(32vw / var(--type-scale-ratio));
-  translate: -50% -50%;
-  cursor: pointer;
-}
-
-.amenity-pin-dot {
-  position: absolute;
-  inset: 40%;
-  border-radius: 50%;
-  background: var(--paper);
-  transition: inset 0.8s var(--hover-ease);
-}
-
-.amenity-pin-btn:hover .amenity-pin-dot,
-.amenity-pin-btn.is-open .amenity-pin-dot {
-  inset: 0;
-}
-
-.amenity-pin-pulse {
-  position: absolute;
-  inset: 0;
-  border: 1px solid var(--paper);
-  border-radius: 50%;
-  animation: amenity-pin-pulse 2.4s var(--hover-ease) infinite;
-}
-
-.amenity-pin-pulse.is-late {
-  animation-delay: 1.2s;
-}
-
-.amenity-pin-card {
-  position: absolute;
-  top: calc(var(--space-32) * -1);
-  left: var(--space-24);
-  width: min(22rem, 56vw);
-  padding: var(--space-24);
-  background: color-mix(in oklab, var(--paper) 92%, transparent);
-  color: var(--ink);
-  text-shadow: none;
-  backdrop-filter: blur(8px);
-  translate: 0 -100%;
-}
-
-@keyframes amenity-pin-pulse {
-  from {
-    transform: scale(0.4);
-    opacity: 0.7;
-  }
-
-  to {
-    transform: scale(2.2);
-    opacity: 0;
-  }
-}
-
-@media (max-width: 991px) {
-  .amenity-pins {
-    display: none;
-  }
-
-  .amenity-intro {
-    padding-top: calc(var(--nav-cell) + var(--space-48));
-  }
-
-  .amenity-caption-wrap {
-    padding-bottom: calc(var(--nav-cell) + var(--space-32));
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .amenity-pin-dot {
-    transition: none;
-  }
-
-  .amenity-pin-pulse {
-    animation: none;
-    opacity: 0.35;
-  }
-}
-
 /* Residence types */
 
 .residence-types {
@@ -1572,8 +1821,8 @@
   flex: 1;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-24);
+  justify-content: center;
+  gap: var(--space-32);
 }
 
 .residence-types-data {
@@ -1630,6 +1879,7 @@
   justify-content: center;
   gap: var(--space-16);
   min-height: var(--space-48);
+  margin-top: var(--space-32);
 }
 
 .residence-types-pag-btn {
@@ -1700,7 +1950,12 @@
 .footer-cta-grade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgb(0 0 0 / 0.35), rgb(0 0 0 / 0.55) 60%, rgb(0 0 0 / 0.75));
+  background: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 0.35),
+    rgb(0 0 0 / 0.55) 60%,
+    rgb(0 0 0 / 0.75)
+  );
 }
 
 .footer-cta-copy {
@@ -1729,14 +1984,19 @@
 
 .footer-cta-action {
   color: inherit;
+  background: none;
+  border: 0;
   border-bottom: 1px solid currentColor;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
 }
 
 .footer-base {
   display: flex;
   flex-direction: column;
   gap: var(--space-48);
-  padding: var(--space-48) var(--nav-offset);
+  padding: var(--space-48) var(--nav-offset) var(--space-48) var(--gutter-x);
 }
 
 .footer-top-link {
@@ -1795,4 +2055,3 @@
     justify-content: space-between;
   }
 }
-

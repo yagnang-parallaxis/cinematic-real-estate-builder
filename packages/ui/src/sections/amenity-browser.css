@@ -1,0 +1,271 @@
+/*
+ * Amenity browser. The compact layout is the base: a horizontal tab bar, a
+ * photograph, and the active panel in normal flow. Desktop layers the pin on
+ * top of it, and reduced-motion unwinds it back to the compact arrangement.
+ */
+
+.amenity-browser-area {
+  position: relative;
+}
+
+.amenity-browser-screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+  overflow: hidden;
+  padding: var(--gutter-top) var(--gutter-x) var(--space-48);
+}
+
+.amenity-browser-stage {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  background: var(--tone-bg);
+}
+
+.amenity-browser-plate {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--dur-m) var(--ease-in-out);
+}
+
+.amenity-browser-plate[data-active="true"] {
+  opacity: 1;
+}
+
+.amenity-browser-intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.amenity-browser-eyebrow {
+  opacity: 0.75;
+}
+
+.amenity-browser-heading {
+  line-height: 0.94;
+}
+
+.amenity-browser-rail {
+  position: relative;
+  display: flex;
+  gap: var(--space-32);
+  overflow-x: auto;
+  border-bottom: 1px solid var(--tone-line);
+  padding-bottom: var(--space-16);
+  scrollbar-width: none;
+}
+
+.amenity-browser-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.amenity-browser-indicator {
+  position: absolute;
+  bottom: calc(var(--space-16) * -1 - 1px);
+  left: 0;
+  width: var(--amenity-browser-ind-w, 0px);
+  height: 1px;
+  background: currentColor;
+  translate: var(--amenity-browser-ind-x, 0px) 0;
+  transition:
+    translate var(--dur-m) var(--ease-out),
+    width var(--dur-m) var(--ease-out),
+    height var(--dur-m) var(--ease-out);
+}
+
+.amenity-browser-tab {
+  display: flex;
+  flex: none;
+  align-items: baseline;
+  gap: var(--space-16);
+  border: 0;
+  background: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.55;
+  text-align: left;
+  transition: opacity var(--dur-s) var(--ease-out);
+}
+
+.amenity-browser-tab[aria-selected="true"] {
+  opacity: 1;
+}
+
+.amenity-browser-tab:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: var(--space-4);
+}
+
+.amenity-browser-tab-index {
+  opacity: 0.6;
+}
+
+.amenity-browser-panel {
+  display: flex;
+  max-width: 34rem;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.amenity-browser-panel[hidden] {
+  display: none;
+}
+
+.amenity-browser-panel:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: var(--space-16);
+}
+
+.amenity-browser-count {
+  opacity: 0.7;
+}
+
+.amenity-browser-title {
+  line-height: 0.96;
+}
+
+.amenity-browser-desc {
+  opacity: 0.86;
+}
+
+.amenity-browser-hint-rule {
+  display: block;
+  width: var(--space-48);
+  height: 1px;
+  background: currentColor;
+}
+
+.amenity-browser-cta {
+  display: none;
+}
+
+@media (min-width: 992px) {
+  /* Extra height below the pinned screen: one band of travel per panel. */
+  .amenity-browser-area {
+    height: calc(100svh + var(--amenity-browser-count, 5) * 80svh);
+  }
+
+  .amenity-browser-screen {
+    position: sticky;
+    top: 0;
+    display: grid;
+    height: 100svh;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto 1fr auto;
+    align-items: start;
+    column-gap: var(--space-48);
+    padding: var(--gutter-top) var(--gutter-x) calc(var(--nav-offset) + var(--nav-cell));
+  }
+
+  .amenity-browser-stage {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    aspect-ratio: auto;
+  }
+
+  .amenity-browser-intro {
+    z-index: 2;
+    grid-column: 1;
+    grid-row: 1;
+    max-width: min(38rem, 48vw);
+  }
+
+  .amenity-browser-rail {
+    z-index: 2;
+    align-self: center;
+    grid-column: 2;
+    grid-row: 2;
+    flex-direction: column;
+    gap: var(--space-24);
+    overflow: visible;
+    border-bottom: 0;
+    border-left: 1px solid var(--tone-line);
+    padding-bottom: 0;
+    padding-left: var(--space-24);
+  }
+
+  .amenity-browser-indicator {
+    bottom: auto;
+    top: 0;
+    left: calc(var(--space-24) * -1 - 1px);
+    width: 1px;
+    height: var(--amenity-browser-ind-h, 0px);
+    translate: 0 var(--amenity-browser-ind-y, 0px);
+  }
+
+  .amenity-browser-tab:hover {
+    opacity: 1;
+  }
+
+  .amenity-browser-panels {
+    z-index: 2;
+    align-self: end;
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .amenity-browser-cta {
+    z-index: 3;
+    display: flex;
+    align-self: end;
+    justify-content: flex-end;
+    grid-column: 2;
+    grid-row: 3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .amenity-browser-area {
+    height: auto;
+  }
+
+  .amenity-browser-screen {
+    position: static;
+    display: flex;
+    height: auto;
+    flex-direction: column;
+    gap: var(--space-32);
+    padding: calc(var(--nav-cell) + var(--space-32)) var(--nav-offset) var(--space-48);
+  }
+
+  .amenity-browser-stage {
+    position: relative;
+    inset: auto;
+    aspect-ratio: 4 / 5;
+  }
+
+  .amenity-browser-rail {
+    flex-direction: row;
+    gap: var(--space-32);
+    overflow-x: auto;
+    border-bottom: 1px solid var(--tone-line);
+    border-left: 0;
+    padding-bottom: var(--space-16);
+    padding-left: 0;
+  }
+
+  .amenity-browser-indicator {
+    bottom: calc(var(--space-16) * -1 - 1px);
+    top: auto;
+    left: 0;
+    width: var(--amenity-browser-ind-w, 0px);
+    height: 1px;
+    translate: var(--amenity-browser-ind-x, 0px) 0;
+    transition: none;
+  }
+
+  .amenity-browser-plate,
+  .amenity-browser-tab {
+    transition: none;
+  }
+
+  .amenity-browser-cta {
+    display: none;
+  }
+}

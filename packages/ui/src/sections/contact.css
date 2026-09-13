@@ -1,0 +1,329 @@
+/*
+ * Contact: a calm row of direct-action channels, a social strip, and a wide
+ * harbour chart with one office pin. Compact turns the chart into a swipeable
+ * strip; desktop lets it sit full-bleed under the copy.
+ */
+
+.contact-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-48);
+  padding: var(--gutter-top) var(--gutter-x) calc(var(--space-48) * 1.5);
+}
+
+.contact-intro {
+  display: grid;
+  gap: var(--space-16);
+  text-align: center;
+}
+
+.contact-eyebrow {
+  opacity: 0.62;
+}
+
+.contact-heading {
+  line-height: 0.96;
+}
+
+/* Channels */
+
+.contact-channels {
+  display: grid;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: var(--space-32);
+}
+
+.contact-channel {
+  display: grid;
+  gap: var(--space-4);
+  justify-items: start;
+}
+
+.contact-channel-label {
+  opacity: 0.56;
+}
+
+.contact-channel-value {
+  color: inherit;
+  text-align: left;
+}
+
+.contact-channel[data-kind="tel"] .contact-channel-value,
+.contact-channel[data-kind="email"] .contact-channel-value {
+  font-size: var(--text-h6);
+}
+
+.contact-channel[data-kind="tel"] .contact-channel-value {
+  white-space: nowrap;
+}
+
+/* Socials */
+
+.contact-socials {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.contact-social {
+  display: flex;
+  align-items: center;
+}
+
+.contact-social + .contact-social::before {
+  content: "";
+  width: 1px;
+  height: calc(16vw / var(--type-scale-ratio));
+  margin-inline: var(--space-16);
+  background: var(--tone-line);
+}
+
+.contact-social-link {
+  display: grid;
+  width: calc(40vw / var(--type-scale-ratio));
+  aspect-ratio: 1;
+  place-items: center;
+  color: inherit;
+}
+
+.contact-social-link svg {
+  width: 62%;
+  transition: scale var(--hover-dur) var(--hover-ease);
+}
+
+/* Map */
+
+.contact-map {
+  display: grid;
+  gap: var(--space-16);
+  width: calc(100% + var(--gutter-x) * 2);
+  margin-inline: calc(var(--gutter-x) * -1);
+}
+
+.contact-map-track {
+  overflow: hidden;
+  background: color-mix(in oklab, var(--ink) 8%, var(--tone-bg));
+}
+
+.contact-map-frame {
+  position: relative;
+  height: calc(420vw / var(--type-scale-ratio));
+  overflow: hidden;
+  background: var(--ink-deep);
+}
+
+.contact-map-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.22;
+  filter: grayscale(1) contrast(1.1);
+}
+
+.contact-chart {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.contact-chart-land {
+  fill: color-mix(in oklab, var(--ink) 72%, var(--shell));
+}
+
+.contact-chart-water {
+  fill: color-mix(in oklab, var(--tide) 34%, var(--ink-deep));
+}
+
+.contact-chart-coast {
+  stroke: color-mix(in oklab, var(--paper) 55%, transparent);
+  stroke-width: 1.6;
+}
+
+.contact-chart-path {
+  stroke: color-mix(in oklab, var(--paper) 62%, transparent);
+  stroke-width: 1.4;
+  stroke-dasharray: 6 9;
+}
+
+.contact-chart-node,
+.contact-chart-yard {
+  fill: none;
+  stroke: color-mix(in oklab, var(--paper) 70%, transparent);
+}
+
+.contact-chart-yard {
+  stroke-width: 1.2;
+}
+
+.contact-chart-label,
+.contact-chart-caption,
+.contact-chart-compass text {
+  fill: color-mix(in oklab, var(--paper) 78%, transparent);
+  font-family: var(--font-body-family);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.contact-chart-label {
+  font-size: 22px;
+}
+
+.contact-chart-caption {
+  font-size: 13px;
+  letter-spacing: 0.16em;
+}
+
+.contact-chart-compass circle,
+.contact-chart-compass path {
+  stroke: color-mix(in oklab, var(--paper) 70%, transparent);
+}
+
+.contact-chart-compass text {
+  text-anchor: middle;
+  letter-spacing: 0.12em;
+}
+
+/* Pin */
+
+.contact-pin {
+  position: absolute;
+  z-index: 2;
+  width: 0;
+  height: 0;
+}
+
+.contact-pin-dot,
+.contact-pin-pulse {
+  position: absolute;
+  border-radius: 50%;
+  translate: -50% -50%;
+}
+
+.contact-pin-dot {
+  width: calc(12vw / var(--type-scale-ratio));
+  height: calc(12vw / var(--type-scale-ratio));
+  background: var(--paper);
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--ink-deep) 28%, transparent);
+}
+
+.contact-pin-pulse {
+  width: calc(28vw / var(--type-scale-ratio));
+  height: calc(28vw / var(--type-scale-ratio));
+  border: 1px solid var(--paper);
+  animation: contact-pin-pulse 2.6s var(--ease-out) infinite;
+}
+
+.contact-pin-pulse-late {
+  animation-delay: 1.3s;
+}
+
+.contact-pin-card {
+  position: absolute;
+  top: calc(var(--space-16) * -1);
+  left: var(--space-16);
+  min-width: 11rem;
+  padding: var(--space-16) var(--space-24);
+  border: 1px solid color-mix(in oklab, var(--paper) 28%, transparent);
+  background: color-mix(in oklab, var(--paper) 92%, transparent);
+  color: var(--ink);
+  translate: 0 -100%;
+}
+
+.contact-pin-hours {
+  opacity: 0.68;
+}
+
+.contact-map-hint {
+  justify-self: center;
+  padding-inline: var(--gutter-x);
+}
+
+.contact-action {
+  display: flex;
+  justify-content: center;
+}
+
+@keyframes contact-pin-pulse {
+  from {
+    scale: 0.45;
+    opacity: 0.7;
+  }
+
+  to {
+    scale: 2.1;
+    opacity: 0;
+  }
+}
+
+@media (max-width: 991px) {
+  .contact-pin-card {
+    left: 50%;
+    translate: -50% calc(-100% - var(--space-16));
+  }
+
+  .contact-map-track {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .contact-map-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .contact-map-frame {
+    width: 168%;
+    height: calc(520vw / var(--type-scale-ratio));
+    scroll-snap-align: start;
+  }
+}
+
+@media (min-width: 992px) {
+  .contact-channels {
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    column-gap: var(--space-24);
+    padding-block: var(--space-16);
+    border-block: 1px solid var(--tone-line);
+  }
+
+  .contact-channel {
+    padding-inline: var(--space-16);
+    border-left: 1px solid var(--tone-line);
+  }
+
+  .contact-channel:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .contact-map-frame {
+    height: min(68vh, calc(720vw / var(--type-scale-ratio)));
+  }
+
+  .contact-social-link:hover svg {
+    scale: 1.14;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-pin-pulse {
+    animation: none;
+    opacity: 0.35;
+    scale: 1.4;
+  }
+
+  .contact-social-link svg {
+    transition: none;
+  }
+}

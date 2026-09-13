@@ -1,0 +1,482 @@
+/*
+ * Concept. Compact is the base layer: a snapping horizontal strip. Desktop
+ * layers the pin on top — a sticky screen inside a tall scroll area, with only
+ * the track's translation written from script. Reduced motion returns to the
+ * strip, so the rules that build the pin are all restated in that block.
+ */
+
+.concept {
+  --concept-span: 2.8;
+  --concept-x: 0px;
+  --concept-progress: 0;
+}
+
+.concept-area {
+  position: relative;
+}
+
+.concept-screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+  padding-block: var(--space-48);
+}
+
+.concept-brow,
+.concept-hint,
+.concept-rail {
+  padding-inline: var(--gutter-x);
+}
+
+.concept-brow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-16);
+}
+
+.concept-kicker {
+  opacity: 0.72;
+}
+
+.concept-count {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.48;
+}
+
+.concept-hint-arrow {
+  width: calc(40vw / var(--type-scale-ratio));
+  flex: none;
+}
+
+/* Track */
+
+.concept-track {
+  display: flex;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.concept-track::-webkit-scrollbar {
+  display: none;
+}
+
+.concept-track:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: calc(-1 * var(--space-4));
+}
+
+.concept-panel {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-24);
+  width: 100%;
+  padding-inline: var(--nav-offset);
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
+.concept-eyebrow {
+  opacity: 0.62;
+}
+
+.concept-heading {
+  max-width: 22ch;
+}
+
+.concept-copy {
+  width: min(100%, calc(560vw / var(--type-scale-ratio)));
+}
+
+.concept-aside {
+  opacity: 0.58;
+}
+
+/* Between: two poles either side of a single plate. */
+
+.concept-between {
+  display: grid;
+  gap: var(--space-24);
+}
+
+.concept-pole {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  border-top: 1px solid var(--tone-line);
+  padding-top: var(--space-16);
+}
+
+.concept-pole-label {
+  opacity: 0.62;
+}
+
+.concept-plate {
+  aspect-ratio: 4 / 3;
+}
+
+.concept-plate img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Route plot */
+
+.concept-route-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.concept-route {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.concept-plot {
+  position: relative;
+  width: 100%;
+  /* Fixed ratio: the waypoint overlay is positioned in the same proportions. */
+  aspect-ratio: 1200 / 420;
+}
+
+.concept-plot-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.concept-plot-shore,
+.concept-plot-line {
+  fill: none;
+  stroke-linecap: round;
+}
+
+/* Stroke widths are user units, so they scale with the plot and are restated
+   at the desktop breakpoint rather than left at the compact value. */
+.concept-plot-shore {
+  stroke: var(--tone-line);
+  stroke-width: 5;
+  stroke-dasharray: 4 22;
+}
+
+.concept-plot-line {
+  stroke: currentColor;
+  stroke-width: 6;
+  stroke-dasharray: var(--concept-path-len, 1400);
+  stroke-dashoffset: var(--concept-path-len, 1400);
+  transition: stroke-dashoffset calc(var(--dur-l) * 2.4) var(--ease-in-out);
+}
+
+.concept-plot-line[data-drawn="true"] {
+  stroke-dashoffset: 0;
+}
+
+/*
+ * Compact: the stops read as a legend under the drawn route, since a 420-unit
+ * tall plot has no room for labels at this width.
+ */
+.concept-stops {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-16);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.concept-stop {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-4);
+  opacity: 0;
+  transition: opacity var(--dur-m) var(--ease-out) calc(var(--stop-index, 0) * 0.05s);
+}
+
+.concept-stop[data-shown="true"] {
+  opacity: 1;
+}
+
+.concept-stop-dot {
+  display: block;
+  width: calc(7vw / var(--type-scale-ratio));
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.concept-stop-detail {
+  display: block;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.56;
+}
+
+/* Close */
+
+.concept-close {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+/* Rail */
+
+.concept-rail {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+}
+
+.concept-rail-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  opacity: 0.34;
+  transition: opacity var(--dur-m) var(--ease-out);
+}
+
+.concept-rail-item[data-state="active"] {
+  opacity: 1;
+}
+
+.concept-rail-item[data-state="past"] {
+  opacity: 0.5;
+}
+
+.concept-rail-dot {
+  width: calc(6vw / var(--type-scale-ratio));
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.concept-rail-tag {
+  display: none;
+}
+
+.concept-rail-track {
+  display: none;
+}
+
+@media (min-width: 992px) {
+  .concept-area {
+    height: calc((1 + var(--concept-span)) * 100vh);
+  }
+
+  .concept-screen {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    padding-block: var(--nav-offset);
+  }
+
+  /* Sized to its panels rather than to the screen, so its own layout width is
+     the distance the pin has to travel. */
+  .concept-track {
+    flex: 1 1 auto;
+    align-self: flex-start;
+    min-height: 0;
+    width: max-content;
+    overflow: visible;
+    scroll-snap-type: none;
+    transform: translate3d(var(--concept-x), 0, 0);
+    will-change: transform;
+  }
+
+  .concept-panel {
+    gap: var(--space-32);
+    width: 100vw;
+    height: 100%;
+  }
+
+  /* The panel under the screen is the only one at full strength. */
+  .concept-panel[data-state="coming"],
+  .concept-panel[data-state="past"] {
+    opacity: 0.4;
+    transition: opacity var(--dur-l) var(--ease-out);
+  }
+
+  .concept-panel[data-state="active"] {
+    opacity: 1;
+    transition: opacity var(--dur-l) var(--ease-out);
+  }
+
+  .concept-between {
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--space-48);
+  }
+
+  .concept-plate {
+    width: calc(380vw / var(--type-scale-ratio));
+    aspect-ratio: 3 / 4;
+  }
+
+  /* Held to a share of the viewport height so the panel never outgrows the pin.
+     The width — not the height — is clamped, since the label overlay is
+     positioned against the plot's own proportions. */
+  .concept-route {
+    width: min(100%, calc(38vh * 1200 / 420));
+  }
+
+  .concept-plot-shore {
+    stroke-width: 1.5;
+  }
+
+  .concept-plot-line {
+    stroke-width: 2;
+  }
+
+  /* The legend becomes labels pinned to their own point on the route. */
+  .concept-stops {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+
+  /* The stop shrinks to its dot, which is then centred on its own waypoint. */
+  .concept-stop {
+    position: absolute;
+    display: block;
+    translate: -50% -50%;
+  }
+
+  .concept-stop-text {
+    position: absolute;
+    left: 50%;
+    display: block;
+    width: max-content;
+    max-width: calc(220vw / var(--type-scale-ratio));
+    translate: -50% 0;
+    text-align: center;
+  }
+
+  .concept-stop[data-place="above"] .concept-stop-text {
+    bottom: calc(100% + var(--space-4));
+  }
+
+  .concept-stop[data-place="below"] .concept-stop-text {
+    top: calc(100% + var(--space-4));
+  }
+
+  .concept-stop[data-align="start"] .concept-stop-text {
+    left: 0;
+    translate: 0 0;
+    text-align: left;
+  }
+
+  .concept-stop[data-align="end"] .concept-stop-text {
+    right: 0;
+    left: auto;
+    translate: 0 0;
+    text-align: right;
+  }
+
+  .concept-close {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-48);
+  }
+
+  .concept-rail-tag {
+    display: block;
+    opacity: 0.72;
+  }
+
+  .concept-rail-track {
+    display: block;
+    flex: 1;
+    height: 1px;
+    background: var(--tone-line);
+  }
+
+  .concept-rail-fill {
+    display: block;
+    height: 100%;
+    background: currentColor;
+    scale: var(--concept-progress) 1;
+    transform-origin: left center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .concept-area {
+    height: auto;
+  }
+
+  .concept-screen {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+
+  .concept-track {
+    align-self: stretch;
+    width: auto;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    transform: none;
+    will-change: auto;
+  }
+
+  .concept-panel {
+    width: 100%;
+    height: auto;
+  }
+
+  .concept-panel[data-state] {
+    opacity: 1;
+    transition: none;
+  }
+
+  /* The strip is swiped here too, so the affordance comes back at every size. */
+  .concept .concept-hint.drag-hint {
+    display: flex;
+  }
+
+  .concept-stops {
+    position: static;
+    display: grid;
+  }
+
+  .concept-stop {
+    position: static;
+    display: grid;
+    translate: none;
+  }
+
+  .concept-stop[data-align] .concept-stop-text {
+    position: static;
+    max-width: none;
+    translate: none;
+    text-align: left;
+  }
+
+  .concept-plot-line,
+  .concept-plot-line[data-drawn="true"] {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+
+  .concept-stop,
+  .concept-rail-item {
+    transition: none;
+  }
+
+  .concept-rail-track {
+    display: none;
+  }
+}

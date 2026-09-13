@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" preserveAspectRatio="xMidYMid meet" role="img">
+<rect width="1200" height="700" fill="#f2efe7"/>
+<text x="64" y="110" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="2" fill="#9aa1a9" text-anchor="start">QUAY BLOCK</text>
+<rect x="64" y="126" width="352" height="132" fill="none" stroke="#9aa1a9" stroke-width="1.6"/>
+<text x="240" y="194" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">011</text>
+<text x="240" y="216" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">132 m²</text>
+<rect x="424" y="126" width="341.33" height="132" fill="#1f2a36" stroke="#1f2a36" stroke-width="3"/>
+<text x="594.67" y="194" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="0" fill="#f2efe7" text-anchor="middle">012</text>
+<text x="594.67" y="216" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="0" fill="#f2efe7" text-anchor="middle">128 m²</text>
+<rect x="773.33" y="126" width="362.67" height="132" fill="none" stroke="#9aa1a9" stroke-width="1.6"/>
+<text x="954.67" y="194" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">013</text>
+<text x="954.67" y="216" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">136 m²</text>
+<line x1="64" y1="295" x2="1136" y2="295" stroke="#9aa1a9" stroke-width="1.2" stroke-dasharray="4 8"/>
+<text x="64" y="285" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="start">Walking path</text>
+<text x="64" y="316" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="2" fill="#9aa1a9" text-anchor="start">PATH BLOCK</text>
+<rect x="64" y="332" width="352" height="132" fill="none" stroke="#9aa1a9" stroke-width="1.6"/>
+<text x="240" y="400" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">021</text>
+<text x="240" y="422" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">141 m²</text>
+<rect x="424" y="332" width="334.52" height="132" fill="none" stroke="#9aa1a9" stroke-width="1.6"/>
+<text x="591.26" y="400" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">022</text>
+<text x="591.26" y="422" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">134 m²</text>
+<rect x="766.52" y="332" width="369.48" height="132" fill="none" stroke="#9aa1a9" stroke-width="1.6"/>
+<text x="951.26" y="400" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">023</text>
+<text x="951.26" y="422" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">148 m²</text>
+<path d="M 64 510 q 24 -9 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0" fill="none" stroke="#9aa1a9" stroke-width="1.4"/>
+<text x="64" y="538" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="start">The channel</text>
+<g stroke="#1f2a36" fill="none" stroke-width="1.6"><circle cx="1112" cy="78" r="20"/><path d="M 1112 90 L 1112 66 M 1107 73 L 1112 66 L 1117 73"/></g><text x="1112" y="116" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="400" letter-spacing="1" fill="#1f2a36" text-anchor="middle">N</text>
+<line x1="64" y1="586" x2="424" y2="586" stroke="#1f2a36" stroke-width="1"/><text x="64" y="612" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="600" letter-spacing="2.4" fill="#1f2a36" text-anchor="start">AURELIA RESIDENCES</text><text x="64" y="634" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="0" fill="#1f2a36" text-anchor="start">Key plan — Garden level</text><text x="64" y="654" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="start">No. 012 shown solid · Quay block · 6 homes on this floor</text>
+</svg>

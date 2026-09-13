@@ -1,0 +1,91 @@
+/*
+ * The route overlay. It sits below the loading screen (z-index 90) and below
+ * the enquiry modal, so on a navigation home the loader takes over as the
+ * cover rather than fighting it.
+ *
+ * `idle` keeps the layer out of the way entirely; only `covering` and
+ * `revealing` paint. Under reduced motion the wipe becomes a plain cross-fade.
+ */
+
+.page-transition {
+  position: fixed;
+  z-index: 85;
+  inset: 0;
+  background: var(--ink);
+  pointer-events: none;
+  will-change: clip-path, opacity;
+}
+
+.page-transition[data-phase="idle"] {
+  display: none;
+}
+
+/* Wipe: the plate closes from the bottom, then opens toward the top. */
+
+.page-transition[data-style="overlay-wipe"][data-phase="covering"] {
+  animation: page-wipe-in var(--dur-s) var(--ease-in-out) both;
+}
+
+.page-transition[data-style="overlay-wipe"][data-phase="revealing"] {
+  animation: page-wipe-out var(--dur-s) var(--ease-in-out) both;
+}
+
+@keyframes page-wipe-in {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes page-wipe-out {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+/* Fade: the same handoff without the directional wipe. */
+
+.page-transition[data-style="overlay-fade"][data-phase="covering"] {
+  animation: page-fade-in var(--dur-s) var(--ease-out) both;
+}
+
+.page-transition[data-style="overlay-fade"][data-phase="revealing"] {
+  animation: page-fade-out var(--dur-s) var(--ease-out) both;
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes page-fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition[data-phase="covering"] {
+    animation: page-fade-in 0.12s linear both;
+  }
+
+  .page-transition[data-phase="revealing"] {
+    animation: page-fade-out 0.12s linear both;
+  }
+}

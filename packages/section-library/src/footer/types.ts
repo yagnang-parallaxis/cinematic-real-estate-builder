@@ -9,6 +9,8 @@ export interface FooterContent {
   ctaSubheading: string;
   ctaBackgroundSrc: string;
   ctaAction: { label: string; href: string };
+  /** Where "To top" points. Defaults to the homepage hero. */
+  topHref?: string;
   phone: string;
   phoneHref: string;
   officeLabel: string;

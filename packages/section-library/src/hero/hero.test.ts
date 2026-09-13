@@ -17,9 +17,27 @@ const sample: HeroContent = {
   nightImageSrc: "https://images.unsplash.com/photo-night",
   nightImageAlt: "The same house after dusk.",
   hotspots: [
-    { id: "stone", label: "Stone that lasts", description: "Limewashed stone and timber.", x: 57, y: 62 },
-    { id: "light", label: "Light through the rooms", description: "Rooms turn toward the water.", x: 27, y: 58 },
-    { id: "street", label: "The quiet street wall", description: "A single opening to the garden.", x: 76, y: 73 },
+    {
+      id: "stone",
+      label: "Stone that lasts",
+      description: "Limewashed stone and timber.",
+      x: 57,
+      y: 62,
+    },
+    {
+      id: "light",
+      label: "Light through the rooms",
+      description: "Rooms turn toward the water.",
+      x: 27,
+      y: 58,
+    },
+    {
+      id: "street",
+      label: "The quiet street wall",
+      description: "A single opening to the garden.",
+      x: 76,
+      y: 73,
+    },
   ],
 };
 

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../../ui/src/styles.css" />
+    <link rel="stylesheet" href="../../ui/src/sections/concept.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--font-body-family);
+      }
+      p,
+      h2,
+      h3,
+      ol {
+        margin: 0;
+      }
+      .spacer {
+        display: grid;
+        place-items: center;
+        height: 70vh;
+        background: var(--ink);
+        color: var(--paper);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="spacer">before</div>
+    <div id="mount">{{SECTION}}</div>
+    <div class="spacer">after</div>
+
+    <script type="module">
+      import {
+        activePanelIndex,
+        panelEntryProgress,
+        pinProgress,
+        revealedWaypointCount,
+        stripIndex,
+        trackTranslation,
+      } from "./logic.js";
+
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => el.setAttribute("data-revealed", "true"));
+
+      const line = document.querySelector(".concept-plot-line");
+      line.style.setProperty("--concept-path-len", String(Math.ceil(line.getTotalLength())));
+      line.setAttribute("data-drawn", "true");
+
+      const area = document.querySelector(".concept-area");
+      const screen = document.querySelector(".concept-screen");
+      const track = document.querySelector(".concept-track");
+      const stops = [...document.querySelectorAll(".concept-stop")];
+      const panels = [...document.querySelectorAll(".concept-panel")];
+      const rail = [...document.querySelectorAll(".concept-rail-item")];
+      const state = (i, active) => (i === active ? "active" : i < active ? "past" : "coming");
+
+      const update = () => {
+        // In strip mode the component drives these from the strip, not the pin.
+        if (getComputedStyle(track).overflowX !== "visible") {
+          const active = stripIndex(track.scrollLeft, track.clientWidth, 4);
+          stops.forEach((el) => el.setAttribute("data-shown", "true"));
+          panels.forEach((el, i) => (el.dataset.state = state(i, active)));
+          rail.forEach((el, i) => (el.dataset.state = state(i, active)));
+          document.querySelector(".concept-count").textContent =
+            `${String(active + 1).padStart(2, "0")} / 04`;
+          window.__state = { strip: true, active };
+          return;
+        }
+
+        const rect = area.getBoundingClientRect();
+        const p = pinProgress({
+          areaTop: rect.top + window.scrollY,
+          areaHeight: rect.height,
+          viewportHeight: window.innerHeight,
+          scrollY: window.scrollY,
+        });
+        const shift = trackTranslation(p, {
+          trackWidth: track.offsetWidth,
+          viewportWidth: screen.clientWidth,
+        });
+        track.style.setProperty("--concept-x", `${shift.toFixed(2)}px`);
+        screen.style.setProperty("--concept-progress", p.toFixed(4));
+
+        const active = activePanelIndex(p, 4);
+        panels.forEach((el, i) => (el.dataset.state = state(i, active)));
+        rail.forEach((el, i) => (el.dataset.state = state(i, active)));
+        document.querySelector(".concept-count").textContent =
+          `${String(active + 1).padStart(2, "0")} / 04`;
+
+        const shown = revealedWaypointCount(panelEntryProgress(p, 4, 2), stops.length);
+        stops.forEach((el, i) =>
+          i < shown ? el.setAttribute("data-shown", "true") : el.removeAttribute("data-shown"),
+        );
+        window.__state = { p, active, shown, shift, trackWidth: track.offsetWidth };
+      };
+
+      window.addEventListener("scroll", update, { passive: true });
+      window.addEventListener("resize", update);
+      window.__update = update;
+      window.__scrollToProgress = (target) => {
+        const rect = area.getBoundingClientRect();
+        const top = rect.top + window.scrollY;
+        window.scrollTo(0, top + target * (rect.height - window.innerHeight));
+        update();
+      };
+      update();
+      window.__ready = true;
+    </script>
+  </body>
+</html>

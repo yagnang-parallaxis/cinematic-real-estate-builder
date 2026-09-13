@@ -1,0 +1,71 @@
+/* Overture: the arched bridge between the hero and the editorial sections. */
+
+.overture {
+  --overture-arch: 34vw;
+}
+
+.overture-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-24);
+  padding: var(--gutter-top) var(--gutter-x) 0;
+  text-align: center;
+}
+
+.overture-eyebrow {
+  opacity: 0.72;
+}
+
+.overture-heading {
+  max-width: 18ch;
+}
+
+.overture-arch {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-32);
+}
+
+/*
+ * The arch is a pill-topped column: the top corner radius is half the column
+ * width, so the shoulder keeps the same curve at every viewport size.
+ */
+.overture-arch-frame {
+  position: relative;
+  width: var(--overture-arch);
+  height: calc(var(--overture-arch) * 1.28);
+  border-radius: calc(var(--overture-arch) / 2) calc(var(--overture-arch) / 2) 0 0;
+  overflow: hidden;
+}
+
+.overture-arch-frame .parallax[data-parallax="image"] {
+  inset: -6% 0;
+}
+
+.overture-arch-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overture-caption {
+  padding-bottom: var(--space-48);
+  opacity: 0.72;
+}
+
+@media (max-width: 991px) {
+  .overture {
+    --overture-arch: 68vw;
+  }
+
+  .overture-shell {
+    padding-top: calc(var(--nav-cell) + var(--space-32));
+    gap: var(--space-16);
+  }
+
+  .overture-heading {
+    font-size: var(--text-h3);
+  }
+}

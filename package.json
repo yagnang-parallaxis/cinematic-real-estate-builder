@@ -15,6 +15,7 @@
     "test": "turbo test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "plans": "node --experimental-strip-types scripts/build-residence-plans.mts",
     "clean": "turbo clean && rm -rf node_modules",
     "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm build"
   },

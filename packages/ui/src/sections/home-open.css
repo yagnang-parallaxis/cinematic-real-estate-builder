@@ -1,0 +1,18 @@
+/*
+ * Home open: hero photograph scrolls with its stations, then a lead + arch
+ * hold the finale frame so the dome can rise over the CTA without a second image.
+ */
+
+.home-open {
+  position: relative;
+}
+
+/*
+ * Distance-as-pause: after the CTA foot, zoom settles on the held frame before
+ * the arch section starts scrubbing the dome.
+ */
+.home-open-lead {
+  /* ~one viewport of settle/zoom before the arch scrub begins. */
+  height: 100svh;
+  pointer-events: none;
+}

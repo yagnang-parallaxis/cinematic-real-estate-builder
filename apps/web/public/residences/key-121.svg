@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" preserveAspectRatio="xMidYMid meet" role="img">
+<rect width="1200" height="700" fill="#f2efe7"/>
+<text x="64" y="110" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="2" fill="#9aa1a9" text-anchor="start">QUAY BLOCK</text>
+<rect x="64" y="126" width="348.48" height="132" fill="none" stroke="#9aa1a9" stroke-width="1.6"/>
+<text x="238.24" y="194" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">111</text>
+<text x="238.24" y="216" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">99 m²</text>
+<rect x="420.48" y="126" width="341.44" height="132" fill="none" stroke="#9aa1a9" stroke-width="1.6"/>
+<text x="591.2" y="194" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">112</text>
+<text x="591.2" y="216" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">97 m²</text>
+<rect x="769.92" y="126" width="366.08" height="132" fill="none" stroke="#9aa1a9" stroke-width="1.6"/>
+<text x="952.96" y="194" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">113</text>
+<text x="952.96" y="216" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">104 m²</text>
+<line x1="64" y1="295" x2="1136" y2="295" stroke="#9aa1a9" stroke-width="1.2" stroke-dasharray="4 8"/>
+<text x="64" y="285" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="start">Walking path</text>
+<text x="64" y="316" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="2" fill="#9aa1a9" text-anchor="start">PATH BLOCK</text>
+<rect x="64" y="332" width="540.02" height="132" fill="#1f2a36" stroke="#1f2a36" stroke-width="3"/>
+<text x="334.01" y="400" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="0" fill="#f2efe7" text-anchor="middle">121</text>
+<text x="334.01" y="422" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="0" fill="#f2efe7" text-anchor="middle">101 m²</text>
+<rect x="612.02" y="332" width="523.98" height="132" fill="none" stroke="#9aa1a9" stroke-width="1.6"/>
+<text x="874.01" y="400" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">122</text>
+<text x="874.01" y="422" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="middle">98 m²</text>
+<path d="M 64 510 q 24 -9 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0 t 48 0" fill="none" stroke="#9aa1a9" stroke-width="1.4"/>
+<text x="64" y="538" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="start">The channel</text>
+<g stroke="#1f2a36" fill="none" stroke-width="1.6"><circle cx="1112" cy="78" r="20"/><path d="M 1112 90 L 1112 66 M 1107 73 L 1112 66 L 1117 73"/></g><text x="1112" y="116" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="400" letter-spacing="1" fill="#1f2a36" text-anchor="middle">N</text>
+<line x1="64" y1="586" x2="424" y2="586" stroke="#1f2a36" stroke-width="1"/><text x="64" y="612" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="600" letter-spacing="2.4" fill="#1f2a36" text-anchor="start">AURELIA RESIDENCES</text><text x="64" y="634" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="0" fill="#1f2a36" text-anchor="start">Key plan — First floor</text><text x="64" y="654" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="400" letter-spacing="0" fill="#9aa1a9" text-anchor="start">No. 121 shown solid · Path block · 5 homes on this floor</text>
+</svg>

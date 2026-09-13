@@ -8,6 +8,13 @@ import { HoverSlide } from "../shared/HoverSlide";
 import { clampHotspots, magneticOffset, resolveHeroMedia } from "./logic";
 import type { HeroContent, HeroVariant } from "./types";
 
+/**
+ * Tall scrollable photograph with three stations along its height.
+ *
+ * The media fills the whole runway and scrolls with the page — sky in the
+ * first viewport, the house mid-frame with the navigators, lawn and CTA at
+ * the foot — so the image itself travels, not a static plate under moving type.
+ */
 export function Hero({ content }: { content: HeroContent }) {
   const [variant, setVariant] = useState<HeroVariant>("day");
   const [openPin, setOpenPin] = useState<string | null>(null);
@@ -45,9 +52,17 @@ export function Hero({ content }: { content: HeroContent }) {
 
   return (
     <section id="hero" data-tone="media" data-nav-tone="on-media" data-hero-variant={variant}>
-      <Animated type="pinnedSection" config={{ distance: 1 }} className="hero">
+      <div className="hero">
+        {/*
+         * The photograph is as tall as the runway. Scrolling the section is
+         * scrolling the image — stations are landmarks along that travel.
+         */}
         <div className="hero-media" aria-hidden="true">
-          <img src={day.src} alt="" className={cn("hero-image", variant === "day" && "is-active")} />
+          <img
+            src={day.src}
+            alt=""
+            className={cn("hero-image", variant === "day" && "is-active")}
+          />
           {content.nightImageSrc ? (
             <img
               src={night.src}
@@ -59,65 +74,80 @@ export function Hero({ content }: { content: HeroContent }) {
           <div className="hero-grade hero-grade-bot" />
         </div>
 
-        <ul className="hero-pins">
-          {hotspots.map((pin) => {
-            const open = openPin === pin.id;
-            return (
-              <li key={pin.id} className="hero-pin" style={{ top: `${pin.y}%`, left: `${pin.x}%` }}>
-                <button
-                  type="button"
-                  className={cn("hero-pin-btn", open && "is-open")}
-                  aria-expanded={open}
-                  aria-controls={`${tablistId}-${pin.id}`}
-                  onClick={() => setOpenPin(open ? null : pin.id)}
-                  onMouseEnter={() => {
-                    if (window.matchMedia("(min-width: 992px)").matches) {
-                      setOpenPin(pin.id);
-                    }
-                  }}
-                  onMouseLeave={() => {
-                    if (window.matchMedia("(min-width: 992px)").matches) {
-                      setOpenPin(null);
-                    }
-                  }}
+        <div className="hero-station hero-station-brand">
+          <ul className="hero-pins">
+            {hotspots.map((pin) => {
+              const open = openPin === pin.id;
+              return (
+                <li
+                  key={pin.id}
+                  className="hero-pin"
+                  style={{ top: `${pin.y}%`, left: `${pin.x}%` }}
                 >
-                  <span className="hero-pin-dot" />
-                  <span className="hero-pin-pulse" />
-                  <span className="hero-pin-pulse is-late" />
-                  <span className="sr-only">{pin.label}</span>
-                </button>
-                {open ? (
-                  <div id={`${tablistId}-${pin.id}`} className="hero-pin-card" role="tooltip">
-                    <p className="t-h5">{pin.label}</p>
-                    <p className="t-body">{pin.description}</p>
-                  </div>
-                ) : null}
-              </li>
-            );
-          })}
-        </ul>
+                  <button
+                    type="button"
+                    className={cn("hero-pin-btn", open && "is-open")}
+                    aria-expanded={open}
+                    aria-controls={`${tablistId}-${pin.id}`}
+                    onClick={() => setOpenPin(open ? null : pin.id)}
+                    onMouseEnter={() => {
+                      if (window.matchMedia("(min-width: 992px)").matches) {
+                        setOpenPin(pin.id);
+                      }
+                    }}
+                    onMouseLeave={() => {
+                      if (window.matchMedia("(min-width: 992px)").matches) {
+                        setOpenPin(null);
+                      }
+                    }}
+                  >
+                    <span className="hero-pin-dot" />
+                    <span className="hero-pin-pulse" />
+                    <span className="hero-pin-pulse is-late" />
+                    <span className="sr-only">{pin.label}</span>
+                  </button>
+                  {open ? (
+                    <div id={`${tablistId}-${pin.id}`} className="hero-pin-card" role="tooltip">
+                      <p className="t-h5">{pin.label}</p>
+                      <p className="t-body">{pin.description}</p>
+                    </div>
+                  ) : null}
+                </li>
+              );
+            })}
+          </ul>
 
-        <div className="hero-copy">
-          <div className="hero-lockup">
-            <Animated
-              type="textReveal"
-              config={{ duration: 1.1, trigger: "on-load" }}
-              as="h1"
-              className="t-h1 hero-title"
-            >
-              {headingLines.map((line) => (
-                <span key={line}>
-                  {line}
-                  <br />
-                </span>
-              ))}
-            </Animated>
-            <Animated type="textReveal" config={{ duration: 0.9, delay: 0.08, trigger: "on-load" }}>
-              <p className="hero-place">{content.place}</p>
-            </Animated>
+          <div className="hero-copy hero-copy-brand">
+            <div className="hero-lockup">
+              <Animated
+                type="textReveal"
+                config={{ duration: 1.1, trigger: "on-load" }}
+                as="h1"
+                className="t-h1 hero-title"
+              >
+                {headingLines.map((line) => (
+                  <span key={line}>
+                    {line}
+                    <br />
+                  </span>
+                ))}
+              </Animated>
+              <Animated
+                type="textReveal"
+                config={{ duration: 0.9, delay: 0.08, trigger: "on-load" }}
+              >
+                <p className="hero-place">{content.place}</p>
+              </Animated>
+            </div>
           </div>
+        </div>
 
-          <Animated type="fadeUp" config={{ duration: 0.8, delay: 0.16, trigger: "on-load" }}>
+        <div className="hero-station hero-station-nav">
+          <Animated
+            type="fadeUp"
+            config={{ duration: 0.8, trigger: "on-scroll-enter" }}
+            className="hero-sentence-wrap"
+          >
             <div className="hero-sentence t-h5">
               <span>{content.supportingBefore}</span>
               <div className="hero-tabs" role="tablist" aria-label="Light">
@@ -146,24 +176,30 @@ export function Hero({ content }: { content: HeroContent }) {
           </Animated>
         </div>
 
-        <Animated type="fadeUp" config={{ duration: 0.7, delay: 0.24, trigger: "on-load" }} className="hero-cta-wrap">
-          <a
-            ref={ctaRef}
-            href={content.cta.href}
-            className="hero-cta"
-            onMouseMove={onCtaMove}
-            onMouseLeave={() => setPull({ x: 0, y: 0 })}
+        <div className="hero-station hero-station-cta">
+          <Animated
+            type="fadeUp"
+            config={{ duration: 0.7, trigger: "on-scroll-enter" }}
+            className="hero-cta-wrap"
           >
-            <span className="hero-cta-ring" aria-hidden="true" />
-            <span
-              className="hero-cta-label t-label"
-              style={{ transform: `translate(${pull.x}px, ${pull.y}px)` }}
+            <a
+              ref={ctaRef}
+              href={content.cta.href}
+              className="hero-cta"
+              onMouseMove={onCtaMove}
+              onMouseLeave={() => setPull({ x: 0, y: 0 })}
             >
-              <HoverSlide align="center">{content.cta.label}</HoverSlide>
-            </span>
-          </a>
-        </Animated>
-      </Animated>
+              <span className="hero-cta-ring" aria-hidden="true" />
+              <span
+                className="hero-cta-label t-label"
+                style={{ transform: `translate(${pull.x}px, ${pull.y}px)` }}
+              >
+                <HoverSlide align="center">{content.cta.label}</HoverSlide>
+              </span>
+            </a>
+          </Animated>
+        </div>
+      </div>
     </section>
   );
 }

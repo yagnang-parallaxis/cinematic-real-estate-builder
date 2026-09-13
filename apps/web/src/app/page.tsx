@@ -1,23 +1,37 @@
 import {
-  Amenities,
+  AmenityBrowser,
   Architecture,
+  Assurance,
+  Concept,
+  Contact,
+  EnquiryModal,
   Footer,
-  Hero,
+  HomeOpen,
+  Interiors,
+  Location,
   LoadingScreen,
   Navigation,
+  Overture,
   ResidenceTypes,
-  Storytelling,
+  Statement,
 } from "@cinematic/section-library";
 
+import { amenityBrowser } from "../content/amenity-browser";
+import { storyArch } from "../content/arch";
+import { contact } from "../content/contact";
+import { assurance } from "../content/assurance";
+import { concept } from "../content/concept";
+import { enquiry } from "../content/enquiry";
+import { interiors } from "../content/interiors";
+import { location } from "../content/location";
+import { closingView, conceptCallout, overture, residenceFigures } from "../content/passages";
 import {
-  amenities,
   architecture,
   footer,
   hero,
   loading,
   navigation,
   residenceTypes,
-  story,
 } from "../content/site";
 
 export default async function HomePage({
@@ -32,13 +46,22 @@ export default async function HomePage({
       <LoadingScreen content={loading} forceVisible={params.loader === "1"} />
       <Navigation content={navigation} />
       <main id="content">
-        <Hero content={hero} />
-        <Storytelling content={story} />
+        <HomeOpen hero={hero} arch={storyArch} />
+        <Overture content={overture} />
+        <Statement content={conceptCallout} />
+        <Concept content={concept} />
+        <Location content={location} />
         <ResidenceTypes content={residenceTypes} />
+        <Statement content={residenceFigures} />
+        <AmenityBrowser content={amenityBrowser} />
+        <Interiors content={interiors} />
         <Architecture content={architecture} />
-        <Amenities content={amenities} />
+        <Assurance content={assurance} />
+        <Statement content={closingView} />
+        <Contact content={contact} />
         <Footer content={footer} />
       </main>
+      <EnquiryModal content={enquiry} />
     </>
   );
 }

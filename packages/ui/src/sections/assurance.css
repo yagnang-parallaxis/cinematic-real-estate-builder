@@ -1,0 +1,236 @@
+/*
+ * Assurance. This block answers who is building the thing, so it is
+ * deliberately the quietest on the page: no parallax, no pinning, one column
+ * of disclosure rows with the supporting image kept subordinate to the text.
+ */
+
+.assurance {
+  display: grid;
+  gap: var(--space-48);
+  padding: var(--gutter-top) var(--gutter-x) max(var(--space-48), 4.5rem);
+}
+
+.assurance-intro {
+  display: grid;
+  gap: var(--space-16);
+  text-align: center;
+}
+
+.assurance-eyebrow {
+  opacity: 0.6;
+}
+
+.assurance-lead {
+  opacity: 0.82;
+}
+
+.assurance-body {
+  display: grid;
+  gap: var(--space-48);
+  align-items: start;
+}
+
+/* Rows */
+
+.assurance-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--tone-line);
+}
+
+.assurance-row {
+  border-bottom: 1px solid var(--tone-line);
+}
+
+.assurance-row-heading {
+  margin: 0;
+}
+
+.assurance-row-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-24);
+  width: 100%;
+  padding-block: var(--space-24);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.assurance-row-trigger:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: calc(var(--space-4) * -1);
+}
+
+.assurance-row-title,
+.assurance-mark {
+  transition: opacity var(--dur-s) var(--ease-out);
+}
+
+/*
+ * The plus becomes a cross by rotating both strokes rather than swapping one
+ * glyph for another, so the mark stays a single continuous movement.
+ */
+.assurance-mark {
+  position: relative;
+  flex: none;
+  width: calc(22vw / var(--type-scale-ratio));
+  height: calc(22vw / var(--type-scale-ratio));
+}
+
+.assurance-mark-stroke {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transition: rotate var(--dur-m) var(--ease-in-out);
+}
+
+.assurance-mark-stroke:nth-child(2) {
+  rotate: 90deg;
+}
+
+.assurance-row[data-open="true"] .assurance-mark-stroke {
+  rotate: 45deg;
+}
+
+.assurance-row[data-open="true"] .assurance-mark-stroke:nth-child(2) {
+  rotate: 135deg;
+}
+
+/* Panels animate to their own content height: 0fr → 1fr, no measured pixels. */
+
+.assurance-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--dur-m) var(--ease-in-out),
+    opacity var(--dur-s) var(--ease-out);
+}
+
+.assurance-row[data-open="true"] .assurance-panel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.assurance-panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.assurance-panel-body {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-16);
+  max-width: 38rem;
+  padding-bottom: var(--space-24);
+}
+
+.assurance-detail {
+  opacity: 0.86;
+}
+
+.assurance-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding-bottom: var(--space-4);
+  color: inherit;
+  border-bottom: 1px solid color-mix(in oklab, currentColor 35%, transparent);
+  transition: border-color var(--dur-s) var(--ease-out);
+}
+
+.assurance-link:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: var(--space-4);
+}
+
+.assurance-link-arrow {
+  flex: none;
+  width: calc(13vw / var(--type-scale-ratio));
+  height: auto;
+  transition: translate var(--dur-s) var(--ease-out);
+}
+
+/* Supporting image */
+
+.assurance-aside {
+  display: grid;
+  gap: var(--space-16);
+}
+
+.assurance-figure {
+  display: grid;
+  gap: var(--space-16);
+  margin: 0;
+}
+
+.assurance-frame {
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+}
+
+.assurance-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.assurance-caption {
+  opacity: 0.6;
+}
+
+.assurance-note {
+  text-align: center;
+  opacity: 0.55;
+}
+
+@media (min-width: 992px) {
+  .assurance-body {
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+    gap: calc(var(--space-48) * 1.5);
+  }
+
+  .assurance-row-trigger:hover .assurance-row-title,
+  .assurance-row-trigger:hover .assurance-mark {
+    opacity: 0.55;
+  }
+
+  .assurance-link:hover {
+    border-bottom-color: currentColor;
+  }
+
+  .assurance-link:hover .assurance-link-arrow {
+    translate: 0.18em -0.18em;
+  }
+}
+
+@media (max-width: 991px) {
+  .assurance {
+    gap: var(--space-32);
+  }
+
+  .assurance-body {
+    gap: var(--space-32);
+  }
+
+  .assurance-frame {
+    aspect-ratio: 3 / 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .assurance-panel,
+  .assurance-mark,
+  .assurance-mark-stroke,
+  .assurance-row-title,
+  .assurance-link,
+  .assurance-link-arrow {
+    transition: none;
+  }
+}

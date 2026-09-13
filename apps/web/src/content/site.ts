@@ -1,5 +1,4 @@
 import type {
-  AmenitiesContent,
   ArchitectureContent,
   FooterContent,
   HeroContent,
@@ -12,7 +11,7 @@ import type {
 export const navigation: NavigationContent = {
   brand: "Aurelia",
   homeHref: "/",
-  primary: { label: "Select a residence", href: "#residences", lines: ["Select a", "residence"] },
+  primary: { label: "Select a residence", href: "/residences", lines: ["Select a", "residence"] },
   links: [],
   cta: { label: "Book a call", href: "#visit" },
   contact: { label: "Contact", href: "#visit" },
@@ -20,6 +19,16 @@ export const navigation: NavigationContent = {
   overlayTitle: "Menu",
   scrollLabel: "Scroll",
   showProgress: true,
+};
+
+/**
+ * The same chrome on the residence pages, with every in-page anchor pointed
+ * back at the homepage so "Contact" and "Book a call" still land somewhere.
+ */
+export const subpageNavigation: NavigationContent = {
+  ...navigation,
+  contact: { label: "Contact", href: "/#visit" },
+  cta: { label: "Book a call", href: "/#visit" },
 };
 
 export const loading: LoadingContent = {
@@ -41,13 +50,13 @@ export const hero: HeroContent = {
   supportingAfter: "above the water",
   dayLabel: "by day",
   nightLabel: "by night",
-  cta: { label: "Select a residence", href: "#residences" },
+  cta: { label: "Select a residence", href: "/residences" },
   imageSrc:
-    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=80",
-  imageAlt: "A timber and stone house facing a still inlet in afternoon light.",
+    "https://cdn.prod.website-files.com/6a068da7ad91b057365bf967/6a25da81dce540a251389928_era-residence_gated-community_day.webp",
+  imageAlt: "Sunlit gated courtyard with a turquoise pool, stone residences and open sky.",
   nightImageSrc:
-    "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=2400&q=80",
-  nightImageAlt: "A house seen after dark, interior lights on toward the garden.",
+    "https://cdn.prod.website-files.com/6a068da7ad91b057365bf967/6a25da81dce540a251389928_era-residence_gated-community_day.webp",
+  nightImageAlt: "The courtyard after the light softens across the pool and stone.",
   hotspots: [
     {
       id: "stone",
@@ -121,66 +130,6 @@ export const architecture: ArchitectureContent = {
   cta: { label: "Book a call", href: "#visit" },
 };
 
-export const amenities: AmenitiesContent = {
-  eyebrow: "A life, considered",
-  heading: "Every day, somewhere to be.",
-  headingLines: ["Every day,", "somewhere to be."],
-  scenes: [
-    {
-      id: "garden",
-      caption: "A garden of its own",
-      imageSrc:
-        "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=2400&q=80",
-      hotspots: [
-        {
-          id: "old-tree",
-          label: "Built around what was already there",
-          description: "The plan was drawn after the tree, not the other way around.",
-          x: 46,
-          y: 32,
-        },
-        {
-          id: "outdoor-table",
-          label: "A table just past the glass",
-          description: "Indoor and outdoor dining share one long sightline.",
-          x: 78,
-          y: 62,
-        },
-      ],
-    },
-    {
-      id: "pool",
-      caption: "Where evenings gather",
-      imageSrc:
-        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2400&q=80",
-      hotspots: [
-        {
-          id: "long-pool",
-          label: "A pool built for the whole day",
-          description: "Long enough for laps at dawn and for doing nothing by dusk.",
-          x: 48,
-          y: 72,
-        },
-      ],
-    },
-    {
-      id: "living",
-      caption: "Light, kept for the mornings",
-      imageSrc:
-        "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=2400&q=80",
-      hotspots: [
-        {
-          id: "reading-corner",
-          label: "A corner for slow mornings",
-          description: "Deep enough for one chair, or two, depending on the day.",
-          x: 22,
-          y: 60,
-        },
-      ],
-    },
-  ],
-};
-
 export const residenceTypes: ResidenceTypesContent = {
   eyebrow: "Residences",
   types: [
@@ -209,7 +158,7 @@ export const residenceTypes: ResidenceTypesContent = {
     {
       id: "penthouse",
       name: "Penthouse residence",
-      bedrooms: "3",
+      bedrooms: "3 – 4",
       areaRange: "164 – 198 m²",
       description:
         "The top level of the building, under a high ceiling, with a rooftop solarium reached by its own stair.",
@@ -238,4 +187,9 @@ export const footer: FooterContent = {
     { label: "Terms of use", href: "#" },
   ],
   credit: { label: "Studio North", href: "#" },
+};
+
+export const subpageFooter: FooterContent = {
+  ...footer,
+  topHref: "#content",
 };

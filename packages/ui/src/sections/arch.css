@@ -1,0 +1,198 @@
+/*
+ * Arch: the handoff after the hero photograph has been scrolled. A dome grows
+ * out of the bottom of a pinned stage over that same frame until it covers the
+ * screen in the incoming tone — with the incoming heading set along its curve.
+ *
+ * The section is tall; the stage inside it is sticky and viewport-high, so the
+ * scroll through the extra height is what drives the dome. Below 992px, and
+ * under reduced motion, the section collapses to one viewport and the dome is
+ * held part way up as a still composition.
+ */
+
+.arch {
+  --arch-curve: calc(52vw / var(--type-scale-ratio));
+  --arch-mark: calc(56vw / var(--type-scale-ratio));
+  --arch-rule: calc(232vw / var(--type-scale-ratio));
+  --arch-flank-gap: calc(96vw / var(--type-scale-ratio));
+  position: relative;
+  z-index: 1;
+}
+
+/*
+ * Beat the global `[data-tone] { background }` rule. The photograph has to show
+ * through the stage until the dome covers it — an opaque tone plate here paints
+ * cream over the image and hides the dome edge (cream on cream).
+ */
+.arch[data-tone] {
+  background: transparent;
+}
+
+.arch-stage {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.arch-backdrop {
+  position: absolute;
+  inset: 0;
+}
+
+.arch-backdrop-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Match the foot of the tall hero frame the visitor just left. */
+  object-position: center 78%;
+  /* Overscanned, so the drift never exposes an edge. */
+  scale: 1.06;
+}
+
+.arch-backdrop-grade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgb(0 0 0 / 0.34), transparent 46%);
+  pointer-events: none;
+}
+
+/* The photograph is faded out of the outgoing tone rather than cut from it. */
+.arch-enter {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: clamp(4rem, 20vh, 15rem);
+  background: linear-gradient(to bottom, var(--seam-bg), transparent);
+  pointer-events: none;
+}
+
+.arch-cap {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 34%;
+  background: linear-gradient(to bottom, var(--tone-bg) 42%, transparent);
+  pointer-events: none;
+}
+
+.arch-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.arch-dome {
+  fill: var(--tone-bg);
+}
+
+.arch-curve {
+  fill: var(--tone-fg);
+  font-family: var(--font-arch, var(--font-display));
+  font-size: var(--arch-curve);
+  font-weight: 500;
+  font-optical-sizing: auto;
+  font-variation-settings: "opsz" 72;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* The interior arrives once the dome is nearly closed. */
+
+/* `top` is set from the dome's geometry; the height follows from it. */
+.arch-interior {
+  position: absolute;
+  inset: 0 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-48);
+  padding: 0 var(--gutter-x) calc(var(--space-48) * 2);
+  color: var(--tone-fg);
+  pointer-events: none;
+}
+
+.arch-mark-row {
+  display: grid;
+  align-items: center;
+  gap: var(--arch-flank-gap);
+  grid-template-columns: 1fr auto 1fr;
+}
+
+.arch-flank {
+  color: color-mix(in oklab, currentColor 66%, transparent);
+  text-align: center;
+}
+
+.arch-flank:first-child {
+  text-align: right;
+}
+
+.arch-flank:last-child {
+  text-align: left;
+}
+
+.arch-mark {
+  width: var(--arch-mark);
+  height: var(--arch-mark);
+}
+
+.arch-rule {
+  width: 1px;
+  height: var(--arch-rule);
+  background: color-mix(in oklab, currentColor 30%, transparent);
+}
+
+.arch-tagline {
+  margin: auto 0 0;
+  color: color-mix(in oklab, currentColor 78%, transparent);
+  letter-spacing: 0.14em;
+  line-height: 1.72;
+  text-align: center;
+}
+
+.arch-tagline-line {
+  display: block;
+}
+
+/* Desktop: the section is tall and the stage sticks, which is the scrub range. */
+
+@media (min-width: 992px) {
+  .arch[data-arch-scrub="true"] {
+    height: 260svh;
+  }
+
+  .arch[data-arch-scrub="true"] .arch-stage {
+    position: sticky;
+    top: 0;
+  }
+
+  .arch-backdrop-image {
+    transition: translate 0.1s linear;
+  }
+}
+
+/* Compact: one viewport, the dome held still part way up. */
+
+@media (max-width: 991px) {
+  .arch {
+    --arch-curve: calc(24vw / var(--type-scale-ratio));
+    --arch-mark: calc(36vw / var(--type-scale-ratio));
+    --arch-rule: calc(72vw / var(--type-scale-ratio));
+    --arch-flank-gap: calc(48vw / var(--type-scale-ratio));
+  }
+
+  .arch-interior {
+    gap: var(--space-24);
+    padding: 0 var(--nav-offset) var(--space-48);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arch-backdrop-image {
+    transition: none;
+    translate: none;
+  }
+}

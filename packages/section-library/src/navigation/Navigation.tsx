@@ -4,6 +4,8 @@ import { Animated } from "@cinematic/animation-engine";
 import { cn } from "@cinematic/ui";
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 
+import { EnquiryTrigger } from "../enquiry/EnquiryTrigger";
+import { useEnquiry } from "../enquiry/EnquiryProvider";
 import { BrandMark, BrandRing, ScrollChevron } from "../shared/BrandMark";
 import { HoverSlide } from "../shared/HoverSlide";
 import {
@@ -45,6 +47,7 @@ export function Navigation({
   content: NavigationContent;
   currentPath?: string;
 }) {
+  const { open: openEnquiry } = useEnquiry();
   const [open, setOpen] = useState(false);
   const [progress, setProgress] = useState(0);
   const [tone, setTone] = useState<NavTone>("on-dark");
@@ -150,9 +153,9 @@ export function Navigation({
               </a>
             ) : null}
             {content.cta ? (
-              <a href={content.cta.href} className="nav-action">
+              <EnquiryTrigger source="navigation" className="nav-action">
                 <HoverSlide className="t-label">{content.cta.label}</HoverSlide>
-              </a>
+              </EnquiryTrigger>
             ) : null}
             {content.contact ? (
               <a href={content.contact.href} className="nav-action nav-action-tight">
@@ -215,20 +218,43 @@ export function Navigation({
               <p className="t-h1">{content.overlayTitle ?? "Menu"}</p>
             </div>
             <ul className="nav-overlay-list">
-              {menuLinks.map((link) => (
-                <li key={`${link.label}-${link.href}`}>
-                  <a
-                    href={link.href}
-                    className="nav-overlay-link"
-                    aria-current={currentPath === link.href ? "page" : undefined}
-                    onClick={closeAndReturn}
-                  >
-                    <HoverSlide className="t-h6" align="center">
-                      {link.label}
-                    </HoverSlide>
-                  </a>
-                </li>
-              ))}
+              {menuLinks.map((link) => {
+                const opensEnquiry =
+                  Boolean(content.cta) &&
+                  link.label === content.cta?.label &&
+                  link.href === content.cta?.href;
+
+                return (
+                  <li key={`${link.label}-${link.href}`}>
+                    {opensEnquiry ? (
+                      <button
+                        type="button"
+                        className="nav-overlay-link"
+                        aria-haspopup="dialog"
+                        onClick={() => {
+                          closeAndReturn();
+                          openEnquiry("navigation-menu");
+                        }}
+                      >
+                        <HoverSlide className="t-h6" align="center">
+                          {link.label}
+                        </HoverSlide>
+                      </button>
+                    ) : (
+                      <a
+                        href={link.href}
+                        className="nav-overlay-link"
+                        aria-current={currentPath === link.href ? "page" : undefined}
+                        onClick={closeAndReturn}
+                      >
+                        <HoverSlide className="t-h6" align="center">
+                          {link.label}
+                        </HoverSlide>
+                      </a>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
             <div className="nav-overlay-mark">
               <BrandMark />

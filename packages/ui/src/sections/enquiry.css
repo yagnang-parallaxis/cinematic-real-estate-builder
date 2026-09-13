@@ -1,0 +1,255 @@
+/* Enquiry modal: one dialog for every "Book a call" on the site. */
+
+.enquiry-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: var(--nav-offset);
+  overflow-y: auto;
+  background: color-mix(in oklab, var(--ink-deep) 92%, transparent);
+  animation: enquiry-overlay-in var(--dur-m) var(--ease-out) both;
+}
+
+.enquiry-panel {
+  position: relative;
+  width: min(100%, calc(640vw / var(--type-scale-ratio)));
+  max-height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+  padding: var(--space-48);
+  border: 1px solid var(--tone-line);
+  animation: enquiry-panel-in var(--dur-m) var(--ease-out) both;
+}
+
+.enquiry-close {
+  position: absolute;
+  top: var(--space-24);
+  right: var(--space-24);
+  color: inherit;
+  cursor: pointer;
+}
+
+.enquiry-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.enquiry-lockup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+}
+
+.enquiry-mark {
+  width: var(--nav-mark);
+  height: var(--nav-mark);
+}
+
+.enquiry-eyebrow {
+  opacity: 0.62;
+}
+
+.enquiry-heading {
+  max-width: 18ch;
+}
+
+.enquiry-intro {
+  max-width: 46ch;
+  opacity: 0.78;
+}
+
+.enquiry-form {
+  display: grid;
+  gap: var(--space-24);
+}
+
+.enquiry-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.enquiry-label {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-16);
+  opacity: 0.72;
+}
+
+.enquiry-hint {
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.enquiry-input {
+  width: 100%;
+  padding-block: var(--space-16);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  letter-spacing: -0.024em;
+  line-height: 1.38462;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--tone-line);
+  border-radius: 0;
+  transition: border-color var(--dur-s) var(--ease-out);
+}
+
+textarea.enquiry-input {
+  resize: vertical;
+}
+
+.enquiry-input::placeholder {
+  color: currentColor;
+  opacity: 0.4;
+}
+
+.enquiry-input:focus-visible {
+  outline: none;
+  border-bottom-color: currentColor;
+}
+
+.enquiry-input.is-invalid {
+  border-bottom-color: var(--shell);
+}
+
+.enquiry-error,
+.enquiry-alert {
+  color: var(--shell);
+}
+
+/* Honeypot: off-screen for sighted users, and aria-hidden for everyone else. */
+.enquiry-hp {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.enquiry-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding-top: var(--space-16);
+}
+
+.enquiry-submit {
+  align-self: flex-start;
+  padding: var(--space-16) var(--space-32);
+  color: inherit;
+  cursor: pointer;
+  border: 1px solid color-mix(in oklab, currentColor 55%, transparent);
+  border-radius: 999px;
+  transition:
+    border-color var(--dur-s) var(--ease-out),
+    opacity var(--dur-s) var(--ease-out);
+}
+
+.enquiry-submit:disabled {
+  cursor: progress;
+  opacity: 0.5;
+}
+
+.enquiry-submit:focus-visible,
+.enquiry-close:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 4px;
+}
+
+.enquiry-note {
+  max-width: 42ch;
+  opacity: 0.58;
+}
+
+.enquiry-success {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  align-items: flex-start;
+}
+
+.enquiry-success:focus-visible {
+  outline: none;
+}
+
+@keyframes enquiry-overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes enquiry-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(24vw / var(--type-scale-ratio)));
+  }
+}
+
+@media (min-width: 992px) {
+  .enquiry-form {
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--space-32);
+  }
+
+  .enquiry-field-wide {
+    grid-column: 1 / -1;
+  }
+
+  .enquiry-submit:hover {
+    border-color: currentColor;
+  }
+
+  .enquiry-input:hover {
+    border-bottom-color: color-mix(in oklab, currentColor 45%, transparent);
+  }
+}
+
+@media (max-width: 991px) {
+  .enquiry-overlay {
+    place-items: start center;
+    padding: var(--nav-offset) var(--space-16);
+  }
+
+  .enquiry-panel {
+    gap: var(--space-24);
+    padding: var(--space-32) var(--space-24);
+  }
+
+  .enquiry-heading {
+    font-size: var(--text-h4);
+  }
+
+  .enquiry-close {
+    top: var(--space-16);
+    right: var(--space-16);
+  }
+
+  .enquiry-submit {
+    align-self: stretch;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enquiry-overlay,
+  .enquiry-panel {
+    animation: none;
+  }
+
+  .enquiry-input,
+  .enquiry-submit {
+    transition: none;
+  }
+}

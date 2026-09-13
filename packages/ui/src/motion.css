@@ -28,31 +28,31 @@
   background: linear-gradient(to bottom, transparent, var(--seam-bg));
 }
 
-.section-seam[data-seam-tone="light"] {
+[data-seam-tone="light"] {
   --seam-bg: var(--paper);
 }
 
-.section-seam[data-seam-tone="light-deep"] {
+[data-seam-tone="light-deep"] {
   --seam-bg: var(--paper-deep);
 }
 
-.section-seam[data-seam-tone="color"] {
+[data-seam-tone="color"] {
   --seam-bg: var(--tide);
 }
 
-.section-seam[data-seam-tone="brand"] {
+[data-seam-tone="brand"] {
   --seam-bg: var(--shell);
 }
 
-.section-seam[data-seam-tone="dark"] {
+[data-seam-tone="dark"] {
   --seam-bg: var(--ink);
 }
 
-.section-seam[data-seam-tone="cellar"] {
+[data-seam-tone="cellar"] {
   --seam-bg: var(--cellar);
 }
 
-.section-seam[data-seam-tone="media"] {
+[data-seam-tone="media"] {
   --seam-bg: var(--ink-deep);
 }
 
@@ -61,7 +61,7 @@
 .section-shell {
   position: relative;
   z-index: 2;
-  padding-inline: var(--nav-offset);
+  padding-inline: var(--gutter-x);
 }
 
 .section-measure {
@@ -76,11 +76,21 @@
 }
 
 .section-scrim-top {
-  background: linear-gradient(to bottom, rgb(0 0 0 / 0.42), transparent 38%);
+  background: linear-gradient(to bottom, rgb(0 0 0 / 0.55), rgb(0 0 0 / 0.2) 34%, transparent 62%);
 }
 
 .section-scrim-bottom {
-  background: linear-gradient(to top, rgb(0 0 0 / 0.58), transparent 46%);
+  background: linear-gradient(to top, rgb(0 0 0 / 0.66), rgb(0 0 0 / 0.24) 38%, transparent 66%);
+}
+
+/* Copy set over photography needs a plate of its own, not just edge scrims. */
+.section-scrim-centre {
+  background: radial-gradient(
+    ellipse 70% 60% at 50% 50%,
+    rgb(0 0 0 / 0.5),
+    rgb(0 0 0 / 0.22) 55%,
+    transparent 80%
+  );
 }
 
 .on-media-text {
@@ -239,7 +249,7 @@
 /* An image layer is overscaled so its drift never exposes a frame edge. */
 .parallax[data-parallax="image"] {
   position: absolute;
-  inset: -8% 0;
+  inset: -14% 0;
   translate: 0 var(--parallax-shift);
 }
 

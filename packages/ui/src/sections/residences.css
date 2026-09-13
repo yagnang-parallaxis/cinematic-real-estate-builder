@@ -1,0 +1,1125 @@
+/*
+ * Residences: the filterable listing (`/residences`) and the single-unit page
+ * (`/residences/[slug]`).
+ *
+ * Two behaviours carry the section. On the listing, a filter change re-flows
+ * the same grid rather than reloading, and cards lift only where there is a
+ * pointer to lift them. On the detail page the info and media columns scroll
+ * independently above 992px, and below it the media is promoted above the info
+ * and becomes a swipe strip — a different layout, not a narrower one.
+ *
+ * Status is always written out in words; the dot beside it is a second signal.
+ * Key plans and floor plans are drawings, so they are contained in their frame
+ * and never cropped.
+ */
+
+/* Breadcrumbs, shared by both pages */
+
+.residence-crumbs-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-16);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.residence-crumb {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-16);
+  color: color-mix(in oklab, currentColor 58%, transparent);
+}
+
+.residence-crumb:not(:last-child)::after {
+  content: "/";
+  opacity: 0.5;
+}
+
+.residence-crumb-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.residence-crumb-link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* Listing: header */
+
+.residence-grid-shell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-48);
+  padding: var(--gutter-top) var(--gutter-x) calc(var(--space-48) * 1.6);
+}
+
+.residence-grid-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+.residence-grid-eyebrow {
+  color: color-mix(in oklab, currentColor 62%, transparent);
+}
+
+.residence-grid .residence-grid-heading {
+  margin: 0;
+  line-height: 0.94;
+  text-wrap: balance;
+}
+
+.residence-grid-intro {
+  width: min(100%, 38em);
+  color: color-mix(in oklab, currentColor 78%, transparent);
+}
+
+/* Listing: filter and sort row */
+
+.residence-grid-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-24);
+  padding-block: var(--space-16);
+  border-top: 1px solid var(--tone-line);
+  border-bottom: 1px solid var(--tone-line);
+}
+
+.residence-grid-count {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.residence-grid-fields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-24);
+}
+
+.residence-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.residence-field-label {
+  color: color-mix(in oklab, currentColor 58%, transparent);
+}
+
+.residence-field-select {
+  min-width: calc(168vw / var(--type-scale-ratio));
+  padding: var(--space-4) calc(20vw / var(--type-scale-ratio)) var(--space-4) 0;
+  border: 0;
+  border-bottom: 1px solid var(--tone-line);
+  border-radius: 0;
+  appearance: none;
+  background-color: transparent;
+  /* The chevron is drawn in currentColor so it follows the section's tone. */
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position:
+    right 6px center,
+    right 1px center;
+  background-repeat: no-repeat;
+  background-size:
+    5px 5px,
+    5px 5px;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  transition: border-color var(--dur-s) var(--ease-out);
+}
+
+.residence-field-select:focus-visible {
+  border-color: currentColor;
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.residence-reset,
+.residence-grid-empty-reset,
+.residence-plan-link,
+.residence-back {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-decoration: none;
+}
+
+.residence-reset {
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--tone-line);
+}
+
+.residence-reset:disabled {
+  cursor: default;
+  opacity: 0.38;
+}
+
+.residence-reset:focus-visible,
+.residence-grid-empty-reset:focus-visible,
+.residence-plan-link:focus-visible,
+.residence-back:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* Listing: the card grid */
+
+.residence-grid-list {
+  display: grid;
+  gap: var(--space-24);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+}
+
+.residence-card-item {
+  position: relative;
+  display: flex;
+}
+
+.residence-card-reveal {
+  display: flex;
+  width: 100%;
+}
+
+.residence-card {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding: var(--space-16);
+  border: 1px solid var(--tone-line);
+  background: color-mix(in oklab, currentColor 3%, transparent);
+  color: inherit;
+  text-decoration: none;
+}
+
+.residence-card-plate {
+  display: grid;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  padding: var(--space-16);
+  background: color-mix(in oklab, currentColor 5%, transparent);
+  place-items: center;
+}
+
+/* A drawing is contained: it is never cropped to fill the frame. */
+.residence-card-schematic {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.residence-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.residence-card-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-16);
+}
+
+.residence-card-completion,
+.residence-card-place {
+  color: color-mix(in oklab, currentColor 60%, transparent);
+}
+
+.residence-card-id {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.residence-card-hash {
+  color: color-mix(in oklab, currentColor 50%, transparent);
+}
+
+.residence-card-number {
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.residence-card-figures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-16);
+  margin-top: var(--space-16);
+  padding-top: var(--space-16);
+  border-top: 1px solid var(--tone-line);
+}
+
+.residence-card-outdoor {
+  color: color-mix(in oklab, currentColor 66%, transparent);
+}
+
+.residence-card-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-16);
+  margin-top: auto;
+  padding-top: var(--space-16);
+}
+
+/* Status: the words carry it. The dot is a second, redundant signal. */
+
+.residence-card-status,
+.residence-detail-status,
+.residence-similar-status {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--space-4) * 2);
+  margin: 0;
+}
+
+.residence-card-dot,
+.residence-detail-dot,
+.residence-similar-dot {
+  width: calc(9vw / var(--type-scale-ratio));
+  flex: none;
+  aspect-ratio: 1;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+[data-status="available"] > .residence-card-dot,
+[data-status="available"] > .residence-detail-dot,
+[data-status="available"] > .residence-similar-dot {
+  background: currentColor;
+}
+
+/* Half filled, so reserved is distinguishable without relying on hue. */
+[data-status="reserved"] > .residence-card-dot,
+[data-status="reserved"] > .residence-detail-dot,
+[data-status="reserved"] > .residence-similar-dot {
+  background: linear-gradient(to right, currentColor 50%, transparent 50%);
+}
+
+[data-status="sold"] {
+  opacity: 0.55;
+}
+
+/* Listing: nothing matched */
+
+.residence-grid-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-16);
+  padding: calc(var(--space-48) * 1.2) 0;
+  border-top: 1px solid var(--tone-line);
+}
+
+.residence-grid-empty-heading {
+  margin: 0;
+  text-wrap: balance;
+}
+
+.residence-grid-empty-body {
+  width: min(100%, 34em);
+  margin: 0;
+  color: color-mix(in oklab, currentColor 76%, transparent);
+}
+
+.residence-grid-empty-reset {
+  margin-top: var(--space-16);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid currentColor;
+}
+
+/* Detail: header band above the split */
+
+.residence-detail-shell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+  padding: var(--gutter-top) var(--gutter-x) calc(var(--space-48) * 1.4);
+}
+
+.residence-detail-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.residence-detail-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-16);
+}
+
+.residence-detail-kicker-date {
+  color: color-mix(in oklab, currentColor 60%, transparent);
+}
+
+.residence-detail .residence-detail-name {
+  margin: 0;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+
+.residence-detail-place {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-16);
+  padding-top: var(--space-16);
+  border-top: 1px solid var(--tone-line);
+}
+
+.residence-detail-place > p {
+  margin: 0;
+  color: color-mix(in oklab, currentColor 76%, transparent);
+}
+
+.residence-detail-split {
+  display: grid;
+  gap: var(--space-32);
+}
+
+/* Detail: media column */
+
+.residence-media {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.residence-media-list {
+  display: grid;
+  gap: var(--space-16);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.residence-media-button {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: calc(var(--space-4) * 2);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.residence-media-frame {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: color-mix(in oklab, currentColor 6%, transparent);
+}
+
+.residence-media-item[data-role="primary"] .residence-media-frame {
+  aspect-ratio: 16 / 10;
+}
+
+/* The drawings sit on a plate and keep their whole sheet in view. */
+.residence-media-item[data-fit="contain"] .residence-media-frame {
+  display: grid;
+  aspect-ratio: 3 / 2;
+  padding: var(--space-16);
+  place-items: center;
+}
+
+.residence-media-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.residence-media-image[data-fit="cover"] {
+  object-fit: cover;
+}
+
+.residence-media-image[data-fit="contain"] {
+  width: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.residence-media-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-16);
+}
+
+.residence-media-label {
+  color: color-mix(in oklab, currentColor 64%, transparent);
+}
+
+.residence-media-expand {
+  color: color-mix(in oklab, currentColor 50%, transparent);
+}
+
+.residence-media-hint {
+  align-self: center;
+}
+
+.residence-media-hint-rule {
+  display: block;
+  width: calc(56vw / var(--type-scale-ratio));
+  height: 1px;
+  background: currentColor;
+}
+
+.residence-media-button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+/* Detail: info column */
+
+.residence-info {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-32);
+}
+
+.residence-info:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 6px;
+}
+
+.residence-specs {
+  display: grid;
+  gap: 0 var(--space-24);
+  margin: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.residence-spec {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-block: var(--space-16);
+  border-top: 1px solid var(--tone-line);
+}
+
+.residence-spec-label {
+  color: color-mix(in oklab, currentColor 58%, transparent);
+}
+
+.residence-spec-value {
+  margin: 0;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+/* Detail: the Info / Included sub-panel */
+
+.residence-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+.residence-tablist {
+  display: flex;
+  gap: var(--space-32);
+  border-bottom: 1px solid var(--tone-line);
+}
+
+.residence-tab {
+  position: relative;
+  padding: 0 0 var(--space-16);
+  border: 0;
+  background: transparent;
+  color: color-mix(in oklab, currentColor 56%, transparent);
+  cursor: pointer;
+  font: inherit;
+  transition: color var(--dur-s) var(--ease-out);
+}
+
+.residence-tab[aria-selected="true"] {
+  color: inherit;
+}
+
+.residence-tab-rule {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scale(0, 1);
+  transform-origin: left center;
+  transition: transform var(--dur-m) var(--ease-in-out);
+}
+
+.residence-tab[aria-selected="true"] .residence-tab-rule {
+  transform: scale(1, 1);
+}
+
+.residence-tab:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.residence-tabpanel {
+  animation: residence-panel-in var(--dur-m) var(--ease-out) both;
+}
+
+.residence-tabpanel[hidden] {
+  display: none;
+}
+
+@keyframes residence-panel-in {
+  from {
+    opacity: 0;
+    translate: 0 calc(8vw / var(--type-scale-ratio));
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.residence-description {
+  width: min(100%, 34em);
+  margin: 0;
+  color: color-mix(in oklab, currentColor 80%, transparent);
+}
+
+.residence-features-title {
+  margin: 0 0 var(--space-16);
+  color: color-mix(in oklab, currentColor 58%, transparent);
+}
+
+.residence-features {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.residence-feature {
+  padding-block: calc(var(--space-4) * 2);
+  border-top: 1px solid var(--tone-line);
+  color: color-mix(in oklab, currentColor 82%, transparent);
+}
+
+/* Detail: actions */
+
+.residence-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-24);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--tone-line);
+}
+
+.residence-plan-link,
+.residence-back {
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--tone-line);
+}
+
+.residence-sold-note {
+  width: min(100%, 26em);
+  margin: 0;
+  color: color-mix(in oklab, currentColor 72%, transparent);
+}
+
+/* Detail: other residences */
+
+.residence-similar-shell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+  padding: calc(var(--space-48) * 1.4) var(--gutter-x);
+}
+
+.residence-similar-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.residence-similar-eyebrow {
+  color: color-mix(in oklab, currentColor 62%, transparent);
+}
+
+.residence-similar .residence-similar-heading {
+  margin: 0;
+  line-height: 0.98;
+}
+
+.residence-similar-list {
+  display: grid;
+  gap: var(--space-24);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+}
+
+.residence-similar-card {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-16);
+  border: 1px solid var(--tone-line);
+  color: inherit;
+  text-decoration: none;
+}
+
+.residence-similar-plate {
+  display: grid;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  margin-bottom: var(--space-16);
+  padding: calc(var(--space-4) * 2);
+  background: color-mix(in oklab, currentColor 5%, transparent);
+  place-items: center;
+}
+
+.residence-similar-schematic {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.residence-similar-type {
+  color: color-mix(in oklab, currentColor 60%, transparent);
+}
+
+.residence-similar-id {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.residence-similar-figures {
+  color: color-mix(in oklab, currentColor 66%, transparent);
+}
+
+.residence-similar-status {
+  margin-top: var(--space-16);
+}
+
+.residence-card:focus-visible,
+.residence-similar-card:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* Detail: lightbox */
+
+.residence-lightbox {
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+  animation: residence-lightbox-in var(--dur-s) var(--ease-out) both;
+}
+
+.residence-lightbox-scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-out;
+}
+
+.residence-lightbox-shell {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  gap: var(--space-24);
+  padding: var(--nav-offset);
+  pointer-events: none;
+}
+
+.residence-lightbox-bar,
+.residence-lightbox-controls {
+  pointer-events: auto;
+}
+
+.residence-lightbox-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.residence-lightbox-counter {
+  color: color-mix(in oklab, currentColor 70%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+.residence-lightbox-close {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--space-4) * 2);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+.residence-lightbox-cross {
+  width: calc(14vw / var(--type-scale-ratio));
+  transition: rotate var(--hover-dur) var(--hover-ease);
+}
+
+.residence-lightbox-figure {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-24);
+  margin: 0;
+}
+
+.residence-lightbox-image {
+  min-height: 0;
+  flex: 1;
+  max-width: 100%;
+  object-fit: contain;
+  animation: residence-image-in var(--dur-m) var(--ease-out) both;
+}
+
+/* A plan is read, not admired: it gets its own sheet inside the lightbox. */
+.residence-lightbox-image[data-fit="contain"] {
+  width: min(100%, 72rem);
+}
+
+.residence-lightbox-caption {
+  max-width: 34em;
+  color: color-mix(in oklab, currentColor 76%, transparent);
+  text-align: center;
+}
+
+.residence-lightbox-controls {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-32);
+}
+
+.residence-lightbox-step {
+  display: grid;
+  width: calc(112vw / var(--type-scale-ratio));
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid color-mix(in oklab, currentColor 40%, transparent);
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-s) var(--ease-out),
+    scale var(--dur-m) var(--ease-out);
+}
+
+.residence-lightbox-arrow {
+  width: calc(38vw / var(--type-scale-ratio));
+}
+
+.residence-lightbox-step[data-direction="next"] .residence-lightbox-arrow {
+  scale: -1 1;
+}
+
+.residence-lightbox-close:focus-visible,
+.residence-lightbox-step:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+@keyframes residence-lightbox-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes residence-image-in {
+  from {
+    opacity: 0;
+    scale: 0.985;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+/* Compact: media above info, and the media row becomes a swipe strip. */
+
+@media (max-width: 991px) {
+  .residence-grid .residence-grid-heading {
+    font-size: calc(64vw / var(--type-scale-ratio));
+  }
+
+  .residence-detail .residence-detail-name {
+    font-size: calc(80vw / var(--type-scale-ratio));
+  }
+
+  .residence-grid-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .residence-grid-fields {
+    gap: var(--space-16) var(--space-24);
+  }
+
+  .residence-field-select {
+    min-width: calc(128vw / var(--type-scale-ratio));
+  }
+
+  .residence-media-list {
+    display: flex;
+    margin-inline: calc(var(--nav-offset) * -1);
+    padding-inline: var(--nav-offset);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .residence-media-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .residence-media-item {
+    flex: 0 0 78%;
+    scroll-snap-align: start;
+  }
+
+  .residence-media-item[data-role="primary"] {
+    flex-basis: 90%;
+  }
+
+  .residence-media-item[data-fit="contain"] {
+    flex-basis: 94%;
+  }
+
+  /*
+   * A filmstrip wants one height and varying widths, so the frames line up
+   * along the row even though the primary photograph is given more of it.
+   */
+  .residence-media-frame,
+  .residence-media-item[data-role="primary"] .residence-media-frame,
+  .residence-media-item[data-fit="contain"] .residence-media-frame {
+    height: calc(248vw / var(--type-scale-ratio));
+    aspect-ratio: auto;
+  }
+
+  .residence-lightbox-image {
+    width: 100%;
+  }
+
+  .residence-features {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Desktop: three columns, the hover lift, and the two scrolling panes. */
+
+@media (min-width: 992px) {
+  .residence-grid-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .residence-card {
+    transition:
+      translate var(--dur-m) var(--ease-out),
+      border-color var(--dur-s) var(--ease-out),
+      box-shadow var(--dur-m) var(--ease-out);
+  }
+
+  .residence-card-schematic {
+    transition: scale var(--hover-dur) var(--hover-ease);
+  }
+
+  /* The lifted card has to sit above its neighbours for the shadow to read. */
+  .residence-card-item:hover,
+  .residence-card-item:focus-within {
+    z-index: 2;
+  }
+
+  .residence-card:hover,
+  .residence-card:focus-visible {
+    translate: 0 calc(-8vw / var(--type-scale-ratio));
+    border-color: color-mix(in oklab, currentColor 32%, transparent);
+    box-shadow: 0 calc(24vw / var(--type-scale-ratio)) calc(48vw / var(--type-scale-ratio))
+      color-mix(in oklab, currentColor 16%, transparent);
+  }
+
+  .residence-card:hover .residence-card-schematic {
+    scale: 1.03;
+  }
+
+  .residence-similar-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .residence-similar-card {
+    transition:
+      translate var(--dur-m) var(--ease-out),
+      border-color var(--dur-s) var(--ease-out);
+  }
+
+  .residence-similar-card:hover {
+    translate: 0 calc(-6vw / var(--type-scale-ratio));
+    border-color: color-mix(in oklab, currentColor 32%, transparent);
+  }
+
+  .residence-detail-split {
+    /*
+     * Two panes, each with its own scroll, so a visitor can read the whole
+     * spec list without losing the photographs — and the other way round.
+     */
+    height: calc(100vh - var(--gutter-top));
+    align-items: stretch;
+    gap: var(--space-48);
+    grid-template-areas: "info media";
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
+
+  .residence-info {
+    padding-right: var(--space-24);
+    overflow-y: auto;
+    grid-area: info;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+
+  .residence-media {
+    overflow-y: auto;
+    grid-area: media;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+
+  .residence-media-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .residence-media-item[data-role="primary"],
+  .residence-media-item[data-fit="contain"] {
+    grid-column: span 2;
+  }
+
+  .residence-media-image[data-fit="cover"] {
+    transition: scale var(--hover-dur) var(--hover-ease);
+  }
+
+  .residence-media-expand {
+    opacity: 0;
+    transition: opacity var(--hover-dur) var(--hover-ease);
+  }
+
+  .residence-media-button:hover .residence-media-image[data-fit="cover"] {
+    scale: 1.045;
+  }
+
+  .residence-media-button:hover .residence-media-expand,
+  .residence-media-button:focus-visible .residence-media-expand {
+    opacity: 1;
+  }
+
+  .residence-lightbox-controls {
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: var(--nav-offset);
+    pointer-events: none;
+  }
+
+  .residence-lightbox-step {
+    pointer-events: auto;
+  }
+
+  .residence-lightbox-step:hover {
+    border-color: currentColor;
+    scale: 1.05;
+  }
+
+  .residence-lightbox-close:hover .residence-lightbox-cross {
+    rotate: 90deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .residence-card,
+  .residence-card-schematic,
+  .residence-similar-card,
+  .residence-media-image,
+  .residence-media-expand,
+  .residence-tab,
+  .residence-tab-rule,
+  .residence-lightbox-cross,
+  .residence-lightbox-step,
+  .residence-field-select {
+    transition: none;
+  }
+
+  .residence-tabpanel,
+  .residence-lightbox,
+  .residence-lightbox-image {
+    animation: none;
+  }
+
+  .residence-card:hover,
+  .residence-card:focus-visible,
+  .residence-similar-card:hover {
+    translate: none;
+  }
+
+  .residence-card:hover .residence-card-schematic,
+  .residence-media-button:hover .residence-media-image[data-fit="cover"] {
+    scale: 1;
+  }
+
+  .residence-media-expand {
+    opacity: 1;
+  }
+}

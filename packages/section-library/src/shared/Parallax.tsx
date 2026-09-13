@@ -11,10 +11,11 @@ export type ParallaxRole =
   /** Foreground accent drifting with the scroll direction. */
   | "accent";
 
+/** Percentages of the layer's own height; `image` must stay inside its overscan. */
 const ROLE_SHIFT: Record<ParallaxRole, number> = {
-  bed: -12,
-  image: -9,
-  accent: 8,
+  bed: -10,
+  image: -7,
+  accent: 7,
 };
 
 /**

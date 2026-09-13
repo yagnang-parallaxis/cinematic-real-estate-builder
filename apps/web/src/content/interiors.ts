@@ -1,0 +1,67 @@
+import type { InteriorsContent } from "@cinematic/section-library";
+
+export const interiors: InteriorsContent = {
+  eyebrow: "Interiors",
+  headingPrefix: "The space to",
+  rotatingWords: ["live", "work", "rest", "gather"],
+  rotationMs: 2600,
+  body: "Oak floors, lime plaster, deep sills. The rooms were drawn long, so the light has somewhere to travel before it reaches the far wall.",
+  galleryLabel: "Interiors",
+  lightboxLabel: "Interiors gallery",
+  expandLabel: "Expand",
+  closeLabel: "Close",
+  previousLabel: "Previous interior",
+  nextLabel: "Next interior",
+  dragHint: "Drag to see the rooms",
+  images: [
+    {
+      id: "long-room",
+      room: "The long room",
+      src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=80",
+      alt: "A long living room with a timber-clad wall, a low sofa, and sliding glass onto a terrace.",
+      caption: "The long room, with the kitchen kept at the far end.",
+    },
+    {
+      id: "kitchen",
+      room: "Kitchen",
+      src: "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1800&q=80",
+      alt: "A pale kitchen island with four oak stools beneath three black pendant lamps.",
+      caption: "One island, four stools, and the stair to the floor above.",
+    },
+    {
+      id: "bath",
+      room: "Bathroom",
+      src: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1800&q=80",
+      alt: "A dark-tiled bathroom with a freestanding bath and a long window set at eye level.",
+      caption: "A window at eye level, so the bath looks out and nothing looks in.",
+    },
+    {
+      id: "garden-room",
+      room: "Garden room",
+      src: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1800&q=80",
+      alt: "A grey sofa under a timber ceiling, facing a glass wall that opens onto trees.",
+      caption: "The garden room, where the glass wall folds back in summer.",
+    },
+    {
+      id: "sitting-room",
+      room: "Sitting room",
+      src: "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1800&q=80",
+      alt: "A green sitting room with two woven pendant shades, a sofa, and plants at the window.",
+      caption: "Green walls, woven shades, and one window kept for the morning.",
+    },
+    {
+      id: "hearth",
+      room: "Hearth",
+      src: "https://images.unsplash.com/photo-1616137466211-f939a420be84?auto=format&fit=crop&w=1800&q=80",
+      alt: "A pale grey room with a fireplace and a row of shuttered windows along one wall.",
+      caption: "The hearth wall, with shutters that close the room down at dusk.",
+    },
+    {
+      id: "second-room",
+      room: "Second sitting room",
+      src: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1800&q=80",
+      alt: "A pale room with a long sofa, a round timber table, and framed prints on the far wall.",
+      caption: "A second room for the evening, kept back from the water.",
+    },
+  ],
+};

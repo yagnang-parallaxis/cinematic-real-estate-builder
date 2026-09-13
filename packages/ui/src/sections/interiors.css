@@ -1,0 +1,435 @@
+/*
+ * Interiors: a rotating-word display headline over a gallery that opens into a
+ * full-screen lightbox. The angled top boundary is painted by a plate that sits
+ * behind the content rather than by clipping the section itself, so the fixed
+ * lightbox is never trapped inside a clip-path.
+ */
+
+.section.interiors {
+  --interiors-cut: calc(56vw / var(--type-scale-ratio));
+  --interiors-row: calc(288vw / var(--type-scale-ratio));
+  /* The tone is painted by the plate below, which is what carries the angled cut. */
+  background: transparent;
+}
+
+.interiors-plate {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background: var(--tone-bg);
+  pointer-events: none;
+}
+
+.interiors-shell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-48);
+  padding: var(--gutter-top) var(--gutter-x) calc(var(--space-48) * 1.5);
+}
+
+.interiors-intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+.interiors-eyebrow {
+  color: color-mix(in oklab, currentColor 62%, transparent);
+}
+
+.interiors .interiors-heading {
+  margin: 0;
+  line-height: 0.92;
+  text-wrap: balance;
+}
+
+.interiors-heading .interiors-word {
+  display: inline-grid;
+  overflow: hidden;
+  /* Room for the descenders of the script face inside the mask. */
+  padding-block: 0.06em 0.12em;
+  vertical-align: baseline;
+}
+
+.interiors-heading .interiors-word-item {
+  grid-area: 1 / 1;
+  font-size: 1.08em;
+  line-height: 1;
+  opacity: 0;
+  text-transform: none;
+  translate: 0 102%;
+}
+
+.interiors-heading .interiors-word-item[data-active="true"] {
+  opacity: 1;
+  animation: interiors-word-rise var(--dur-m) var(--ease-out) both;
+}
+
+@keyframes interiors-word-rise {
+  from {
+    translate: 0 102%;
+  }
+
+  to {
+    translate: 0 0;
+  }
+}
+
+.interiors-body {
+  width: min(100%, 34em);
+  color: color-mix(in oklab, currentColor 78%, transparent);
+}
+
+/* Gallery */
+
+.interiors-gallery {
+  display: grid;
+  gap: var(--space-16);
+}
+
+.interiors-shot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.interiors-shot-frame {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: color-mix(in oklab, currentColor 8%, transparent);
+}
+
+.interiors-shot-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.interiors-shot-expand {
+  position: absolute;
+  top: var(--space-16);
+  right: var(--space-16);
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--space-4) * 2);
+  padding: var(--space-4) calc(14vw / var(--type-scale-ratio));
+  border: 1px solid color-mix(in oklab, var(--paper) 50%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--ink-deep) 40%, transparent);
+  color: var(--paper);
+  opacity: 0.82;
+}
+
+.interiors-shot-icon {
+  width: calc(16vw / var(--type-scale-ratio));
+  flex: none;
+}
+
+.interiors-shot-room {
+  color: color-mix(in oklab, currentColor 64%, transparent);
+}
+
+.interiors-hint {
+  align-self: center;
+}
+
+.interiors-hint-rule {
+  display: block;
+  width: calc(56vw / var(--type-scale-ratio));
+  height: 1px;
+  background: currentColor;
+}
+
+/* Lightbox */
+
+.interiors-lightbox {
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+  animation: interiors-lightbox-in var(--dur-s) var(--ease-out) both;
+}
+
+.interiors-lightbox-scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-out;
+}
+
+.interiors-lightbox-shell {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  gap: var(--space-24);
+  padding: var(--nav-offset);
+  pointer-events: none;
+}
+
+/* The figure stays transparent to clicks so the area around the photograph closes the lightbox. */
+.interiors-lightbox-bar,
+.interiors-lightbox-controls {
+  pointer-events: auto;
+}
+
+.interiors-lightbox-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.interiors-lightbox-counter {
+  color: color-mix(in oklab, currentColor 70%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+.interiors-lightbox-close {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--space-4) * 2);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+.interiors-lightbox-cross {
+  width: calc(14vw / var(--type-scale-ratio));
+  transition: rotate var(--hover-dur) var(--hover-ease);
+}
+
+.interiors-lightbox-figure {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-24);
+  margin: 0;
+}
+
+.interiors-lightbox-image {
+  min-height: 0;
+  flex: 1;
+  max-width: 100%;
+  object-fit: contain;
+  animation: interiors-image-in var(--dur-m) var(--ease-out) both;
+}
+
+.interiors-lightbox-caption {
+  max-width: 34em;
+  color: color-mix(in oklab, currentColor 76%, transparent);
+  text-align: center;
+}
+
+.interiors-lightbox-controls {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-32);
+}
+
+.interiors-lightbox-step {
+  display: grid;
+  width: calc(112vw / var(--type-scale-ratio));
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid color-mix(in oklab, currentColor 40%, transparent);
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-s) var(--ease-out),
+    scale var(--dur-m) var(--ease-out);
+}
+
+.interiors-lightbox-arrow {
+  width: calc(38vw / var(--type-scale-ratio));
+}
+
+.interiors-lightbox-step[data-direction="next"] .interiors-lightbox-arrow {
+  scale: -1 1;
+}
+
+.interiors-shot:focus-visible,
+.interiors-lightbox-close:focus-visible,
+.interiors-lightbox-step:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+@keyframes interiors-lightbox-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes interiors-image-in {
+  from {
+    opacity: 0;
+    scale: 0.985;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+/* Compact: the gallery becomes a swipeable strip. */
+
+@media (max-width: 991px) {
+  .interiors .interiors-heading {
+    font-size: calc(104vw / var(--type-scale-ratio));
+  }
+
+  .interiors-gallery {
+    display: flex;
+    margin-inline: calc(var(--nav-offset) * -1);
+    padding-inline: var(--nav-offset);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .interiors-gallery::-webkit-scrollbar {
+    display: none;
+  }
+
+  .interiors-shot {
+    flex: 0 0 76%;
+    scroll-snap-align: start;
+  }
+
+  .interiors-shot[data-role="primary"] {
+    flex-basis: 88%;
+  }
+
+  .interiors-shot-frame {
+    aspect-ratio: 4 / 5;
+  }
+
+  .interiors-shot[data-role="primary"] .interiors-shot-frame {
+    aspect-ratio: 4 / 3;
+  }
+
+  .interiors-lightbox-image {
+    width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  .interiors-plate {
+    top: calc(var(--interiors-cut) * -1);
+    clip-path: polygon(0 var(--interiors-cut), 100% 0, 100% 100%, 0 100%);
+  }
+
+  .interiors .interiors-heading {
+    font-size: calc(132vw / var(--type-scale-ratio));
+  }
+
+  .interiors-gallery {
+    grid-auto-rows: var(--interiors-row);
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .interiors-shot[data-role="primary"] {
+    grid-row: span 2;
+    grid-column: span 3;
+  }
+
+  .interiors-shot-frame {
+    min-height: 0;
+    flex: 1;
+  }
+
+  .interiors-shot-image {
+    transition: scale var(--hover-dur) var(--hover-ease);
+  }
+
+  .interiors-shot-expand {
+    opacity: 0;
+    translate: 0 calc(12vw / var(--type-scale-ratio));
+    transition:
+      opacity var(--hover-dur) var(--hover-ease),
+      translate var(--hover-dur) var(--hover-ease);
+  }
+
+  .interiors-shot:hover .interiors-shot-image,
+  .interiors-shot:focus-visible .interiors-shot-image {
+    scale: 1.055;
+  }
+
+  .interiors-shot:hover .interiors-shot-expand,
+  .interiors-shot:focus-visible .interiors-shot-expand {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .interiors-lightbox-controls {
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: var(--nav-offset);
+    pointer-events: none;
+  }
+
+  .interiors-lightbox-step {
+    pointer-events: auto;
+  }
+
+  .interiors-lightbox-step:hover {
+    border-color: currentColor;
+    scale: 1.05;
+  }
+
+  .interiors-lightbox-close:hover .interiors-lightbox-cross {
+    rotate: 90deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interiors-heading .interiors-word-item[data-active="true"] {
+    animation: none;
+    translate: 0 0;
+  }
+
+  .interiors-lightbox,
+  .interiors-lightbox-image {
+    animation: none;
+  }
+
+  .interiors-shot-image,
+  .interiors-shot-expand,
+  .interiors-lightbox-cross,
+  .interiors-lightbox-step {
+    transition: none;
+  }
+
+  .interiors-shot:hover .interiors-shot-image,
+  .interiors-shot:focus-visible .interiors-shot-image {
+    scale: 1;
+  }
+}
