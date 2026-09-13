@@ -43,10 +43,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Match the foot of the tall hero frame the visitor just left. */
   object-position: center 78%;
-  /* Overscanned, so the drift never exposes an edge. */
-  scale: 1.06;
 }
 
 .arch-backdrop-grade {

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   clampBeats,
+  formatBeatNumber,
   formatSlideLabel,
   nextIndex,
   prevIndex,
@@ -99,6 +100,13 @@ describe("nextIndex / prevIndex", () => {
   it("retreats and wraps at the start", () => {
     expect(prevIndex(2, 3)).toBe(1);
     expect(prevIndex(0, 3)).toBe(2);
+  });
+});
+
+describe("formatBeatNumber", () => {
+  it("counts slides from one", () => {
+    expect(formatBeatNumber(0)).toBe("1");
+    expect(formatBeatNumber(2)).toBe("3");
   });
 });
 

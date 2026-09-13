@@ -4,6 +4,7 @@ import {
   ARCH_H_EASE,
   ARCH_H_FROM,
   ARCH_H_TO,
+  ARCH_SETTLE,
   ARCH_STATIC_PROGRESS,
   archFullRadius,
   archGeometry,
@@ -16,9 +17,11 @@ import {
   clampProgress,
   coversStage,
   curvedTextOpacity,
+  hidesHeroChrome,
   curvedWordSpacingEm,
   interiorOpacity,
   pinProgress,
+  settleProgress,
 } from "./logic";
 
 const STAGE = { width: 1440, height: 900 };
@@ -107,19 +110,29 @@ describe("archGeometry", () => {
     }
   });
 
-  it("extends with straight sides once past a full semicircle", () => {
+  it("finishes as a full-width circular arc, never a straight-sided plate", () => {
     const g = archGeometry(1, STAGE);
-    expect(g.extended).toBe(true);
-    expect(g.rx).toBeCloseTo(archFullRadius(STAGE), 5);
-    expect(g.height).toBeCloseTo(STAGE.height * ARCH_H_TO, 5);
-    expect(g.height).toBeGreaterThan(g.rx);
+    const fullR = archFullRadius(STAGE);
+    expect(g.extended).toBe(false);
+    expect(g.rx).toBeCloseTo(fullR, 5);
+    expect(g.height).toBeCloseTo(fullR, 5);
+    expect(g.height).toBeLessThanOrEqual(fullR);
+    const width = archSegmentHalfWidth(g.rx, g.height) * 2;
+    expect(width).toBeCloseTo(STAGE.width, 5);
+  });
+
+  it("keeps the apex on the stage so the closed arch does not flatten off-screen", () => {
+    const g = archGeometry(1, STAGE);
+    const apexY = g.floorY - g.height;
+    expect(g.height).toBeLessThanOrEqual(STAGE.height);
+    expect(apexY).toBeGreaterThanOrEqual(0);
   });
 
   it("grows without ever going backwards", () => {
     let lastH = -1;
     for (let p = 0; p <= 1.0001; p += 0.1) {
       const g = archGeometry(p, STAGE);
-      expect(g.height).toBeGreaterThan(lastH);
+      expect(g.height).toBeGreaterThanOrEqual(lastH);
       lastH = g.height;
     }
   });
@@ -127,8 +140,9 @@ describe("archGeometry", () => {
   it("eases the rise so early growth is assertive", () => {
     expect(ARCH_H_EASE).toBeLessThan(1);
     const early = archGeometry(0.25, STAGE);
-    const linear =
-      STAGE.height * ARCH_H_FROM + 0.25 * STAGE.height * (ARCH_H_TO - ARCH_H_FROM);
+    const hFrom = STAGE.height * ARCH_H_FROM;
+    const hTo = Math.min(archFullRadius(STAGE), STAGE.height * ARCH_H_TO);
+    const linear = hFrom + 0.25 * (hTo - hFrom);
     expect(early.height).toBeGreaterThan(linear);
   });
 
@@ -152,12 +166,12 @@ describe("archPath", () => {
     expect(Number(endX)).toBeLessThan(STAGE.width * 0.8);
   });
 
-  it("draws a semicircle on a rectangle once extended", () => {
+  it("stays a circular segment at the end of the rise", () => {
     const g = archGeometry(1, STAGE);
-    expect(g.extended).toBe(true);
+    expect(g.extended).toBe(false);
     const path = archPath(g);
-    expect(path).toContain(" L ");
-    expect(path.endsWith("Z")).toBe(true);
+    expect(path).not.toContain(" L ");
+    expect(path).toMatch(/^M -?[\d.]+ 900 A [\d.]+ [\d.]+ 0 0 1 -?[\d.]+ 900 Z$/);
   });
 });
 
@@ -209,7 +223,7 @@ describe("entry ramps", () => {
     expect(curvedTextOpacity(0.28)).toBe(1);
   });
 
-  it("holds the interior back until the panel is past a semicircle", () => {
+  it("holds the interior back until the arc is large enough to carry it", () => {
     expect(interiorOpacity(0.3)).toBe(0);
     expect(interiorOpacity(0.55)).toBeCloseTo(0.5, 5);
     expect(interiorOpacity(0.68)).toBe(1);
@@ -244,15 +258,34 @@ describe("capOpacity", () => {
   });
 });
 
+describe("settleProgress", () => {
+  it("finishes the rise before the scrub ends, then holds", () => {
+    expect(ARCH_SETTLE).toBeGreaterThan(0.5);
+    expect(ARCH_SETTLE).toBeLessThan(1);
+    expect(settleProgress(0)).toBe(0);
+    expect(settleProgress(ARCH_SETTLE / 2)).toBeCloseTo(0.5, 5);
+    expect(settleProgress(ARCH_SETTLE)).toBe(1);
+    expect(settleProgress(1)).toBe(1);
+  });
+});
+
 describe("coversStage", () => {
-  it("is false while the photograph still shows around the dome", () => {
+  it("never treats the rise as a full plate", () => {
     expect(coversStage(0)).toBe(false);
-    expect(coversStage(0.85)).toBe(false);
+    expect(coversStage(0.92)).toBe(false);
+    expect(coversStage(1)).toBe(false);
+  });
+});
+
+describe("hidesHeroChrome", () => {
+  it("leaves the CTA visible while the bump is still small", () => {
+    expect(hidesHeroChrome(0)).toBe(false);
+    expect(hidesHeroChrome(0.3)).toBe(false);
   });
 
-  it("is true once the panel has taken the stage", () => {
-    expect(coversStage(0.92)).toBe(true);
-    expect(coversStage(1)).toBe(true);
+  it("hides the foot chrome once the arc covers the lower stage", () => {
+    expect(hidesHeroChrome(0.55)).toBe(true);
+    expect(hidesHeroChrome(1)).toBe(true);
   });
 });
 

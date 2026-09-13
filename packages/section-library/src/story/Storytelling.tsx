@@ -3,11 +3,10 @@
 import { Animated } from "@cinematic/animation-engine";
 import { useId, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 
-import { BrandMark } from "../shared/BrandMark";
 import { HoverSlide } from "../shared/HoverSlide";
 import {
   clampBeats,
-  formatSlideLabel,
+  formatBeatNumber,
   nextIndex,
   prevIndex,
   slideProgress,
@@ -83,116 +82,101 @@ export function Storytelling({ content }: { content: StoryContent }) {
   };
 
   return (
-    <section id="story" data-tone="light" data-nav-tone="on-light" className="story">
-      <div className="story-intro">
-        <Animated
-          type="textReveal"
-          config={{ duration: 1.1, trigger: "on-load" }}
-          as="h2"
-          className="t-display story-title"
+    <section id="story" data-tone="color" data-nav-tone="on-color" className="story">
+      <div className="story-shell">
+        <div
+          className="story-browser"
+          role="region"
+          aria-roledescription="carousel"
+          aria-labelledby={labelId}
+          tabIndex={0}
+          onPointerDown={onPointerDown}
+          onPointerUp={onPointerUp}
+          onPointerCancel={() => {
+            dragX.current = null;
+          }}
+          onKeyDown={onKeyDown}
         >
-          {headingLines.map((line) => (
-            <span key={line}>
-              {line}
-              <br />
-            </span>
-          ))}
-        </Animated>
+          <p id={labelId} className="sr-only">
+            {content.heading}
+          </p>
 
-        <div className="story-lockup">
-          <Animated
-            type="fadeUp"
-            config={{ duration: 0.8, delay: 0.08, trigger: "on-load" }}
-            className="story-flanks"
-          >
-            <p className="t-label story-flank">{content.leftCaption}</p>
-            <BrandMark className="story-mark" />
-            <p className="t-label story-flank">{content.rightCaption}</p>
-          </Animated>
-          <div className="story-rule" aria-hidden="true">
-            <Animated type="fadeUp" config={{ duration: 0.7, delay: 0.12, trigger: "on-load" }}>
-              <span className="story-rule-line" />
-            </Animated>
-          </div>
-          <Animated type="textReveal" config={{ duration: 0.8, delay: 0.16, trigger: "on-load" }}>
-            <p className="t-label story-tagline">{content.tagline}</p>
-          </Animated>
-        </div>
-      </div>
-
-      <div
-        className="story-browser"
-        role="region"
-        aria-roledescription="carousel"
-        aria-labelledby={labelId}
-        tabIndex={0}
-        onPointerDown={onPointerDown}
-        onPointerUp={onPointerUp}
-        onPointerCancel={() => {
-          dragX.current = null;
-        }}
-        onKeyDown={onKeyDown}
-      >
-        <p id={labelId} className="sr-only">
-          {content.heading}
-        </p>
-
-        <article className="story-slide" aria-live="polite" aria-atomic="true">
-          <div className="story-slide-top">
-            <Animated key={`${beat.title}-title`} type="textReveal" config={{ duration: 0.8, trigger: "on-load" }}>
-              <h3 className="t-h1 story-slide-title">{beat.title}</h3>
-            </Animated>
-          </div>
-
-          <Animated
-            key={`${beat.title}-image`}
-            type="carousel"
-            config={{ duration: 0.7, trigger: "on-load" }}
-            className="story-slide-media"
-          >
-            <img src={beat.imageSrc} alt={beat.imageAlt} className="story-slide-image" />
-          </Animated>
-
-          <div className="story-slide-copy">
-            <Animated key={`${beat.title}-body`} type="fadeUp" config={{ duration: 0.7, trigger: "on-load" }}>
-              <p className="t-body story-slide-body">{beat.body}</p>
-            </Animated>
+          <div className="story-plate">
             <Animated
-              key={`${beat.title}-cap`}
-              type="fadeUp"
-              config={{ duration: 0.6, delay: 0.06, trigger: "on-load" }}
+              type="textReveal"
+              config={{ duration: 1.1, trigger: "on-scroll-enter" }}
+              as="h2"
+              className="t-display story-title"
             >
-              <p className="t-label story-slide-caption">{content.caption}</p>
+              {headingLines.map((line, lineIndex) => (
+                <span key={line}>
+                  {lineIndex > 0 ? <br /> : null}
+                  {line}
+                </span>
+              ))}
             </Animated>
-          </div>
-        </article>
 
-        <div className="story-pag">
-          <button
-            type="button"
-            className="story-pag-btn"
-            aria-label="Previous reason"
-            onClick={() => goTo(prevIndex(index, beats.length))}
-          >
-            <PagArrow direction="prev" />
-            <HoverSlide align="center">
-              <span className="t-label">{formatSlideLabel(index)}</span>
-            </HoverSlide>
-          </button>
-          <div className="story-pag-track" aria-hidden="true">
-            <span className="story-pag-fill" style={{ width: `${slideProgress(index, beats.length)}%` }} />
+            <article className="story-slide" aria-live="polite" aria-atomic="true">
+              <Animated
+                key={`${beat.title}-image`}
+                type="carousel"
+                config={{ duration: 0.7, trigger: "on-load" }}
+                className="story-slide-media"
+              >
+                <img src={beat.imageSrc} alt={beat.imageAlt} className="story-slide-image" />
+              </Animated>
+            </article>
           </div>
-          <button
-            type="button"
-            className="story-pag-btn"
-            aria-label="Next reason"
-            onClick={() => goTo(nextIndex(index, beats.length))}
-          >
-            <HoverSlide align="center">
-              <span className="t-label">{formatSlideLabel(nextIndex(index, beats.length))}</span>
-            </HoverSlide>
-            <PagArrow direction="next" />
-          </button>
+
+          <div className="story-follow">
+            <div className="story-pag">
+              <button
+                type="button"
+                className="story-pag-btn"
+                aria-label="Previous"
+                onClick={() => goTo(prevIndex(index, beats.length))}
+              >
+                <PagArrow direction="prev" />
+                <HoverSlide align="center">
+                  <span className="t-label">{formatBeatNumber(prevIndex(index, beats.length))}</span>
+                </HoverSlide>
+              </button>
+              <div className="story-pag-track" aria-hidden="true">
+                <span
+                  className="story-pag-fill"
+                  style={{ width: `${slideProgress(index, beats.length)}%` }}
+                />
+              </div>
+              <button
+                type="button"
+                className="story-pag-btn"
+                aria-label="Next"
+                onClick={() => goTo(nextIndex(index, beats.length))}
+              >
+                <HoverSlide align="center">
+                  <span className="t-label">{formatBeatNumber(index)}</span>
+                </HoverSlide>
+                <PagArrow direction="next" />
+              </button>
+            </div>
+
+            <div className="story-slide-copy">
+              <Animated
+                key={`${beat.title}-body`}
+                type="fadeUp"
+                config={{ duration: 0.7, trigger: "on-load" }}
+              >
+                <p className="t-body story-slide-body">{beat.body}</p>
+              </Animated>
+              <Animated
+                key={`${beat.title}-cap`}
+                type="fadeUp"
+                config={{ duration: 0.6, delay: 0.06, trigger: "on-load" }}
+              >
+                <p className="t-label story-slide-caption">{content.caption}</p>
+              </Animated>
+            </div>
+          </div>
         </div>
       </div>
     </section>

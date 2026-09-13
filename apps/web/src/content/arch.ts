@@ -14,5 +14,5 @@ export const storyArch: ArchRevealContent = {
   curvedWordSpacing: 1.15,
   leftCaption: "North",
   rightCaption: "Coast",
-  tagline: ["A place to live —", "and to come back to"],
+  tagline: ["A place to live —", "to return year after year"],
 };

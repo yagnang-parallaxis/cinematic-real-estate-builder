@@ -13,6 +13,7 @@ import {
   Navigation,
   ResidenceTypes,
   Statement,
+  Storytelling,
 } from "@cinematic/section-library";
 
 import { amenityBrowser } from "../content/amenity-browser";
@@ -23,7 +24,7 @@ import { concept } from "../content/concept";
 import { enquiry } from "../content/enquiry";
 import { interiors } from "../content/interiors";
 import { location } from "../content/location";
-import { closingView, conceptCallout, residenceFigures } from "../content/passages";
+import { closingView, residenceFigures } from "../content/passages";
 import {
   architecture,
   footer,
@@ -31,6 +32,7 @@ import {
   loading,
   navigation,
   residenceTypes,
+  story,
 } from "../content/site";
 
 export default async function HomePage({
@@ -46,7 +48,7 @@ export default async function HomePage({
       <Navigation content={navigation} />
       <main id="content">
         <HomeOpen hero={hero} arch={storyArch} />
-        <Statement content={conceptCallout} />
+        <Storytelling content={story} />
         <Concept content={concept} />
         <Location content={location} />
         <ResidenceTypes content={residenceTypes} />

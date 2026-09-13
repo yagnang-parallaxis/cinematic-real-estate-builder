@@ -2,13 +2,11 @@
  * Geometry for the arch transition — Era-style.
  *
  * The arch is always a slice of a full-stage-width circle (radius = half the
- * stage width). Progress raises how much of that circle is visible:
+ * stage width). Progress raises how much of that circle is visible, from a
+ * padded bump into a full-width semicircle. It never grows straight sides or
+ * becomes a full-bleed plate — the photograph stays visible above the arc.
  *
- * Phase 1: a shallow padded bump grows into a full semicircle.
- * Phase 2: the semicircle stays on top while the panel extends upward with
- * straight sides until the photograph is covered.
- *
- * Lettering rides the top curve in both phases.
+ * Lettering rides the top curve.
  */
 
 /**
@@ -18,8 +16,14 @@
  */
 export const ARCH_H_FROM = 0.09;
 
-/** Ending panel height, as a fraction of the stage height (slight overshoot). */
-export const ARCH_H_TO = 1.06;
+/**
+ * Upper bound on panel height as a fraction of the stage. The rise is also
+ * capped at a semicircle (`archFullRadius`) so the shape stays an arc.
+ */
+export const ARCH_H_TO = 0.97;
+
+/** Fraction of the scrub used to finish the rise. After this, the closed arch holds. */
+export const ARCH_SETTLE = 0.8;
 
 /** Ease on height growth — assertive early rise, soft settle at the end. */
 export const ARCH_H_EASE = 0.88;
@@ -63,6 +67,25 @@ export function clampProgress(value: number): number {
   return Math.min(1, Math.max(0, value));
 }
 
+/**
+ * Maps section scrub onto the rise, then holds at 1 so the closed arch
+ * does not keep growing after it has reached the top of the stage.
+ */
+export function settleProgress(progress: number, settleAt = ARCH_SETTLE): number {
+  const t = clampProgress(progress);
+  const at = clampProgress(settleAt);
+
+  if (at <= 0) {
+    return 1;
+  }
+
+  if (t >= at) {
+    return 1;
+  }
+
+  return t / at;
+}
+
 function lerp(from: number, to: number, t: number): number {
   return from + (to - from) * t;
 }
@@ -100,7 +123,7 @@ export function archGeometry(progress: number, stage: ArchStage): ArchGeometry {
   const eased = t === 0 || t === 1 ? t : Math.pow(t, ARCH_H_EASE);
   const fullR = archFullRadius(stage);
   const hFrom = Math.max(1, stage.height * ARCH_H_FROM);
-  const hTo = Math.max(hFrom + 1, stage.height * ARCH_H_TO);
+  const hTo = Math.min(fullR, Math.max(hFrom + 1, stage.height * ARCH_H_TO));
   const height = lerp(hFrom, hTo, eased);
   const cx = stage.width / 2;
   const floorY = stage.height;
@@ -108,12 +131,9 @@ export function archGeometry(progress: number, stage: ArchStage): ArchGeometry {
   /*
    * Radius stays locked to half the stage width for the whole rise — early
    * frames are a padded slice of that circle, not a tiny growing bubble.
+   * The height cap keeps the finish a semicircle, never a straight-sided plate.
    */
-  if (height <= fullR) {
-    return { cx, floorY, rx: fullR, ry: fullR, height, extended: false };
-  }
-
-  return { cx, floorY, rx: fullR, ry: fullR, height, extended: true };
+  return { cx, floorY, rx: fullR, ry: fullR, height, extended: false };
 }
 
 /** The filled arch panel. */
@@ -208,7 +228,7 @@ export function curvedTextOpacity(progress: number): number {
   return ramp(progress, 0.08, 0.28);
 }
 
-/** Mark, rule and tagline arrive once the panel is past a semicircle. */
+/** Mark, rule and tagline arrive once the arc is large enough to hold them. */
 export function interiorOpacity(progress: number): number {
   return ramp(progress, 0.42, 0.68);
 }
@@ -218,9 +238,14 @@ export function capOpacity(progress: number): number {
   return ramp(progress, 0.82, 0.97);
 }
 
-/** True once the panel has taken the stage. */
-export function coversStage(progress: number): boolean {
-  return clampProgress(progress) >= 0.92;
+/** The rise never becomes a full-bleed plate. */
+export function coversStage(_progress: number): boolean {
+  return false;
+}
+
+/** True once the arc has grown over the hero CTA. */
+export function hidesHeroChrome(progress: number): boolean {
+  return clampProgress(progress) >= 0.5;
 }
 
 function ramp(value: number, start: number, end: number): number {

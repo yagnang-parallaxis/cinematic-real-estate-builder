@@ -24,6 +24,11 @@ export function formatSlideLabel(index: number): string {
   return String(index).padStart(2, "0");
 }
 
+/** One-based slide number, as shown on the boutique pager. */
+export function formatBeatNumber(index: number): string {
+  return String(index + 1);
+}
+
 export function slideProgress(index: number, length: number): number {
   if (length <= 0) {
     return 0;

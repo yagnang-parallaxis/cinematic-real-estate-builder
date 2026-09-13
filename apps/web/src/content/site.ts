@@ -86,31 +86,27 @@ export const hero: HeroContent = {
 export const story: StoryContent = {
   leftCaption: "North",
   rightCaption: "Coast",
-  tagline: "A house to live in — and come back to.",
-  heading: "Three reasons to return",
-  headingLines: ["Three reasons", "to return"],
-  caption: "Designed as a street of houses, not a stack of flats.",
+  tagline: "A place to live — and to come back to.",
+  heading: "Boutique Concept",
+  caption: "Designed as a community, not a complex.",
   beats: [
     {
-      title: "The inlet first",
-      body: "The plan turns every primary room toward the water, so the day is read in reflections rather than in a corridor of doors.",
-      imageSrc:
-        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=80",
-      imageAlt: "A double-height living room with timber, stone, and a tall window.",
+      title: "A community of eighteen",
+      body: "A boutique gated community of eighteen residences, designed around privacy, wellbeing and quiet harbour living.",
+      imageSrc: "/hero/gated-community-day.webp",
+      imageAlt: "The courtyard and residences in afternoon light.",
     },
     {
-      title: "A street of houses",
-      body: "Each home shares the same material language and a different slice of light. Nothing is stacked that cannot still feel like a house.",
-      imageSrc:
-        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=80",
-      imageAlt: "A timber and stone house facing a still inlet.",
+      title: "Houses, not a stack",
+      body: "Each home keeps its own path from the garden and its own slice of light. Nothing is stacked that cannot still feel like a house.",
+      imageSrc: "/hero/concept-garden.jpg",
+      imageAlt: "A quiet living room — a house, not a corridor of doors.",
     },
     {
-      title: "Quiet at the street",
-      body: "From the road, Aurelia is a dark timber wall and a single opening. The garden and the water are kept for the people who live here.",
-      imageSrc:
-        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1800&q=80",
-      imageAlt: "A timber doorway opening into a pale hall.",
+      title: "A place to return to",
+      body: "Rooms turn toward the water, so the day is read in reflections rather than in a corridor of doors.",
+      imageSrc: "/hero/gated-community-night.webp",
+      imageAlt: "The courtyard at dusk, pool lights on and residences lit.",
     },
   ],
 };

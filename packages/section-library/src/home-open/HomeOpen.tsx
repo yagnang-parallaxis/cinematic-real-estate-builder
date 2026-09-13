@@ -10,7 +10,7 @@ import type { HeroContent } from "../hero/types";
 /**
  * Opening chapter: scroll the tall photograph, then hold the finale frame
  * (image + CTA) while a short lead zooms the plate and the oval arch rises
- * over it — elements stay put; the dome overlaps them. No second image.
+ * over it — one photograph, the dome overlapping it. No second image.
  */
 export function HomeOpen({
   hero,

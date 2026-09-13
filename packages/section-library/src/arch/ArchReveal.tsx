@@ -3,7 +3,6 @@
 import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 
 import { BrandMark } from "../shared/BrandMark";
-import { navContrastForTone } from "../shared/tone";
 import {
   ARCH_STATIC_PROGRESS,
   archGeometry,
@@ -11,11 +10,12 @@ import {
   archPath,
   archTextInset,
   archTextPath,
-  coversStage,
   curvedTextOpacity,
   curvedWordSpacingEm,
+  hidesHeroChrome,
   interiorOpacity,
   pinProgress,
+  settleProgress,
 } from "./logic";
 import type { ArchRevealContent } from "./types";
 
@@ -26,9 +26,9 @@ const FALLBACK_STAGE = { width: 1440, height: 900 };
 
 /**
  * The handoff after the hero photograph has been scrolled: an Era-style arch
- * rises from the bottom — first as a growing semicircle, then as a full-width
- * curved panel with straight sides — until it covers the stage in the incoming
- * tone, carrying the incoming heading along its curve.
+ * rises from the bottom as a growing circular slice until it is a full-width
+ * semicircle, carrying the incoming heading along its curve. The photograph
+ * stays visible above the arc — the rise never becomes a title card.
  *
  * When composed inside HomeOpen, the photograph is the chapter's sticky media
  * — this section draws only the arch. Standalone, it can still carry its own
@@ -100,7 +100,7 @@ export function ArchReveal({
       const delay = Math.min(0.45, Math.max(0, riseAfter));
       const mapped =
         delay >= 0.999 ? raw : Math.min(1, Math.max(0, (raw - delay) / (1 - delay)));
-      setProgress(mapped);
+      setProgress(settleProgress(mapped));
     };
 
     const onScroll = () => {
@@ -145,18 +145,18 @@ export function ArchReveal({
 
   const geometry = archGeometry(progress, stage);
   const inset = archTextInset(geometry, stage);
-  const covered = coversStage(progress);
+  const overCta = hidesHeroChrome(progress);
   const wordSpacing = curvedWordSpacingEm(progress, content.curvedWordSpacing ?? 1);
 
   /*
    * The fixed navigation picks its contrast by sampling `data-nav-tone` on the
    * scroll event. This section's tone is rendered from state, which lands a
    * frame later — so without a nudge after the swap the nav keeps the tone it
-   * read before it, and is left light on a light dome once scrolling stops.
+   * read before it.
    */
   useEffect(() => {
     window.dispatchEvent(new Event("scroll"));
-  }, [covered]);
+  }, [overCta]);
 
   return (
     <section
@@ -164,10 +164,10 @@ export function ArchReveal({
       id={content.id}
       aria-label={content.label}
       data-tone={content.tone}
-      /* While the photograph still shows, the fixed nav is sitting on it. */
-      data-nav-tone={covered ? navContrastForTone(content.tone) : "on-media"}
+      /* Photograph remains above the arc, so the nav stays on the image. */
+      data-nav-tone="on-media"
       data-arch-scrub={scrubbing ? "true" : undefined}
-      data-arch-covered={covered ? "true" : undefined}
+      data-arch-covered={overCta ? "true" : undefined}
       className="arch"
     >
       <div ref={stageRef} className="arch-stage">
@@ -234,7 +234,6 @@ export function ArchReveal({
           className="arch-interior"
           style={{
             opacity: interiorOpacity(progress),
-            /* Kept below the lettering, which sits lower the lower the dome is. */
             top: `${archInteriorTop(geometry, inset, stage.height).toFixed(1)}px`,
           }}
         >

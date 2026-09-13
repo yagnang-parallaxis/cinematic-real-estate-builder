@@ -5,6 +5,7 @@
 
 .home-open {
   position: relative;
+  z-index: 0;
 }
 
 /*

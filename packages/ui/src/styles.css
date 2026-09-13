@@ -1520,109 +1520,65 @@
   }
 }
 
-/* Storytelling */
+/* Storytelling — boutique concept, continues the arch colour plate. */
 
 .story {
+  position: relative;
+  z-index: 1;
   color: var(--tone-fg);
   background: var(--tone-bg);
 }
 
-.story-intro,
+.story-shell,
 .story-browser {
   display: flex;
-  flex-direction: column;
-  min-height: 100svh;
-  padding: calc(var(--nav-cell) + var(--space-16)) var(--nav-offset) max(var(--space-48), 3.5rem);
-}
-
-.story-intro {
-  justify-content: flex-start;
-  align-items: center;
-  gap: var(--space-32);
-}
-
-.story-title {
   width: 100%;
-  max-width: calc(100% - var(--gutter-x) * 2);
-  margin-inline: auto;
-  text-align: center;
-  line-height: 0.92;
-}
-
-.story-lockup {
-  display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-24);
-  margin-top: auto;
-}
-
-.story-flanks {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-32);
-}
-
-.story-flank {
-  text-align: center;
-}
-
-.story-mark {
-  width: var(--nav-mark);
-  height: var(--nav-mark);
-}
-
-.story-rule {
-  display: flex;
-  justify-content: center;
-  height: var(--space-48);
-}
-
-.story-rule > * {
-  height: 100%;
-}
-
-.story-rule-line {
-  display: block;
-  width: 0.75px;
-  height: 100%;
-  background: currentColor;
-}
-
-.story-tagline {
-  text-align: center;
-  max-width: 28rem;
 }
 
 .story-browser {
-  justify-content: space-between;
   outline: none;
   touch-action: pan-y;
 }
 
-.story-slide {
+.story-plate {
   display: flex;
-  flex: 1;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100svh;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
-  gap: var(--space-32);
+  gap: clamp(3.5rem, 12vh, 8rem);
+  padding: var(--gutter-top) var(--gutter-x) var(--space-48);
 }
 
-.story-slide-top {
-  display: flex;
-  justify-content: center;
-  padding-top: var(--space-24);
-}
-
-.story-slide-title {
+.story-title {
+  margin: 0;
+  max-width: 100%;
+  font-size: clamp(2.4rem, 7.2vw, 7.25rem);
+  letter-spacing: -0.03em;
+  line-height: 0.86;
   text-align: center;
 }
 
+@media (min-width: 992px) {
+  .story-title {
+    white-space: nowrap;
+  }
+}
+
+.story-slide {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+}
+
 .story-slide-media {
-  width: min(62vw, 52rem);
-  margin-inline: auto;
-  aspect-ratio: 2 / 1;
+  width: min(36vw, 28rem);
+  aspect-ratio: 16 / 9;
   overflow: hidden;
 }
 
@@ -1632,22 +1588,45 @@
   object-fit: cover;
 }
 
+.story-follow {
+  display: flex;
+  width: 100%;
+  min-height: 78svh;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2rem, 5vh, 3.5rem);
+  padding: clamp(1.25rem, 3vh, 2.5rem) var(--gutter-x) max(7rem, 20vh);
+}
+
 .story-slide-copy {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-24);
-  padding-bottom: var(--space-16);
+  gap: var(--space-32);
 }
 
 .story-slide-body {
-  max-width: 38rem;
+  max-width: 34rem;
   text-align: center;
 }
 
 .story-slide-caption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85em;
+  max-width: 32rem;
+  letter-spacing: 0.16em;
   text-align: center;
-  max-width: 22rem;
+}
+
+.story-slide-caption::before {
+  content: "";
+  flex: 0 0 0.35em;
+  width: 0.35em;
+  height: 0.35em;
+  border-radius: 50%;
+  background: currentColor;
 }
 
 .story-pag {
@@ -1656,7 +1635,6 @@
   justify-content: center;
   gap: var(--space-16);
   min-height: var(--space-48);
-  margin-top: var(--space-32);
 }
 
 .story-pag-btn {
@@ -1688,30 +1666,28 @@
 }
 
 @media (max-width: 991px) {
+  .story-plate {
+    justify-content: flex-start;
+    gap: clamp(2.25rem, 7vh, 3.5rem);
+    padding-top: calc(var(--gutter-top) + var(--space-24));
+    padding-bottom: var(--space-32);
+  }
+
   .story-title {
-    font-size: var(--text-h2);
-  }
-
-  .story-intro,
-  .story-browser {
-    padding-bottom: calc(var(--nav-mark) + var(--space-32));
-  }
-
-  .story-slide-top {
-    padding-top: 0;
-  }
-
-  .story-slide-title {
-    font-size: var(--text-h2);
+    font-size: clamp(2.25rem, 13vw, 3.75rem);
   }
 
   .story-slide-media {
-    width: 100%;
-    max-height: 28svh;
+    width: min(86vw, 22rem);
+  }
+
+  .story-follow {
+    min-height: 0;
+    padding-bottom: max(4.5rem, 14vh);
   }
 
   .story-pag-track {
-    width: calc(272vw / var(--type-scale-ratio));
+    width: calc(200vw / var(--type-scale-ratio));
   }
 }
 
