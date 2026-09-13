@@ -12,7 +12,7 @@
 .arch {
   --arch-curve: calc(52vw / var(--type-scale-ratio));
   --arch-mark: calc(56vw / var(--type-scale-ratio));
-  --arch-rule: calc(232vw / var(--type-scale-ratio));
+  --arch-rule: calc(176vw / var(--type-scale-ratio));
   --arch-flank-gap: calc(96vw / var(--type-scale-ratio));
   position: relative;
   z-index: 1;
@@ -106,8 +106,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--space-48);
-  padding: 0 var(--gutter-x) calc(var(--space-48) * 2);
+  gap: var(--space-24);
+  padding: 0 var(--gutter-x) var(--space-24);
   color: var(--tone-fg);
   pointer-events: none;
 }
@@ -144,7 +144,7 @@
 }
 
 .arch-tagline {
-  margin: auto 0 0;
+  margin: 0;
   color: color-mix(in oklab, currentColor 78%, transparent);
   letter-spacing: 0.14em;
   line-height: 1.72;
@@ -159,7 +159,7 @@
 
 @media (min-width: 992px) {
   .arch[data-arch-scrub="true"] {
-    height: 260svh;
+    height: var(--arch-run, 200svh);
   }
 
   .arch[data-arch-scrub="true"] .arch-stage {

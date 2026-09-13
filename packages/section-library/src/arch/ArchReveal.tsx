@@ -4,6 +4,9 @@ import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 
 import { BrandMark } from "../shared/BrandMark";
 import {
+  ARCH_CARRY_S,
+  ARCH_HANDOFF,
+  ARCH_SCROLL_VH,
   ARCH_STATIC_PROGRESS,
   archGeometry,
   archInteriorTop,
@@ -16,6 +19,7 @@ import {
   interiorOpacity,
   pinProgress,
   settleProgress,
+  shouldHandoff,
 } from "./logic";
 import type { ArchRevealContent } from "./types";
 
@@ -93,6 +97,70 @@ export function ArchReveal({
 
     let frame = 0;
     let active = false;
+    let handed = false;
+    let carrying = false;
+    let fallback = 0;
+
+    const carryToStory = () => {
+      const story = document.getElementById("story");
+      if (!story || carrying) {
+        return;
+      }
+
+      const to = story.getBoundingClientRect().top + window.scrollY;
+      if (window.scrollY >= to - 8) {
+        return;
+      }
+
+      handed = true;
+      carrying = true;
+      const duration = ARCH_CARRY_S;
+      const ease = (t: number) => 1 - (1 - t) ** 3;
+      const done = () => {
+        carrying = false;
+      };
+      const lenis = (
+        window as Window & {
+          cinematicLenis?: {
+            scrollTo: (
+              t: HTMLElement,
+              o: {
+                duration: number;
+                offset: number;
+                lock?: boolean;
+                easing?: (n: number) => number;
+                onComplete?: () => void;
+              },
+            ) => void;
+          };
+        }
+      ).cinematicLenis;
+
+      if (lenis) {
+        lenis.scrollTo(story, {
+          duration,
+          offset: 0,
+          lock: true,
+          easing: ease,
+          onComplete: done,
+        });
+        return;
+      }
+
+      const from = window.scrollY;
+      const start = performance.now();
+      const ms = duration * 1000;
+      const step = (now: number) => {
+        const t = Math.min(1, (now - start) / ms);
+        window.scrollTo(0, from + (to - from) * ease(t));
+        if (t < 1) {
+          fallback = requestAnimationFrame(step);
+        } else {
+          done();
+        }
+      };
+      fallback = requestAnimationFrame(step);
+    };
 
     const update = () => {
       frame = 0;
@@ -101,6 +169,15 @@ export function ArchReveal({
       const mapped =
         delay >= 0.999 ? raw : Math.min(1, Math.max(0, (raw - delay) / (1 - delay)));
       setProgress(settleProgress(mapped));
+
+      if (raw < ARCH_HANDOFF - 0.1) {
+        handed = false;
+        return;
+      }
+
+      if (!handed && !carrying && shouldHandoff(raw)) {
+        carryToStory();
+      }
     };
 
     const onScroll = () => {
@@ -136,6 +213,9 @@ export function ArchReveal({
       if (frame) {
         cancelAnimationFrame(frame);
       }
+      if (fallback) {
+        cancelAnimationFrame(fallback);
+      }
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
       desktop.removeEventListener("change", sync);
@@ -169,6 +249,7 @@ export function ArchReveal({
       data-arch-scrub={scrubbing ? "true" : undefined}
       data-arch-covered={overCta ? "true" : undefined}
       className="arch"
+      style={{ "--arch-run": `${ARCH_SCROLL_VH}svh` } as CSSProperties}
     >
       <div ref={stageRef} className="arch-stage">
         {!omitBackdrop && content.backdropSrc ? (

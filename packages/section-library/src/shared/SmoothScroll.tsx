@@ -30,6 +30,7 @@ export function SmoothScroll() {
         // Touch scrolling stays native; virtualising it fights the platform.
         syncTouch: false,
       });
+      (window as Window & { cinematicLenis?: typeof lenis }).cinematicLenis = lenis;
 
       let frame = requestAnimationFrame(function raf(time: number) {
         lenis.raf(time);
@@ -59,6 +60,7 @@ export function SmoothScroll() {
         cancelAnimationFrame(frame);
         document.removeEventListener("click", onAnchor);
         document.documentElement.removeAttribute("data-smooth-scroll");
+        delete (window as Window & { cinematicLenis?: typeof lenis }).cinematicLenis;
         lenis.destroy();
       };
     })();

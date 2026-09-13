@@ -23,7 +23,7 @@ export const ARCH_H_FROM = 0.09;
 export const ARCH_H_TO = 0.97;
 
 /** Fraction of the scrub used to finish the rise. After this, the closed arch holds. */
-export const ARCH_SETTLE = 0.8;
+export const ARCH_SETTLE = 0.9;
 
 /** Ease on height growth — assertive early rise, soft settle at the end. */
 export const ARCH_H_EASE = 0.88;
@@ -35,7 +35,16 @@ export const ARCH_H_EASE = 0.88;
 export const ARCH_STATIC_PROGRESS = 0.48;
 
 /** How much of the scroll range the dome takes to grow, in viewport heights. */
-export const ARCH_SCROLL_VH = 260;
+export const ARCH_SCROLL_VH = 200;
+
+/**
+ * Raw pin progress at which the visitor has finished most of the arc and
+ * the page should ease them on to Boutique Concept.
+ */
+export const ARCH_HANDOFF = 0.9;
+
+/** Seconds for the ease from the closed arc onto the next chapter. */
+export const ARCH_CARRY_S = 2.6;
 
 export interface ArchStage {
   width: number;
@@ -71,6 +80,10 @@ export function clampProgress(value: number): number {
  * Maps section scrub onto the rise, then holds at 1 so the closed arch
  * does not keep growing after it has reached the top of the stage.
  */
+export function shouldHandoff(progress: number, handoffAt = ARCH_HANDOFF): boolean {
+  return clampProgress(progress) >= handoffAt;
+}
+
 export function settleProgress(progress: number, settleAt = ARCH_SETTLE): number {
   const t = clampProgress(progress);
   const at = clampProgress(settleAt);
@@ -228,9 +241,9 @@ export function curvedTextOpacity(progress: number): number {
   return ramp(progress, 0.08, 0.28);
 }
 
-/** Mark, rule and tagline arrive once the arc is large enough to hold them. */
+/** Mark, rule and tagline arrive once the arc is nearly closed. */
 export function interiorOpacity(progress: number): number {
-  return ramp(progress, 0.42, 0.68);
+  return ramp(progress, 0.72, 0.88);
 }
 
 /** Soft plate closes the top corners once the arch doorway fills the stage. */

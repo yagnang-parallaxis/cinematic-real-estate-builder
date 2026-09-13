@@ -4,6 +4,9 @@ import {
   ARCH_H_EASE,
   ARCH_H_FROM,
   ARCH_H_TO,
+  ARCH_CARRY_S,
+  ARCH_HANDOFF,
+  ARCH_SCROLL_VH,
   ARCH_SETTLE,
   ARCH_STATIC_PROGRESS,
   archFullRadius,
@@ -22,6 +25,7 @@ import {
   interiorOpacity,
   pinProgress,
   settleProgress,
+  shouldHandoff,
 } from "./logic";
 
 const STAGE = { width: 1440, height: 900 };
@@ -223,10 +227,10 @@ describe("entry ramps", () => {
     expect(curvedTextOpacity(0.28)).toBe(1);
   });
 
-  it("holds the interior back until the arc is large enough to carry it", () => {
-    expect(interiorOpacity(0.3)).toBe(0);
-    expect(interiorOpacity(0.55)).toBeCloseTo(0.5, 5);
-    expect(interiorOpacity(0.68)).toBe(1);
+  it("holds the interior back until the arc is nearly closed", () => {
+    expect(interiorOpacity(0.7)).toBe(0);
+    expect(interiorOpacity(0.8)).toBeCloseTo(0.5, 5);
+    expect(interiorOpacity(0.88)).toBe(1);
   });
 });
 
@@ -259,13 +263,38 @@ describe("capOpacity", () => {
 });
 
 describe("settleProgress", () => {
-  it("finishes the rise before the scrub ends, then holds", () => {
+  it("finishes the rise at the handoff, so the closed arch does not sit in a long hold", () => {
+    expect(ARCH_SETTLE).toBe(ARCH_HANDOFF);
     expect(ARCH_SETTLE).toBeGreaterThan(0.5);
     expect(ARCH_SETTLE).toBeLessThan(1);
     expect(settleProgress(0)).toBe(0);
     expect(settleProgress(ARCH_SETTLE / 2)).toBeCloseTo(0.5, 5);
     expect(settleProgress(ARCH_SETTLE)).toBe(1);
     expect(settleProgress(1)).toBe(1);
+  });
+});
+
+describe("shouldHandoff", () => {
+  it("waits until 90% of the arc, then hands off to Boutique Concept", () => {
+    expect(ARCH_HANDOFF).toBe(0.9);
+    expect(shouldHandoff(0)).toBe(false);
+    expect(shouldHandoff(0.89)).toBe(false);
+    expect(shouldHandoff(0.9)).toBe(true);
+    expect(shouldHandoff(1)).toBe(true);
+  });
+});
+
+describe("ARCH_SCROLL_VH", () => {
+  it("gives the rise about a viewport of scrub so opening is not rushed", () => {
+    expect(ARCH_SCROLL_VH).toBeGreaterThanOrEqual(190);
+    expect(ARCH_SCROLL_VH).toBeLessThanOrEqual(220);
+  });
+});
+
+describe("ARCH_CARRY_S", () => {
+  it("eases into Boutique Concept slowly instead of snapping", () => {
+    expect(ARCH_CARRY_S).toBeGreaterThanOrEqual(2.4);
+    expect(ARCH_CARRY_S).toBeLessThanOrEqual(3.2);
   });
 });
 
