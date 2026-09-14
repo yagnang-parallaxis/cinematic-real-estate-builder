@@ -706,7 +706,7 @@
   --loader-tagline: calc(14vw / var(--type-scale-ratio));
   --loader-place: calc(96vw / var(--type-scale-ratio));
   /* Script hang below the wordmark (translate + flourish overflow). */
-  --loader-place-hang: calc(var(--loader-place) * 0.75);
+  --loader-place-hang: calc(var(--loader-place) * 0.88);
   --loader-rule: calc(96vw / var(--type-scale-ratio));
   --loader-rule-gap: calc(48vw / var(--type-scale-ratio));
   position: fixed;
@@ -825,8 +825,8 @@
   font-family: var(--font-accent);
   font-size: var(--loader-place);
   line-height: 1;
-  /* Sits across the wordmark's last baseline, a shade right of its axis. */
-  translate: -40% 58%;
+  /* Sits under the wordmark's last baseline, a shade right of its axis. */
+  translate: -40% 76%;
   rotate: -7deg;
   white-space: nowrap;
   pointer-events: none;
@@ -971,7 +971,7 @@
     --loader-flank-track: 0.5em;
     --loader-tagline: calc(11vw / var(--type-scale-ratio));
     --loader-place: calc(56vw / var(--type-scale-ratio));
-    --loader-place-hang: calc(var(--loader-place) * 0.7);
+    --loader-place-hang: calc(var(--loader-place) * 0.82);
     --loader-rule: calc(64vw / var(--type-scale-ratio));
     --loader-rule-gap: calc(32vw / var(--type-scale-ratio));
   }
@@ -1000,7 +1000,7 @@
   }
 
   .loader-place {
-    translate: -42% 55%;
+    translate: -42% 72%;
   }
 }
 
@@ -1236,14 +1236,63 @@
   text-align: center;
 }
 
+.hero-title-line {
+  display: block;
+  overflow: hidden;
+}
+
+.hero-title-line-inner {
+  display: block;
+}
+
+.hero-title-cascade {
+  overflow: visible;
+  white-space: nowrap;
+}
+
+.hero-title-char {
+  display: inline-block;
+}
+
 .hero-place {
   align-self: center;
-  margin-top: -0.42em;
+  margin-top: -0.18em;
   margin-right: -0.6em;
   font-family: var(--font-accent);
   font-size: var(--hero-place);
   line-height: 1;
   transform: rotate(-7deg);
+}
+
+.hero-copy-brand:not(.is-intro) .hero-title-line-inner {
+  transform: translateY(110%);
+}
+
+.hero-copy-brand:not(.is-intro) .hero-title-char {
+  opacity: 0;
+  transform: translate3d(0, 0.42em, 0);
+}
+
+.hero-copy-brand:not(.is-intro) .hero-place,
+.hero-copy-brand:not(.is-intro) .hero-sentence-wrap {
+  opacity: 0;
+}
+
+.hero-copy-brand.is-intro .hero-title-line-inner {
+  animation: hero-brand-unmask 1.05s var(--ease-out) both;
+}
+
+.hero-copy-brand.is-intro .hero-title-char {
+  animation: hero-brand-char 0.82s var(--ease-out) both;
+  animation-delay: calc(0.22s + var(--char) * 0.058s);
+}
+
+.hero-copy-brand.is-intro .hero-place {
+  animation: hero-brand-script 1.15s var(--ease-out) 0.48s both;
+}
+
+.hero-copy-brand.is-intro .hero-sentence-wrap {
+  animation: hero-brand-rise 0.9s var(--ease-out) 1.05s both;
 }
 
 /* Centered under the lockup — one line, not full-bleed. */
@@ -1450,6 +1499,52 @@
   }
 }
 
+@keyframes hero-brand-unmask {
+  from {
+    transform: translateY(110%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-brand-char {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.42em, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hero-brand-script {
+  from {
+    opacity: 0;
+    transform: rotate(-7deg) translate3d(-0.35em, 0.2em, 0) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: rotate(-7deg);
+  }
+}
+
+@keyframes hero-brand-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.7rem, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media (max-width: 991px) {
   .hero {
     --hero-title: calc(64vw / var(--type-scale-ratio));
@@ -1483,7 +1578,7 @@
   }
 
   .hero-place {
-    margin-top: -0.3em;
+    margin-top: -0.08em;
     margin-right: -0.4em;
   }
 }
@@ -1491,6 +1586,19 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-copy-brand {
     transform: none;
+  }
+
+  .hero-copy-brand:not(.is-intro) .hero-title-line-inner,
+  .hero-copy-brand:not(.is-intro) .hero-title-char,
+  .hero-copy-brand:not(.is-intro) .hero-place,
+  .hero-copy-brand:not(.is-intro) .hero-sentence-wrap,
+  .hero-copy-brand.is-intro .hero-title-line-inner,
+  .hero-copy-brand.is-intro .hero-title-char,
+  .hero-copy-brand.is-intro .hero-place,
+  .hero-copy-brand.is-intro .hero-sentence-wrap {
+    opacity: 1;
+    transform: none;
+    animation: none;
   }
 
   .hero-cta-ring-rest,

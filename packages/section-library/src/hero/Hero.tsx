@@ -2,10 +2,11 @@
 
 import { Animated } from "@cinematic/animation-engine";
 import { cn } from "@cinematic/ui";
-import { useEffect, useId, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 
 import { HoverSlide } from "../shared/HoverSlide";
-import { brandLeaveProgress, clampHotspots, magneticOffset, resolveHeroMedia } from "./logic";
+import { OPEN_EVENT } from "../loading/logic";
+import { brandLeaveProgress, clampHotspots, lockupChars, magneticOffset, resolveHeroMedia } from "./logic";
 import type { HeroContent, HeroHotspot, HeroVariant } from "./types";
 
 /**
@@ -81,10 +82,13 @@ function HeroPins({ hotspots, tablistId }: { hotspots: HeroHotspot[]; tablistId:
 export function Hero({ content }: { content: HeroContent }) {
   const [variant, setVariant] = useState<HeroVariant>("day");
   const [pull, setPull] = useState({ x: 0, y: 0 });
+  const [intro, setIntro] = useState(false);
   const ctaRef = useRef<HTMLAnchorElement>(null);
   const brandCopyRef = useRef<HTMLDivElement>(null);
   const tablistId = useId();
   const headingLines = content.headingLines ?? [content.heading];
+  const leadLine = headingLines[0] ?? content.heading;
+  const cascadeChars = lockupChars(headingLines[1] ?? "");
   const hotspots = clampHotspots(content.hotspots);
   const day = resolveHeroMedia(content, "day");
   const night = resolveHeroMedia(content, "night");
@@ -123,6 +127,16 @@ export function Hero({ content }: { content: HeroContent }) {
       node.style.removeProperty("--hero-brand-out");
       node.classList.remove("is-away");
     };
+  }, []);
+
+  useEffect(() => {
+    const play = () => setIntro(true);
+    window.addEventListener(OPEN_EVENT, play);
+    const loader = document.querySelector(".loader");
+    if (!loader || loader.classList.contains("is-leaving")) {
+      play();
+    }
+    return () => window.removeEventListener(OPEN_EVENT, play);
   }, []);
 
   const onCtaMove = (event: MouseEvent<HTMLAnchorElement>) => {
@@ -166,34 +180,33 @@ export function Hero({ content }: { content: HeroContent }) {
         </div>
 
         <div className="hero-station hero-station-brand">
-          <div ref={brandCopyRef} className="hero-copy hero-copy-brand">
+          <div
+            ref={brandCopyRef}
+            className={cn("hero-copy hero-copy-brand", intro && "is-intro")}
+          >
             <div className="hero-lockup">
-              <Animated
-                type="textReveal"
-                config={{ duration: 1.1, trigger: "on-load" }}
-                as="h1"
-                className="t-h1 hero-title"
-              >
-                {headingLines.map((line) => (
-                  <span key={line}>
-                    {line}
-                    <br />
+              <h1 className="t-h1 hero-title">
+                <span className="hero-title-line">
+                  <span className="hero-title-line-inner">{leadLine}</span>
+                </span>
+                {cascadeChars.length > 0 ? (
+                  <span className="hero-title-line hero-title-cascade">
+                    {cascadeChars.map((glyph, index) => (
+                      <span
+                        key={`${glyph}-${index}`}
+                        className="hero-title-char"
+                        style={{ "--char": index } as CSSProperties}
+                      >
+                        {glyph === " " ? "\u00a0" : glyph}
+                      </span>
+                    ))}
                   </span>
-                ))}
-              </Animated>
-              <Animated
-                type="textReveal"
-                config={{ duration: 0.9, delay: 0.08, trigger: "on-load" }}
-              >
-                <p className="hero-place">{content.place}</p>
-              </Animated>
+                ) : null}
+              </h1>
+              <p className="hero-place">{content.place}</p>
             </div>
 
-            <Animated
-              type="fadeUp"
-              config={{ duration: 0.8, delay: 0.16, trigger: "on-load" }}
-              className="hero-sentence-wrap"
-            >
+            <div className="hero-sentence-wrap">
               <div className="hero-sentence t-h5">
                 <span className="hero-sentence-lead">{content.supportingBefore}</span>
                 <div className="hero-tabs" role="tablist" aria-label="Light">
@@ -219,7 +232,7 @@ export function Hero({ content }: { content: HeroContent }) {
                 </div>
                 <span className="hero-sentence-tail">{content.supportingAfter}</span>
               </div>
-            </Animated>
+            </div>
           </div>
         </div>
 

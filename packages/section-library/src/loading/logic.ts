@@ -1,5 +1,8 @@
 import type { LoadingContent } from "./types";
 
+/** Fired as the loader starts to leave, so the hero lockup can enter with it. */
+export const OPEN_EVENT = "cinematic:open";
+
 /** Below this the composition cannot be read; above it the hold is a wait. */
 export const MIN_HOLD_MS = 600;
 export const MAX_HOLD_MS = 6000;

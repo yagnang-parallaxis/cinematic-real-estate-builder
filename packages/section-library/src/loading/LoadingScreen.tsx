@@ -4,7 +4,7 @@ import { cn } from "@cinematic/ui";
 import { useEffect, useState, type CSSProperties } from "react";
 
 import { BrandMark } from "../shared/BrandMark";
-import { clampHoldMs, taglineLines, wordmarkLines } from "./logic";
+import { clampHoldMs, OPEN_EVENT, taglineLines, wordmarkLines } from "./logic";
 import type { LoadingContent } from "./types";
 
 const EXIT_MS = 450;
@@ -39,7 +39,10 @@ export function LoadingScreen({
       return;
     }
 
-    const leave = window.setTimeout(() => setLeaving(true), holdMs);
+    const leave = window.setTimeout(() => {
+      setLeaving(true);
+      window.dispatchEvent(new Event(OPEN_EVENT));
+    }, holdMs);
     const unmount = window.setTimeout(() => setMounted(false), holdMs + EXIT_MS);
 
     return () => {

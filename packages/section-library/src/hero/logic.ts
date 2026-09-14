@@ -15,6 +15,11 @@ export function clampHotspots(hotspots: HeroHotspot[] = []): HeroHotspot[] {
   return hotspots.slice(0, 4);
 }
 
+/** Glyphs of one lockup line, so the second word can arrive letter by letter. */
+export function lockupChars(line: string): string[] {
+  return Array.from(line);
+}
+
 /**
  * How far the brand lockup and sentence have left — 0 at the top of the page,
  * 1 after a short first-viewport travel. Scroll back reverses the same curve.

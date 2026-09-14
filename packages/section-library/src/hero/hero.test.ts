@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { brandLeaveProgress, clampHotspots, magneticOffset, resolveHeroMedia } from "./logic";
+import { brandLeaveProgress, clampHotspots, lockupChars, magneticOffset, resolveHeroMedia } from "./logic";
 import type { HeroContent } from "./types";
 
 const sample: HeroContent = {
@@ -40,6 +40,20 @@ const sample: HeroContent = {
     },
   ],
 };
+
+describe("lockupChars", () => {
+  it("splits a lockup line into glyphs so they can arrive one at a time", () => {
+    expect(lockupChars("Residences")).toEqual([..."Residences"]);
+  });
+
+  it("keeps a space as its own glyph", () => {
+    expect(lockupChars("A B")).toEqual(["A", " ", "B"]);
+  });
+
+  it("is empty when the line is empty", () => {
+    expect(lockupChars("")).toEqual([]);
+  });
+});
 
 describe("hero content", () => {
   it("requires a heading, place, media, and a primary action", () => {
