@@ -39,8 +39,12 @@ export interface ConceptRoutePanel {
   footnote: string;
 }
 
-/** The three corners the horizontal strip actually uses. */
-export type ConceptFloralPlace = "intro-top-left" | "intro-bottom-right" | "route-top-right";
+/** The four places the horizontal strip actually uses. */
+export type ConceptFloralPlace =
+  | "intro-top-left"
+  | "intro-bottom-right"
+  | "between-bottom-right"
+  | "route-top-right";
 
 export type ConceptFloralCorner = "top-left" | "top-right" | "bottom-right";
 
@@ -54,14 +58,14 @@ export interface ConceptFloralAccent {
 }
 
 /**
- * The strip keeps flowers in exactly three places, each travelling with its
- * own panel: hanging from the intro's top-left, a live clip stood upright
- * on the intro | between seam, and hanging from the route's top-right. The
- * bush sits on the join so half can show on each slide.
+ * The strip keeps flowers in four places: hanging from the intro's top-left,
+ * a live clip on each track join, and hanging from the route's top-right.
+ * Each bush sits on its join so half can show on the neighbouring slides.
  */
 export interface ConceptFloral {
   introTopLeft?: string;
   introBottomRight?: string;
+  betweenBottomRight?: string;
   routeTopRight?: string;
 }
 
@@ -72,6 +76,6 @@ export interface ConceptContent {
   intro: ConceptIntroPanel;
   between: ConceptBetweenPanel;
   route: ConceptRoutePanel;
-  /** Optional clips for the three floral seats (see `ConceptFloral`). */
+  /** Optional clips for the floral seats (see `ConceptFloral`). */
   floral?: ConceptFloral;
 }

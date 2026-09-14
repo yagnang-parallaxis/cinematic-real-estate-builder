@@ -287,16 +287,18 @@ describe("floralAccentsForPanel", () => {
   const floral = {
     introTopLeft: "/flowers/a.webm",
     introBottomRight: "/flowers/b.webm",
+    betweenBottomRight: "/flowers/d.webm",
     routeTopRight: "/flowers/c.webm",
   };
 
-  it("keeps exactly three seats, with the bush on the intro | between seam", () => {
-    expect(CONCEPT_FLORAL_SLOTS).toHaveLength(3);
+  it("keeps a bush on each track join, plus the two hanging corners", () => {
+    expect(CONCEPT_FLORAL_SLOTS).toHaveLength(4);
     expect(floralAccentsForPanel(floral, "intro")).toEqual([
       { place: "intro-top-left", corner: "top-left", src: "/flowers/a.webm" },
     ]);
     expect(floralAccentsForPanel(floral, "seam")).toEqual([
       { place: "intro-bottom-right", corner: "bottom-right", src: "/flowers/b.webm" },
+      { place: "between-bottom-right", corner: "bottom-right", src: "/flowers/d.webm" },
     ]);
     expect(floralAccentsForPanel(floral, "route")).toEqual([
       { place: "route-top-right", corner: "top-right", src: "/flowers/c.webm" },

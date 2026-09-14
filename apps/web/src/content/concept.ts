@@ -54,6 +54,7 @@ export const concept: ConceptContent = {
   floral: {
     introTopLeft: "/flowers/bougainvillea-flowers_01.webm",
     introBottomRight: "/flowers/bougainvillea-flowers_02.webm",
+    betweenBottomRight: "/flowers/bougainvillea-flowers_02.webm",
     routeTopRight: "/flowers/bougainvillea-flowers_07.webm",
   },
 };

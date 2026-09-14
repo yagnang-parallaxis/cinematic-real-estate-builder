@@ -10,11 +10,12 @@ import type {
  * the pin can be reasoned about — and tested — without a layout engine.
  */
 
-/** Three authored seats. The bottom bush is mounted on the track seam, not
+/** Four authored seats. Both bushes are mounted on the track joins, not
  *  inside a panel — otherwise the next slide paints over the overflowing half. */
 export const CONCEPT_FLORAL_SLOTS = [
   { place: "intro-top-left", panel: "intro", corner: "top-left" },
   { place: "intro-bottom-right", panel: "seam", corner: "bottom-right" },
+  { place: "between-bottom-right", panel: "seam", corner: "bottom-right" },
   { place: "route-top-right", panel: "route", corner: "top-right" },
 ] as const;
 
@@ -210,12 +211,14 @@ function floralSrc(floral: ConceptFloral | undefined, place: ConceptFloralPlace)
       return floral.introTopLeft;
     case "intro-bottom-right":
       return floral.introBottomRight;
+    case "between-bottom-right":
+      return floral.betweenBottomRight;
     case "route-top-right":
       return floral.routeTopRight;
   }
 }
 
-/** Clips that belong on a given panel — never more than the three seats. */
+/** Clips that belong on a given panel — never more than the four seats. */
 export function floralAccentsForPanel(
   floral: ConceptFloral | undefined,
   panel: ConceptFloralPanel,

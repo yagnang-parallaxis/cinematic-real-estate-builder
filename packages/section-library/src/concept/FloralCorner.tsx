@@ -9,8 +9,8 @@ function isVideoSrc(src: string) {
 }
 
 /**
- * One of the three floral seats. Corner sprays hang as shot; the seam
- * bush is the same footage stood on its head so it grows up from the join.
+ * One floral seat. Corner sprays hang as shot; the seam bushes are the
+ * same footage stood on its head so they grow up from the join.
  */
 export function FloralCorner({ place, corner, src }: ConceptFloralAccent) {
   const videoRef = useRef<HTMLVideoElement>(null);

@@ -35,9 +35,8 @@
 }
 
 /*
- * Three floral seats, each living on its panel so it travels with the
- * track. On desktop the panel is the full pinned screen, so these corners
- * are the viewport corners — the same hang the reference uses.
+ * Floral seats live on the track so they travel with the pin. Corners hang
+ * from their panel; both bushes are track children, planted on the joins.
  */
 .concept-panel {
   position: relative;
@@ -81,10 +80,15 @@
 
 /* Current hang was stem-up, drooping left. A further 180° (net −90°)
    puts the stem on the floor so the spray grows up across the join. */
-.concept-floral[data-place="intro-bottom-right"] .concept-floral-media {
+.concept-floral[data-place="intro-bottom-right"] .concept-floral-media,
+.concept-floral[data-place="between-bottom-right"] .concept-floral-media {
   object-fit: contain;
   object-position: center;
   transform: translateZ(0) scaleY(-1) rotate(-90deg);
+}
+
+.concept-floral[data-place="between-bottom-right"] .concept-floral-media {
+  transform: translateZ(0) scaleY(-1) scaleX(-1) rotate(-90deg);
 }
 
 .concept-brow {
@@ -357,17 +361,26 @@
     translate: -6% -12%;
   }
 
-  /* Centered on the intro | between join, planted on the floor. */
-  .concept-track > .concept-floral[data-place="intro-bottom-right"] {
+  /* Planted on the floor of each track join, centred so half reads on
+     each neighbouring slide. */
+  .concept-track > .concept-floral[data-place="intro-bottom-right"],
+  .concept-track > .concept-floral[data-place="between-bottom-right"] {
     top: auto;
     right: auto;
-    left: 100vw;
     bottom: 0;
     z-index: 1;
     width: 38vw;
     aspect-ratio: 1;
     overflow: visible;
     translate: -50% 18%;
+  }
+
+  .concept-track > .concept-floral[data-place="intro-bottom-right"] {
+    left: 100vw;
+  }
+
+  .concept-track > .concept-floral[data-place="between-bottom-right"] {
+    left: 200vw;
   }
 
   .concept-floral[data-place="route-top-right"] {
