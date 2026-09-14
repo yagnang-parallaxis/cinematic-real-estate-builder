@@ -6,8 +6,19 @@
   overflow: hidden;
 }
 
+/*
+ * Beat the global `[data-tone] { background }` rule. Vista is tagged `color`
+ * (tide) so the photograph sits on a grey-blue plate; parallax then lifts the
+ * image and leaves that plate as a hard band against the cream Concept
+ * section. Paint the leftover in the incoming paper so the two pages meet.
+ */
+.vista[data-tone] {
+  background: var(--paper);
+}
+
 .vista-stage {
   position: relative;
+  overflow: hidden;
 }
 
 .vista-stage::after {
@@ -32,6 +43,8 @@
 .vista-image {
   height: auto;
   vertical-align: middle;
+  /* Extra cover so the yPercent scrub never opens a plate at the foot. */
+  scale: 1.16;
 }
 
 .vista-copy {

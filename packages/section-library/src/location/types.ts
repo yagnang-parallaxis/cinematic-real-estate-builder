@@ -8,7 +8,7 @@ export interface LocationPoint {
 
 export interface LocationContent {
   eyebrow: string;
-  /** Place name, split into the lines the heading reveals one at a time. */
+  /** Place name, then the supporting line drawn in the script face. */
   placeLines: string[];
   regionLabel: string;
   description: string;

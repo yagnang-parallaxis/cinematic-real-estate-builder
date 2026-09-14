@@ -1,7 +1,22 @@
+import type {
+  ConceptFloral,
+  ConceptFloralAccent,
+  ConceptFloralPanel,
+  ConceptFloralPlace,
+} from "./types";
+
 /**
  * Scroll math for the pinned horizontal narrative. Everything here is pure so
  * the pin can be reasoned about — and tested — without a layout engine.
  */
+
+/** Three authored seats. The bottom bush is mounted on the track seam, not
+ *  inside a panel — otherwise the next slide paints over the overflowing half. */
+export const CONCEPT_FLORAL_SLOTS = [
+  { place: "intro-top-left", panel: "intro", corner: "top-left" },
+  { place: "intro-bottom-right", panel: "seam", corner: "bottom-right" },
+  { place: "route-top-right", panel: "route", corner: "top-right" },
+] as const;
 
 export interface PinFrame {
   /** Distance from the top of the document to the top of the scroll area. */
@@ -112,6 +127,26 @@ export function pinnedScrollSpan(panelCount: number, perPanel = 0.7, min = 1.5):
   return Math.max(min, panelCount * perPanel);
 }
 
+/**
+ * Exponential smoothing step: moves `current` a fixed fraction of the way
+ * toward `target` each frame. Used to trail the raw scroll position so the
+ * pin's horizontal drift reads as inertial rather than snapping straight to
+ * wherever the scrollbar is, and snaps once the gap is imperceptible so a
+ * frame loop built on this never idles forever chasing a fraction of a pixel.
+ */
+export function smoothApproach(current: number, target: number, factor: number): number {
+  if (factor >= 1) {
+    return target;
+  }
+
+  if (factor <= 0) {
+    return current;
+  }
+
+  const next = current + (target - current) * factor;
+  return Math.abs(target - next) < 0.0004 ? target : next;
+}
+
 export function clampIndex(index: number, panelCount: number): number {
   if (panelCount <= 0) {
     return 0;
@@ -163,4 +198,38 @@ export function toPercent(value: number, extent: number): number {
 
 export function formatCount(value: number): string {
   return String(value).padStart(2, "0");
+}
+
+function floralSrc(floral: ConceptFloral | undefined, place: ConceptFloralPlace): string | undefined {
+  if (!floral) {
+    return undefined;
+  }
+
+  switch (place) {
+    case "intro-top-left":
+      return floral.introTopLeft;
+    case "intro-bottom-right":
+      return floral.introBottomRight;
+    case "route-top-right":
+      return floral.routeTopRight;
+  }
+}
+
+/** Clips that belong on a given panel — never more than the three seats. */
+export function floralAccentsForPanel(
+  floral: ConceptFloral | undefined,
+  panel: ConceptFloralPanel,
+): ConceptFloralAccent[] {
+  return CONCEPT_FLORAL_SLOTS.flatMap((slot) => {
+    if (slot.panel !== panel) {
+      return [];
+    }
+
+    const src = floralSrc(floral, slot.place);
+    if (!src) {
+      return [];
+    }
+
+    return [{ place: slot.place, corner: slot.corner, src }];
+  });
 }

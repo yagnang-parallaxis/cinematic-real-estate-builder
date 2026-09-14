@@ -2,12 +2,13 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 
-import { CircleCta } from "../shared/CircleCta";
 import { Reveal, RevealLines } from "../shared/Reveal";
 import { Section } from "../shared/Section";
+import { FloralCorner } from "./FloralCorner";
 import {
   activePanelIndex,
   clampIndex,
+  floralAccentsForPanel,
   formatCount,
   labelAlign,
   labelPlacement,
@@ -15,25 +16,31 @@ import {
   pinnedScrollSpan,
   pinProgress,
   revealedWaypointCount,
+  smoothApproach,
   stripIndex,
   toPercent,
   trackTranslation,
 } from "./logic";
-import type { ConceptContent } from "./types";
+import type { ConceptContent, ConceptFloralPanel } from "./types";
 
 export type {
   ConceptBetweenPanel,
-  ConceptClosePanel,
   ConceptContent,
-  ConceptCta,
   ConceptIntroPanel,
   ConceptPole,
+  ConceptFloral,
+  ConceptFloralAccent,
+  ConceptFloralCorner,
+  ConceptFloralPlace,
   ConceptRoutePanel,
   ConceptWaypoint,
 } from "./types";
 
-const PANEL_COUNT = 4;
+const PANEL_COUNT = 3;
 const ROUTE_PANEL_INDEX = 2;
+
+/** Fraction of the remaining gap closed each frame — lower trails softer. */
+const SMOOTH_FACTOR = 0.14;
 
 const PLOT_WIDTH = 1200;
 const PLOT_HEIGHT = 420;
@@ -52,6 +59,28 @@ const ROUTE_PATH = [
 ].join(" ");
 
 const SHORE_PATH = "M 0 398 C 180 378 306 390 452 366 S 742 336 900 306 S 1108 264 1200 238";
+const SHORE_FILL = `${SHORE_PATH} L ${PLOT_WIDTH} ${PLOT_HEIGHT} L 0 ${PLOT_HEIGHT} Z`;
+
+function FloralAccents({
+  floral,
+  panel,
+}: {
+  floral: ConceptContent["floral"];
+  panel: ConceptFloralPanel;
+}) {
+  const accents = floralAccentsForPanel(floral, panel);
+  if (!accents.length) {
+    return null;
+  }
+
+  return (
+    <>
+      {accents.map((accent) => (
+        <FloralCorner key={accent.place} {...accent} />
+      ))}
+    </>
+  );
+}
 
 function DragArrow() {
   return (
@@ -67,6 +96,7 @@ export function Concept({ content }: { content: ConceptContent }) {
   const trackRef = useRef<HTMLDivElement | null>(null);
   const plotRef = useRef<HTMLDivElement | null>(null);
   const lineRef = useRef<SVGPathElement | null>(null);
+  const walkerRef = useRef<SVGCircleElement | null>(null);
   const indexRef = useRef(0);
   const revealedRef = useRef(0);
 
@@ -76,7 +106,6 @@ export function Concept({ content }: { content: ConceptContent }) {
   const [pinnedRevealed, setPinnedRevealed] = useState(0);
 
   const waypoints = content.route.waypoints;
-  const tags = [content.intro.tag, content.between.tag, content.route.tag, content.close.tag];
   const revealed = pinned ? pinnedRevealed : drawn ? waypoints.length : 0;
   const [nearPole, farPole] = content.between.poles;
 
@@ -90,25 +119,43 @@ export function Concept({ content }: { content: ConceptContent }) {
 
     const desktop = window.matchMedia("(min-width: 992px)");
     const calm = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let frame = 0;
+    let raf = 0;
     let attached = false;
+    let target = 0;
+    let display = 0;
 
-    const update = () => {
-      frame = 0;
+    // The raw scroll-derived position for this frame. Read on scroll/resize
+    // rather than every tick, since it never changes between them.
+    const measure = () => {
       const rect = area.getBoundingClientRect();
-      const progress = pinProgress({
+      target = pinProgress({
         areaTop: rect.top + window.scrollY,
         areaHeight: rect.height,
         viewportHeight: window.innerHeight,
         scrollY: window.scrollY,
       });
+    };
+
+    // Paints a given (smoothed) progress and derives the discrete states from
+    // it, so the active panel and waypoint reveals change in step with what
+    // is visually on screen rather than jumping ahead of the eased track.
+    const paint = (progress: number) => {
       const shift = trackTranslation(progress, {
         trackWidth: track.offsetWidth,
         viewportWidth: screen.clientWidth,
       });
 
       track.style.setProperty("--concept-x", `${shift.toFixed(2)}px`);
-      screen.style.setProperty("--concept-progress", progress.toFixed(4));
+      const entry = panelEntryProgress(progress, PANEL_COUNT, ROUTE_PANEL_INDEX);
+      plotRef.current?.style.setProperty("--concept-path-drawn", entry.toFixed(4));
+
+      const line = lineRef.current;
+      const walker = walkerRef.current;
+      if (line && walker) {
+        const point = line.getPointAtLength(entry * line.getTotalLength());
+        walker.setAttribute("cx", point.x.toFixed(1));
+        walker.setAttribute("cy", point.y.toFixed(1));
+      }
 
       const index = activePanelIndex(progress, PANEL_COUNT);
       if (index !== indexRef.current) {
@@ -126,9 +173,23 @@ export function Concept({ content }: { content: ConceptContent }) {
       }
     };
 
+    // Eases the displayed position toward the target every frame, so the pin
+    // trails the scrollbar with a soft, inertial lag instead of snapping to
+    // it — the loop keeps ticking under its own motion until it converges,
+    // even after the user has stopped scrolling.
+    const tick = () => {
+      raf = 0;
+      display = smoothApproach(display, target, SMOOTH_FACTOR);
+      paint(display);
+      if (display !== target) {
+        raf = requestAnimationFrame(tick);
+      }
+    };
+
     const onScroll = () => {
-      if (!frame) {
-        frame = requestAnimationFrame(update);
+      measure();
+      if (!raf) {
+        raf = requestAnimationFrame(tick);
       }
     };
 
@@ -143,12 +204,21 @@ export function Concept({ content }: { content: ConceptContent }) {
       if (enabled) {
         window.addEventListener("scroll", onScroll, { passive: true });
         window.addEventListener("resize", onScroll);
-        update();
+        // Jump straight to position on activation — nothing to ease from yet.
+        measure();
+        display = target;
+        paint(display);
       } else {
         window.removeEventListener("scroll", onScroll);
         window.removeEventListener("resize", onScroll);
+        if (raf) {
+          cancelAnimationFrame(raf);
+          raf = 0;
+        }
+        target = 0;
+        display = 0;
         track.style.removeProperty("--concept-x");
-        screen.style.removeProperty("--concept-progress");
+        plotRef.current?.style.removeProperty("--concept-path-drawn");
         indexRef.current = 0;
         revealedRef.current = 0;
         setActiveIndex(0);
@@ -161,8 +231,8 @@ export function Concept({ content }: { content: ConceptContent }) {
     calm.addEventListener("change", sync);
 
     return () => {
-      if (frame) {
-        cancelAnimationFrame(frame);
+      if (raf) {
+        cancelAnimationFrame(raf);
       }
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
@@ -207,11 +277,11 @@ export function Concept({ content }: { content: ConceptContent }) {
 
   useEffect(() => {
     const line = lineRef.current;
-    if (line) {
-      line.style.setProperty("--concept-path-len", `${Math.ceil(line.getTotalLength())}`);
+    const plot = plotRef.current;
+    if (line && plot) {
+      plot.style.setProperty("--concept-path-len", `${Math.ceil(line.getTotalLength())}`);
     }
 
-    const plot = plotRef.current;
     if (!plot) {
       return;
     }
@@ -271,7 +341,6 @@ export function Concept({ content }: { content: ConceptContent }) {
       >
         <div ref={screenRef} className="concept-screen">
           <div className="concept-brow">
-            <p className="t-label concept-kicker">{content.kicker}</p>
             <p className="t-label concept-count" aria-hidden="true">
               {formatCount(activeIndex + 1)} / {formatCount(PANEL_COUNT)}
             </p>
@@ -291,6 +360,7 @@ export function Concept({ content }: { content: ConceptContent }) {
             onKeyDown={onStripKeyDown}
           >
             <article className="concept-panel" data-panel="intro" data-state={panelState(0)}>
+              <FloralAccents floral={content.floral} panel="intro" />
               <Reveal variant="block" className="t-label concept-eyebrow">
                 {content.intro.eyebrow}
               </Reveal>
@@ -310,6 +380,7 @@ export function Concept({ content }: { content: ConceptContent }) {
             </article>
 
             <article className="concept-panel" data-panel="between" data-state={panelState(1)}>
+              <FloralAccents floral={content.floral} panel="between" />
               <Reveal variant="block" className="t-label concept-eyebrow">
                 {content.between.eyebrow}
               </Reveal>
@@ -334,6 +405,7 @@ export function Concept({ content }: { content: ConceptContent }) {
             </article>
 
             <article className="concept-panel" data-panel="route" data-state={panelState(2)}>
+              <FloralAccents floral={content.floral} panel="route" />
               <div className="concept-route-head">
                 <Reveal variant="block" className="t-label concept-eyebrow">
                   {content.route.eyebrow}
@@ -350,7 +422,7 @@ export function Concept({ content }: { content: ConceptContent }) {
                 </div>
               </div>
 
-              <div ref={plotRef} className="concept-route">
+              <div ref={plotRef} className="concept-route" data-drawn={drawn ? "true" : undefined}>
                 <div className="concept-plot">
                   <svg
                     className="concept-plot-svg"
@@ -358,12 +430,49 @@ export function Concept({ content }: { content: ConceptContent }) {
                     aria-hidden="true"
                     focusable="false"
                   >
-                    <path className="concept-plot-shore" d={SHORE_PATH} />
+                    <defs>
+                      <linearGradient
+                        id="concept-water-fill"
+                        gradientUnits="userSpaceOnUse"
+                        x1="600"
+                        y1="220"
+                        x2="600"
+                        y2="410"
+                      >
+                        <stop offset="0" stopColor="currentColor" stopOpacity="0.07" />
+                        <stop offset="1" stopColor="currentColor" stopOpacity="0" />
+                      </linearGradient>
+                      <linearGradient
+                        id="concept-water-edge"
+                        gradientUnits="userSpaceOnUse"
+                        x1="0"
+                        y1="0"
+                        x2={PLOT_WIDTH}
+                        y2="0"
+                      >
+                        <stop offset="0" stopColor="#fff" />
+                        <stop offset="0.88" stopColor="#fff" />
+                        <stop offset="1" stopColor="#fff" stopOpacity="0" />
+                      </linearGradient>
+                      <mask id="concept-water-mask">
+                        <rect width={PLOT_WIDTH} height={PLOT_HEIGHT} fill="url(#concept-water-edge)" />
+                      </mask>
+                    </defs>
                     <path
-                      ref={lineRef}
-                      className="concept-plot-line"
-                      d={ROUTE_PATH}
-                      data-drawn={drawn ? "true" : undefined}
+                      className="concept-plot-water"
+                      d={SHORE_FILL}
+                      fill="url(#concept-water-fill)"
+                      mask="url(#concept-water-mask)"
+                    />
+                    <path className="concept-plot-shore" d={SHORE_PATH} />
+                    <path className="concept-plot-halo" d={ROUTE_PATH} />
+                    <path ref={lineRef} className="concept-plot-line" d={ROUTE_PATH} />
+                    <circle
+                      ref={walkerRef}
+                      className="concept-plot-walker"
+                      r="6"
+                      cx="62"
+                      cy="330"
                     />
                   </svg>
                 </div>
@@ -377,6 +486,9 @@ export function Concept({ content }: { content: ConceptContent }) {
                       data-shown={index < revealed ? "true" : undefined}
                       data-place={labelPlacement(index)}
                       data-align={labelAlign(waypoint.x, PLOT_WIDTH)}
+                      data-mark={
+                        index === 0 ? "start" : index === waypoints.length - 1 ? "end" : undefined
+                      }
                       style={
                         {
                           left: `${toPercent(waypoint.x, PLOT_WIDTH)}%`,
@@ -399,39 +511,7 @@ export function Concept({ content }: { content: ConceptContent }) {
                 {content.route.footnote}
               </Reveal>
             </article>
-
-            <article className="concept-panel" data-panel="close" data-state={panelState(3)}>
-              <Reveal variant="block" className="t-label concept-eyebrow">
-                {content.close.eyebrow}
-              </Reveal>
-              <RevealLines
-                lines={content.close.headingLines}
-                className="t-h1 concept-heading"
-                delay={0.06}
-              />
-              <div className="concept-close">
-                <div className="concept-copy">
-                  <Reveal variant="block" delay={0.12}>
-                    <p className="t-lead">{content.close.body}</p>
-                  </Reveal>
-                </div>
-                <Reveal variant="block" delay={0.18} className="concept-close-cta">
-                  <CircleCta label={content.close.cta.label} href={content.close.cta.href} />
-                </Reveal>
-              </div>
-            </article>
-          </div>
-
-          <div className="concept-rail" aria-hidden="true">
-            {tags.map((tag, index) => (
-              <span key={tag} className="concept-rail-item" data-state={panelState(index)}>
-                <span className="concept-rail-dot" />
-                <span className="t-label concept-rail-tag">{tag}</span>
-              </span>
-            ))}
-            <span className="concept-rail-track">
-              <span className="concept-rail-fill" />
-            </span>
+            <FloralAccents floral={content.floral} panel="seam" />
           </div>
         </div>
       </div>

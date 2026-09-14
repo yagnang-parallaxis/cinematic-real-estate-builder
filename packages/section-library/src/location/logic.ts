@@ -1,5 +1,12 @@
 import type { LocationPoint } from "./types";
 
+export interface PanFrame {
+  stageTop: number;
+  stageHeight: number;
+  viewportHeight: number;
+  scrollY: number;
+}
+
 /** The row only stays readable across one desktop screen up to six waypoints. */
 export const MAX_POINTS = 6;
 
@@ -93,4 +100,24 @@ export function cloudLane(index: number): CloudLane {
 export function cloudLanes(count = CLOUD_LANE_COUNT): CloudLane[] {
   const lanes = clamp(Math.trunc(count), 1, MAX_CLOUD_LANES);
   return Array.from({ length: lanes }, (_, index) => cloudLane(index));
+}
+
+function clamp01(value: number): number {
+  if (Number.isNaN(value)) {
+    return 0;
+  }
+
+  return Math.min(1, Math.max(0, value));
+}
+
+/**
+ * How far the aerial has been walked: 0 shows the sky, 1 the shore.
+ */
+export function panProgress({ stageTop, stageHeight, viewportHeight, scrollY }: PanFrame): number {
+  const range = stageHeight - viewportHeight;
+  if (range <= 0) {
+    return 0;
+  }
+
+  return clamp01((scrollY - stageTop) / range);
 }

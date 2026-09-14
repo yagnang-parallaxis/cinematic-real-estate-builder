@@ -1,273 +1,274 @@
 /*
- * Location: an aerial plate with three cloud lanes drifting at unrelated
- * rates, a copy block that sits on the section tone below the photograph, and
- * an angled hand-off into the next section.
+ * Location: a continuing walk. Compact shows the shore of the aerial.
+ * Desktop walks the photograph from sky to beach.
  */
+
+@property --location-pan {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+.location {
+  --location-pan: 1;
+}
+
+.location-stage {
+  position: relative;
+}
 
 .location-frame {
   position: relative;
-  height: 58vh;
+  height: 70vh;
   overflow: hidden;
+  --location-shift: 0%;
 }
 
-.location-frame img {
+.location-plate {
   display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 72%;
 }
 
-/*
- * The photograph dissolves into the section tone rather than into black, so
- * the copy below reads as ink on the tone instead of on a darkened edge.
- */
-.location-scrim {
-  background: linear-gradient(
-    to top,
-    var(--tone-bg) 0 16%,
-    color-mix(in oklab, var(--tone-bg) 52%, transparent) 40%,
-    transparent 74%
-  );
-}
-
-/* Cloud lanes */
-
+.location-veil,
 .location-sky {
-  --cloud-unit: calc(150vw / var(--type-scale-ratio));
-  --cloud-gap: calc(60vw / var(--type-scale-ratio));
-  --cloud-blur: calc(14vw / var(--type-scale-ratio));
+  display: none;
+}
+
+.location .location-plaque {
   position: absolute;
-  inset: 0;
+  top: calc(var(--gutter-top) + var(--space-16));
+  left: var(--gutter-x);
+  bottom: auto;
+  z-index: 2;
+  display: grid;
+  justify-items: start;
+  gap: 0;
   color: var(--paper);
   pointer-events: none;
 }
 
-.location-cloud-lane {
-  --marquee-dur: var(--cloud-dur);
-  position: absolute;
-  top: var(--cloud-top);
-  right: 0;
-  left: 0;
-  /* Clouds spill past the lane and are clipped by the frame instead, so the
-     blurred edges never meet a hard horizontal cut. */
-  overflow: visible;
-  opacity: var(--cloud-opacity);
-  filter: blur(var(--cloud-blur));
-}
-
-.location-cloud-lane .marquee-track {
-  gap: 0;
-  animation-delay: var(--cloud-delay);
-}
-
-/* The trailing gap belongs to the list, so one list is the exact repeat unit. */
-.location-cloud-lane .marquee-list {
-  gap: var(--cloud-gap);
-  align-items: center;
-  padding-right: var(--cloud-gap);
-}
-
-.location-cloud {
-  flex: none;
-  width: var(--cloud-unit);
-  height: calc(var(--cloud-unit) * 0.34);
-  border-radius: 50%;
-  background: radial-gradient(
-    closest-side,
-    color-mix(in oklab, currentColor 78%, transparent),
-    color-mix(in oklab, currentColor 26%, transparent) 58%,
-    transparent 76%
-  );
-  scale: var(--cloud-scale);
-}
-
-.location-cloud:nth-child(2) {
-  width: calc(var(--cloud-unit) * 0.7);
-}
-
-.location-cloud:nth-child(3) {
-  width: calc(var(--cloud-unit) * 1.25);
-  height: calc(var(--cloud-unit) * 0.26);
-}
-
-.location-cloud:nth-child(4) {
-  width: calc(var(--cloud-unit) * 0.55);
-  height: calc(var(--cloud-unit) * 0.3);
-}
-
-/* Copy */
-
-.location-shell {
-  padding: var(--gutter-top) var(--gutter-x) var(--space-48);
-}
-
-.location-copy {
-  display: grid;
-  gap: var(--space-24);
-}
-
-.location-copy-head {
-  display: grid;
-  gap: var(--space-16);
-}
-
-.location-copy-aside {
-  display: grid;
-  gap: var(--space-16);
-  justify-items: start;
-}
-
-.location-rule {
-  display: block;
-  width: 1px;
-  height: calc(64vw / var(--type-scale-ratio));
-  background: var(--tone-line);
-}
-
-.location-support {
-  display: grid;
-  gap: var(--space-16);
-  max-width: 34rem;
-}
-
-.location-region {
-  opacity: 0.7;
-}
-
-/* Waypoints */
-
-.location-waypoints {
+.location .location-place {
   margin: 0;
-  margin-top: var(--space-32);
-  padding: 0;
-  list-style: none;
-  counter-reset: waypoint;
-  border-top: 1px solid var(--tone-line);
+  max-width: none;
+  color: var(--paper);
+  font-size: calc(48vw / var(--type-scale-ratio));
+  letter-spacing: -0.03em;
+  line-height: 0.96;
+  text-transform: none;
+  text-shadow:
+    0 1px 2px rgb(6 18 32 / 0.35),
+    0 8px 28px rgb(6 18 32 / 0.28);
 }
 
-.location-waypoint {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-16);
-  padding-block: var(--space-16);
-  border-bottom: 1px solid var(--tone-line);
+.location .location-shore {
+  display: block;
+  width: max-content;
+  margin: 0.08em 0 0 0.2em;
+  padding-block: 0.18em 0.08em;
+  font-size: calc(32vw / var(--type-scale-ratio));
+  line-height: 1;
+  white-space: nowrap;
+  rotate: -4deg;
+  transform-origin: left center;
+  text-shadow:
+    0 1px 2px rgb(6 18 32 / 0.35),
+    0 8px 24px rgb(6 18 32 / 0.28);
 }
 
-.location-waypoint::before {
-  counter-increment: waypoint;
-  content: counter(waypoint, decimal-leading-zero);
-  font-family: var(--font-body);
-  font-size: var(--text-caption);
-  letter-spacing: 0.048em;
-  opacity: 0.5;
+.location .location-region {
+  margin: var(--space-16) 0 0;
+  padding-top: 0;
+  font-size: calc(13vw / var(--type-scale-ratio));
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  opacity: 0.92;
+  text-shadow: 0 1px 12px rgb(6 18 32 / 0.35);
 }
 
-.location-waypoint-label {
-  flex: 1;
+.location .location-region::before {
+  content: "";
+  display: block;
+  width: 3.25rem;
+  height: 1px;
+  margin: 0 0 var(--space-16);
+  background: color-mix(in oklab, var(--paper) 58%, transparent);
 }
 
-.location-waypoint-time {
-  opacity: 0.7;
-}
-
-.location-action {
-  display: flex;
-  margin-top: var(--space-32);
-}
-
-/* The angled boundary is a desktop-only device; compact keeps a flat edge. */
 .location-edge {
   display: none;
 }
 
 @media (min-width: 992px) {
+  .location {
+    --location-pan: 0;
+  }
+
+  .location-stage {
+    height: 240vh;
+  }
+
   .location-frame {
-    height: 74vh;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+
+  .location-plate {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 200%;
+    object-fit: cover;
+    object-position: center top;
+    translate: 0 var(--location-shift, 0%);
+    will-change: transform;
   }
 
   .location-sky {
     --cloud-unit: calc(420vw / var(--type-scale-ratio));
     --cloud-gap: calc(160vw / var(--type-scale-ratio));
     --cloud-blur: calc(30vw / var(--type-scale-ratio));
+    position: absolute;
+    inset: 0;
+    display: block;
+    color: var(--paper);
+    pointer-events: none;
+    opacity: clamp(0, calc(1 - var(--location-pan) * 1.45), 1);
   }
 
-  /* The copy rides up into the band where the photograph has already gone. */
-  .location-shell {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    column-gap: var(--space-48);
-    row-gap: var(--space-48);
-    align-items: end;
-    margin-top: calc(var(--space-48) * -1.5);
-    padding-block: 0 var(--space-48);
+  .location-cloud-lane {
+    --marquee-dur: var(--cloud-dur);
+    position: absolute;
+    top: var(--cloud-top);
+    right: 0;
+    left: 0;
+    overflow: visible;
+    opacity: var(--cloud-opacity);
+    filter: blur(var(--cloud-blur));
   }
 
-  .location-copy {
-    grid-column: 1 / -1;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-    align-items: start;
-    column-gap: var(--space-48);
+  .location-cloud-lane .marquee-track {
+    gap: 0;
+    animation-delay: var(--cloud-delay);
   }
 
-  .location-copy-aside {
-    padding-top: var(--space-16);
+  .location-cloud-lane .marquee-list {
+    gap: var(--cloud-gap);
+    align-items: center;
+    padding-right: var(--cloud-gap);
   }
 
-  .location-rule {
-    height: calc(120vw / var(--type-scale-ratio));
+  .location-cloud {
+    flex: none;
+    width: var(--cloud-unit);
+    height: calc(var(--cloud-unit) * 0.34);
+    border-radius: 50%;
+    background: radial-gradient(
+      closest-side,
+      color-mix(in oklab, currentColor 78%, transparent),
+      color-mix(in oklab, currentColor 26%, transparent) 58%,
+      transparent 76%
+    );
+    scale: var(--cloud-scale);
   }
 
-  .location-waypoints {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(0, 1fr);
-    grid-column: 1;
-    margin-top: 0;
+  .location-cloud:nth-child(2) {
+    width: calc(var(--cloud-unit) * 0.7);
   }
 
-  .location-waypoint {
-    flex-direction: column;
-    align-items: start;
-    gap: var(--space-4);
-    padding: var(--space-24) var(--space-24) var(--space-32) var(--space-16);
-    border-bottom: 0;
-    border-left: 1px solid var(--tone-line);
+  .location-cloud:nth-child(3) {
+    width: calc(var(--cloud-unit) * 1.25);
+    height: calc(var(--cloud-unit) * 0.26);
   }
 
-  .location-waypoint:first-child {
-    padding-left: 0;
-    border-left: 0;
+  .location-cloud:nth-child(4) {
+    width: calc(var(--cloud-unit) * 0.55);
+    height: calc(var(--cloud-unit) * 0.3);
   }
 
-  .location-waypoint-time {
-    transition: translate var(--hover-dur) var(--hover-ease);
+  .location-veil {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      var(--paper) 0%,
+      color-mix(in oklab, var(--paper) 78%, transparent) 18%,
+      color-mix(in oklab, var(--paper) 28%, transparent) 38%,
+      transparent 56%
+    );
+    opacity: clamp(0, calc(1 - var(--location-pan) * 1.65), 1);
   }
 
-  .location-waypoint:hover .location-waypoint-time {
-    translate: 0 calc(var(--space-4) * -1);
+  .location .location-plaque {
+    top: auto;
+    left: calc(var(--gutter-x) + 1.5vw);
+    right: auto;
+    bottom: 5.5%;
+    opacity: clamp(0, calc((var(--location-pan) - 0.58) / 0.22), 1);
   }
 
-  .location-action {
-    grid-column: 2;
-    margin-top: 0;
-    align-self: end;
-    justify-self: end;
+  .location .location-place {
+    font-size: calc(80vw / var(--type-scale-ratio));
+  }
+
+  .location .location-shore {
+    margin-top: 0.06em;
+    margin-left: 0.55em;
+    font-size: calc(44vw / var(--type-scale-ratio));
+  }
+
+  .location .location-region {
+    margin-top: var(--space-24);
+    font-size: calc(16vw / var(--type-scale-ratio));
   }
 
   .location-edge {
     display: block;
     position: relative;
     height: calc(140vw / var(--type-scale-ratio));
-    margin-top: var(--space-48);
     background: var(--shell);
     clip-path: polygon(0 100%, 100% 0, 100% 100%);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .location-cloud-lane .marquee-track {
-    animation: none;
+  .location {
+    --location-pan: 1;
   }
 
-  .location-waypoint-time {
-    transition: none;
+  .location-stage {
+    height: auto;
+  }
+
+  .location-frame {
+    position: relative;
+    height: 70vh;
+  }
+
+  .location-plate {
+    position: relative;
+    height: 100%;
+    object-position: center 72%;
+    translate: none;
+    will-change: auto;
+  }
+
+  .location-sky,
+  .location-veil {
+    display: none;
+  }
+
+  .location .location-plaque {
+    opacity: 1;
+  }
+
+  .location-cloud-lane .marquee-track {
+    animation: none;
   }
 }

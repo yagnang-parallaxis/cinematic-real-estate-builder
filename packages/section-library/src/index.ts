@@ -17,9 +17,11 @@ export type { VistaContent } from "./vista/types";
 export { Concept } from "./concept/Concept";
 export type {
   ConceptBetweenPanel,
-  ConceptClosePanel,
   ConceptContent,
-  ConceptCta,
+  ConceptFloral,
+  ConceptFloralAccent,
+  ConceptFloralCorner,
+  ConceptFloralPlace,
   ConceptIntroPanel,
   ConceptPole,
   ConceptRoutePanel,

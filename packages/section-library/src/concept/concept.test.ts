@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  CONCEPT_FLORAL_SLOTS,
   activePanelIndex,
   clamp01,
   clampIndex,
+  floralAccentsForPanel,
   formatCount,
   labelAlign,
   labelPlacement,
@@ -11,6 +13,7 @@ import {
   pinnedScrollSpan,
   pinProgress,
   revealedWaypointCount,
+  smoothApproach,
   stripIndex,
   toPercent,
   trackTranslation,
@@ -185,6 +188,27 @@ describe("pinnedScrollSpan", () => {
   });
 });
 
+describe("smoothApproach", () => {
+  it("moves a fixed fraction of the way toward the target", () => {
+    expect(smoothApproach(0, 1, 0.25)).toBe(0.25);
+    expect(smoothApproach(0.5, 0, 0.5)).toBe(0.25);
+  });
+
+  it("snaps to the target once the remaining gap is imperceptible", () => {
+    expect(smoothApproach(0.99999, 1, 0.5)).toBe(1);
+  });
+
+  it("jumps straight to the target at full strength", () => {
+    expect(smoothApproach(0, 1, 1)).toBe(1);
+    expect(smoothApproach(0.3, 0.9, 1.4)).toBe(0.9);
+  });
+
+  it("holds still at zero strength", () => {
+    expect(smoothApproach(0.3, 1, 0)).toBe(0.3);
+    expect(smoothApproach(0.3, 1, -1)).toBe(0.3);
+  });
+});
+
 describe("clampIndex", () => {
   it("keeps an index inside the panel range", () => {
     expect(clampIndex(-1, 4)).toBe(0);
@@ -256,5 +280,37 @@ describe("formatCount", () => {
     expect(formatCount(1)).toBe("01");
     expect(formatCount(4)).toBe("04");
     expect(formatCount(12)).toBe("12");
+  });
+});
+
+describe("floralAccentsForPanel", () => {
+  const floral = {
+    introTopLeft: "/flowers/a.webm",
+    introBottomRight: "/flowers/b.webm",
+    routeTopRight: "/flowers/c.webm",
+  };
+
+  it("keeps exactly three seats, with the bush on the intro | between seam", () => {
+    expect(CONCEPT_FLORAL_SLOTS).toHaveLength(3);
+    expect(floralAccentsForPanel(floral, "intro")).toEqual([
+      { place: "intro-top-left", corner: "top-left", src: "/flowers/a.webm" },
+    ]);
+    expect(floralAccentsForPanel(floral, "seam")).toEqual([
+      { place: "intro-bottom-right", corner: "bottom-right", src: "/flowers/b.webm" },
+    ]);
+    expect(floralAccentsForPanel(floral, "route")).toEqual([
+      { place: "route-top-right", corner: "top-right", src: "/flowers/c.webm" },
+    ]);
+  });
+
+  it("leaves the between panel bare", () => {
+    expect(floralAccentsForPanel(floral, "between")).toEqual([]);
+  });
+
+  it("omits a seat when that clip is not authored", () => {
+    expect(floralAccentsForPanel({ introTopLeft: "/flowers/a.webm" }, "intro")).toEqual([
+      { place: "intro-top-left", corner: "top-left", src: "/flowers/a.webm" },
+    ]);
+    expect(floralAccentsForPanel(undefined, "intro")).toEqual([]);
   });
 });

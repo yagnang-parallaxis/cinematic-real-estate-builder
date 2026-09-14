@@ -8,7 +8,6 @@
 .concept {
   --concept-span: 2.8;
   --concept-x: 0px;
-  --concept-progress: 0;
 }
 
 .concept-area {
@@ -24,20 +23,74 @@
 }
 
 .concept-brow,
-.concept-hint,
-.concept-rail {
+.concept-hint {
+  position: relative;
+  z-index: 1;
   padding-inline: var(--gutter-x);
+}
+
+.concept-track {
+  position: relative;
+  z-index: 1;
+}
+
+/*
+ * Three floral seats, each living on its panel so it travels with the
+ * track. On desktop the panel is the full pinned screen, so these corners
+ * are the viewport corners — the same hang the reference uses.
+ */
+.concept-panel {
+  position: relative;
+  overflow: visible;
+}
+
+.concept-panel > *:not(.concept-floral) {
+  position: relative;
+  z-index: 2;
+}
+
+.concept-floral {
+  position: absolute;
+  z-index: 0;
+  display: none;
+  pointer-events: none;
+  aspect-ratio: 1;
+}
+
+.concept-floral[data-corner="top-left"] {
+  top: 0;
+  left: 0;
+}
+
+.concept-floral[data-corner="top-right"] {
+  top: 0;
+  right: 0;
+}
+
+.concept-floral[data-corner="bottom-right"] {
+  right: 0;
+  bottom: 0;
+}
+
+.concept-floral-media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Current hang was stem-up, drooping left. A further 180° (net −90°)
+   puts the stem on the floor so the spray grows up across the join. */
+.concept-floral[data-place="intro-bottom-right"] .concept-floral-media {
+  object-fit: contain;
+  object-position: center;
+  transform: translateZ(0) scaleY(-1) rotate(-90deg);
 }
 
 .concept-brow {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-16);
-}
-
-.concept-kicker {
-  opacity: 0.72;
+  justify-content: flex-end;
 }
 
 .concept-count {
@@ -127,7 +180,13 @@
   object-fit: cover;
 }
 
-/* Route plot */
+/* Route plot. --concept-path-drawn is 0–1: pinned scroll writes it each
+   frame; compact transitions it when the plot crosses the screen. */
+@property --concept-path-drawn {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
 
 .concept-route-head {
   display: flex;
@@ -140,6 +199,13 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-16);
+  --concept-path-drawn: 0;
+  --concept-path-len: 1400;
+}
+
+.concept-route[data-drawn="true"] {
+  --concept-path-drawn: 1;
+  transition: --concept-path-drawn calc(var(--dur-l) * 2.2) var(--ease-in-out);
 }
 
 .concept-plot {
@@ -154,32 +220,54 @@
   inset: 0;
   width: 100%;
   height: 100%;
+  overflow: visible;
+}
+
+.concept-plot-water {
+  pointer-events: none;
 }
 
 .concept-plot-shore,
+.concept-plot-halo,
 .concept-plot-line {
   fill: none;
   stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* Stroke widths are user units, so they scale with the plot and are restated
    at the desktop breakpoint rather than left at the compact value. */
 .concept-plot-shore {
-  stroke: var(--tone-line);
+  stroke: color-mix(in oklab, var(--ink) 22%, transparent);
   stroke-width: 5;
-  stroke-dasharray: 4 22;
+  stroke-dasharray: 3 18;
+}
+
+.concept-plot-halo,
+.concept-plot-line {
+  stroke-dasharray: var(--concept-path-len);
+  stroke-dashoffset: calc(var(--concept-path-len) * (1 - var(--concept-path-drawn)));
+}
+
+.concept-plot-halo {
+  stroke: color-mix(in oklab, var(--ink) 14%, transparent);
+  stroke-width: 16;
 }
 
 .concept-plot-line {
   stroke: currentColor;
   stroke-width: 6;
-  stroke-dasharray: var(--concept-path-len, 1400);
-  stroke-dashoffset: var(--concept-path-len, 1400);
-  transition: stroke-dashoffset calc(var(--dur-l) * 2.4) var(--ease-in-out);
 }
 
-.concept-plot-line[data-drawn="true"] {
-  stroke-dashoffset: 0;
+.concept-plot-walker {
+  fill: var(--tone-bg);
+  stroke: currentColor;
+  stroke-width: 2.4;
+  offset-distance: calc(var(--concept-path-drawn) * 100%);
+  offset-rotate: 0deg;
+  opacity: calc(
+    min(1, var(--concept-path-drawn) * 16) * min(1, (1 - var(--concept-path-drawn)) * 28)
+  );
 }
 
 /*
@@ -201,72 +289,40 @@
   align-items: center;
   gap: var(--space-4);
   opacity: 0;
-  transition: opacity var(--dur-m) var(--ease-out) calc(var(--stop-index, 0) * 0.05s);
+  transform: translateY(0.35rem) scale(0.7);
+  transition:
+    opacity var(--dur-m) var(--ease-out) calc(var(--stop-index, 0) * 0.05s),
+    transform var(--dur-m) var(--ease-out) calc(var(--stop-index, 0) * 0.05s);
 }
 
 .concept-stop[data-shown="true"] {
   opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 .concept-stop-dot {
+  position: relative;
   display: block;
   width: calc(7vw / var(--type-scale-ratio));
   aspect-ratio: 1;
   border-radius: 50%;
   background: currentColor;
+  box-shadow: 0 0 0 3px var(--tone-bg);
+}
+
+.concept-stop[data-mark="start"] .concept-stop-dot {
+  width: calc(9vw / var(--type-scale-ratio));
+}
+
+.concept-stop[data-mark="end"] .concept-stop-dot {
+  background: var(--tone-bg);
+  box-shadow: 0 0 0 1.5px currentColor;
 }
 
 .concept-stop-detail {
   display: block;
   font-variant-numeric: tabular-nums;
   opacity: 0.56;
-}
-
-/* Close */
-
-.concept-close {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-24);
-}
-
-/* Rail */
-
-.concept-rail {
-  display: flex;
-  align-items: center;
-  gap: var(--space-16);
-}
-
-.concept-rail-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  opacity: 0.34;
-  transition: opacity var(--dur-m) var(--ease-out);
-}
-
-.concept-rail-item[data-state="active"] {
-  opacity: 1;
-}
-
-.concept-rail-item[data-state="past"] {
-  opacity: 0.5;
-}
-
-.concept-rail-dot {
-  width: calc(6vw / var(--type-scale-ratio));
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: currentColor;
-}
-
-.concept-rail-tag {
-  display: none;
-}
-
-.concept-rail-track {
-  display: none;
 }
 
 @media (min-width: 992px) {
@@ -282,14 +338,54 @@
     padding-block: var(--nav-offset);
   }
 
-  /* Sized to its panels rather than to the screen, so its own layout width is
-     the distance the pin has to travel. */
-  .concept-track {
-    flex: 1 1 auto;
-    align-self: flex-start;
-    min-height: 0;
-    width: max-content;
+  /* Brow overlays the full-viewport slides so floral corners can sit on
+     the true screen edges while the counter stays put. */
+  .concept-brow {
+    position: absolute;
+    top: var(--nav-offset);
+    left: 0;
+    right: 0;
+    z-index: 2;
+  }
+
+  .concept-floral {
+    display: block;
+  }
+
+  .concept-floral[data-place="intro-top-left"] {
+    width: clamp(38rem, 56vw, 54rem);
+    translate: -6% -12%;
+  }
+
+  /* Centered on the intro | between join, planted on the floor. */
+  .concept-track > .concept-floral[data-place="intro-bottom-right"] {
+    top: auto;
+    right: auto;
+    left: 100vw;
+    bottom: 0;
+    z-index: 1;
+    width: 38vw;
+    aspect-ratio: 1;
     overflow: visible;
+    translate: -50% 18%;
+  }
+
+  .concept-floral[data-place="route-top-right"] {
+    width: clamp(36rem, 50vw, 48rem);
+    translate: 8% -16%;
+  }
+
+  /* The track fills the sticky screen; each panel is one viewport, so a
+     corner seat is a viewport corner and travels with --concept-x. */
+  .concept-track {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: flex;
+    width: max-content;
+    height: 100%;
+    overflow: visible;
+    isolation: isolate;
     scroll-snap-type: none;
     transform: translate3d(var(--concept-x), 0, 0);
     will-change: transform;
@@ -299,16 +395,19 @@
     gap: var(--space-32);
     width: 100vw;
     height: 100%;
+    padding-block: calc(var(--nav-offset) + var(--space-48));
+    padding-inline: var(--gutter-x);
   }
 
-  /* The panel under the screen is the only one at full strength. */
-  .concept-panel[data-state="coming"],
-  .concept-panel[data-state="past"] {
+  /* Fade the copy, never the flowers — they stay at full strength as
+     their panel slides through. */
+  .concept-panel[data-state="coming"] > *:not(.concept-floral),
+  .concept-panel[data-state="past"] > *:not(.concept-floral) {
     opacity: 0.4;
     transition: opacity var(--dur-l) var(--ease-out);
   }
 
-  .concept-panel[data-state="active"] {
+  .concept-panel[data-state="active"] > *:not(.concept-floral) {
     opacity: 1;
     transition: opacity var(--dur-l) var(--ease-out);
   }
@@ -328,15 +427,23 @@
      The width — not the height — is clamped, since the label overlay is
      positioned against the plot's own proportions. */
   .concept-route {
-    width: min(100%, calc(38vh * 1200 / 420));
+    width: min(100%, calc(46vh * 1200 / 420));
   }
 
   .concept-plot-shore {
-    stroke-width: 1.5;
+    stroke-width: 1.35;
+  }
+
+  .concept-plot-halo {
+    stroke-width: 7;
   }
 
   .concept-plot-line {
-    stroke-width: 2;
+    stroke-width: 2.25;
+  }
+
+  .concept-plot-walker {
+    stroke-width: 1.6;
   }
 
   /* The legend becomes labels pinned to their own point on the route. */
@@ -363,18 +470,41 @@
     text-align: center;
   }
 
+  .concept-stop-text::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    width: 1px;
+    height: calc(var(--space-4) * 2);
+    background: color-mix(in oklab, currentColor 28%, transparent);
+    translate: -50% 0;
+  }
+
   .concept-stop[data-place="above"] .concept-stop-text {
-    bottom: calc(100% + var(--space-4));
+    bottom: calc(100% + var(--space-16));
+  }
+
+  .concept-stop[data-place="above"] .concept-stop-text::before {
+    top: 100%;
   }
 
   .concept-stop[data-place="below"] .concept-stop-text {
-    top: calc(100% + var(--space-4));
+    top: calc(100% + var(--space-16));
+  }
+
+  .concept-stop[data-place="below"] .concept-stop-text::before {
+    bottom: 100%;
   }
 
   .concept-stop[data-align="start"] .concept-stop-text {
     left: 0;
     translate: 0 0;
     text-align: left;
+  }
+
+  .concept-stop[data-align="start"] .concept-stop-text::before {
+    left: calc(var(--space-4));
+    translate: 0 0;
   }
 
   .concept-stop[data-align="end"] .concept-stop-text {
@@ -384,31 +514,10 @@
     text-align: right;
   }
 
-  .concept-close {
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: var(--space-48);
-  }
-
-  .concept-rail-tag {
-    display: block;
-    opacity: 0.72;
-  }
-
-  .concept-rail-track {
-    display: block;
-    flex: 1;
-    height: 1px;
-    background: var(--tone-line);
-  }
-
-  .concept-rail-fill {
-    display: block;
-    height: 100%;
-    background: currentColor;
-    scale: var(--concept-progress) 1;
-    transform-origin: left center;
+  .concept-stop[data-align="end"] .concept-stop-text::before {
+    left: auto;
+    right: calc(var(--space-4));
+    translate: 0 0;
   }
 }
 
@@ -447,6 +556,10 @@
     display: flex;
   }
 
+  .concept-floral {
+    display: none;
+  }
+
   .concept-stops {
     position: static;
     display: grid;
@@ -465,18 +578,18 @@
     text-align: left;
   }
 
-  .concept-plot-line,
-  .concept-plot-line[data-drawn="true"] {
+  .concept-plot-halo,
+  .concept-plot-line {
     stroke-dashoffset: 0;
     transition: none;
   }
 
-  .concept-stop,
-  .concept-rail-item {
-    transition: none;
+  .concept-plot-walker {
+    opacity: 1;
+    offset-distance: 100%;
   }
 
-  .concept-rail-track {
-    display: none;
+  .concept-stop {
+    transition: none;
   }
 }

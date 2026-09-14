@@ -2,7 +2,6 @@ import type { ConceptContent } from "@cinematic/section-library";
 
 export const concept: ConceptContent = {
   label: "The idea behind Aurelia",
-  kicker: "The idea",
   dragHint: "Drag to see more",
   intro: {
     tag: "Premise",
@@ -52,13 +51,9 @@ export const concept: ConceptContent = {
     ],
     footnote: "Times measured from the north entrance, at walking pace.",
   },
-  close: {
-    tag: "Next",
-    eyebrow: "Seen in person",
-    headingLines: ["Best understood", "from the water"],
-    body:
-      "Viewings run on Thursdays and Saturdays, one household at a time. We walk the route above, " +
-      "then sit in whichever residence is unlocked.",
-    cta: { label: "Arrange a viewing", href: "#visit" },
+  floral: {
+    introTopLeft: "/flowers/bougainvillea-flowers_01.webm",
+    introBottomRight: "/flowers/bougainvillea-flowers_02.webm",
+    routeTopRight: "/flowers/bougainvillea-flowers_07.webm",
   },
 };

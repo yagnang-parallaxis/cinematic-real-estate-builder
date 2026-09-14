@@ -1,8 +1,3 @@
-export interface ConceptCta {
-  label: string;
-  href: string;
-}
-
 export interface ConceptWaypoint {
   id: string;
   label: string;
@@ -44,21 +39,39 @@ export interface ConceptRoutePanel {
   footnote: string;
 }
 
-export interface ConceptClosePanel {
-  tag: string;
-  eyebrow: string;
-  headingLines: string[];
-  body: string;
-  cta: ConceptCta;
+/** The three corners the horizontal strip actually uses. */
+export type ConceptFloralPlace = "intro-top-left" | "intro-bottom-right" | "route-top-right";
+
+export type ConceptFloralCorner = "top-left" | "top-right" | "bottom-right";
+
+export type ConceptFloralPanel = "intro" | "between" | "route" | "seam";
+
+/** A resolved still or clip for one of the three places. */
+export interface ConceptFloralAccent {
+  place: ConceptFloralPlace;
+  corner: ConceptFloralCorner;
+  src: string;
+}
+
+/**
+ * The strip keeps flowers in exactly three places, each travelling with its
+ * own panel: hanging from the intro's top-left, a live clip stood upright
+ * on the intro | between seam, and hanging from the route's top-right. The
+ * bush sits on the join so half can show on each slide.
+ */
+export interface ConceptFloral {
+  introTopLeft?: string;
+  introBottomRight?: string;
+  routeTopRight?: string;
 }
 
 export interface ConceptContent {
   label: string;
-  kicker: string;
   /** Affordance shown above the compact strip. */
   dragHint: string;
   intro: ConceptIntroPanel;
   between: ConceptBetweenPanel;
   route: ConceptRoutePanel;
-  close: ConceptClosePanel;
+  /** Optional clips for the three floral seats (see `ConceptFloral`). */
+  floral?: ConceptFloral;
 }

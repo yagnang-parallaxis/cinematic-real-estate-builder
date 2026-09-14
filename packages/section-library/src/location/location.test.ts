@@ -7,6 +7,7 @@ import {
   MAX_CLOUD_LANES,
   MAX_POINTS,
   normalizePoints,
+  panProgress,
 } from "./logic";
 import type { LocationPoint } from "./types";
 
@@ -83,6 +84,28 @@ describe("cloudLane", () => {
   it("treats a negative or fractional index as the first lane", () => {
     expect(cloudLane(-3)).toEqual(cloudLane(0));
     expect(cloudLane(1.8)).toEqual(cloudLane(1));
+  });
+});
+
+describe("panProgress", () => {
+  const frame = { stageTop: 1000, stageHeight: 2200, viewportHeight: 800, scrollY: 1000 };
+
+  it("is 0 while the stage is still arriving", () => {
+    expect(panProgress({ ...frame, scrollY: 800 })).toBe(0);
+    expect(panProgress(frame)).toBe(0);
+  });
+
+  it("is 1 once the stage has been walked to its end", () => {
+    expect(panProgress({ ...frame, scrollY: 2400 })).toBe(1);
+    expect(panProgress({ ...frame, scrollY: 2600 })).toBe(1);
+  });
+
+  it("moves through the range", () => {
+    expect(panProgress({ ...frame, scrollY: 1700 })).toBeCloseTo(0.5);
+  });
+
+  it("is 0 when the stage is no taller than the screen", () => {
+    expect(panProgress({ ...frame, stageHeight: 800, scrollY: 1400 })).toBe(0);
   });
 });
 

@@ -2,14 +2,13 @@ import type { LocationContent } from "@cinematic/section-library";
 
 export const location: LocationContent = {
   eyebrow: "Location",
-  placeLines: ["Norhavn,", "on the Aldemark coast"],
+  placeLines: ["Norhavn", "on the Aldemark coast"],
   regionLabel: "Nordkvist county, 61° north",
   description:
     "A working harbour of two thousand people. Aurelia stands on the last ridge before the water, eight minutes above the quay.",
-  imageSrc:
-    "https://images.unsplash.com/photo-1552083375-1447ce886485?auto=format&fit=crop&w=1800&q=80",
+  imageSrc: "/hero/era-residence-master-plan.webp",
   imageAlt:
-    "The inlet at Norhavn seen from the ridge above, with moored boats along the far shore.",
+    "Aerial view of the shoreline, with the residences along the beach and the hills behind.",
   points: [
     { id: "quay", label: "The quay", travelTime: "8 min on foot" },
     { id: "ferry", label: "Ferry terminal", travelTime: "4 min" },
