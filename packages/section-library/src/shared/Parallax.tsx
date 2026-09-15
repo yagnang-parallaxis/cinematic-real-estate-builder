@@ -27,12 +27,18 @@ const ROLE_SHIFT: Record<ParallaxRole, number> = {
 export function Parallax({
   role = "bed",
   intensity = 1,
+  compact = "off",
   className,
   style,
   children,
 }: {
   role?: ParallaxRole;
   intensity?: number;
+  /**
+   * Continuous scroll-coupled layers default off below 992px. Pass `"on"` for
+   * a one-time entry reveal that should still drift on a phone.
+   */
+  compact?: "off" | "on";
   className?: string;
   style?: CSSProperties;
   children: ReactNode;
@@ -71,7 +77,7 @@ export function Parallax({
     };
 
     const sync = () => {
-      const enabled = desktop.matches && !calm.matches;
+      const enabled = (compact === "on" || desktop.matches) && !calm.matches;
       if (enabled === active) {
         return;
       }
@@ -100,7 +106,7 @@ export function Parallax({
       desktop.removeEventListener("change", sync);
       calm.removeEventListener("change", sync);
     };
-  }, [role, intensity]);
+  }, [role, intensity, compact]);
 
   return (
     <div ref={ref} className={cn("parallax", className)} data-parallax={role} style={style}>

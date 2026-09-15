@@ -33,7 +33,7 @@ page.on("console", (message) => {
 
 await page.goto(url, { waitUntil: "load" });
 // The branded preloader holds first paint; wait it out before measuring.
-await page.waitForSelector(".loader", { state: "detached", timeout: 20000 }).catch(() => {});
+await page.waitForSelector(".boot-plate", { state: "detached", timeout: 20000 }).catch(() => {});
 await page.waitForTimeout(1500);
 
 const total = await page.evaluate(() => document.body.scrollHeight);

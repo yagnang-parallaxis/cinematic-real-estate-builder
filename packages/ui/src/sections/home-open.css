@@ -1,6 +1,7 @@
 /*
- * Home open: hero photograph scrolls with its stations, then a lead + arch
- * hold the finale frame so the dome can rise over the CTA without a second image.
+ * Home open: a once-only gate overlay opens onto the hero photograph, then
+ * the photograph scrolls with its stations, then the finale frame is held so
+ * the dome can rise over it without a second image.
  */
 
 .home-open {
@@ -8,12 +9,229 @@
   z-index: 0;
 }
 
+/* Opening gate — a fixed overlay, not a scroll chapter */
+
+.curtain-stage {
+  /*
+   * The lockup's own tiers, because the lockup on this plate is the hero's —
+   * the same lines at the same display tier, shown on the way in.
+   */
+  --hero-title: var(--text-display);
+  --hero-place: calc(var(--hero-title) * var(--accent-companion));
+  --hero-sentence: var(--text-h4);
+  --curtain-frame-out: 0;
+  --curtain-tagline-out: 0;
+  --curtain-gutter: calc(96vw / var(--type-scale-ratio));
+  position: fixed;
+  inset: 0;
+  /*
+   * Above the fixed chrome (60) and the menu overlay (70), below the boot
+   * plate (90). During the gate the page is still locked, so covering the
+   * rails is the same as the reference's preloader sitting over everything.
+   */
+  z-index: 80;
+  overflow: hidden;
+  color: var(--paper);
+  pointer-events: none;
+}
+
+/*
+ * A session that has already seen the gate never paints it — not even for a
+ * frame. The bootstrap script marks the root open before this node is parsed.
+ */
+html[data-boot="open"] .curtain-stage {
+  display: none;
+}
+
+.curtain-plate {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.curtain-plate-fill {
+  fill: var(--ink);
+}
+
+/*
+ * A concentric outline a short gap outside the arch, so the doorway reads as
+ * an opening in the plate rather than a hole punched through it.
+ */
+.curtain-plate-ring {
+  fill: none;
+  stroke: color-mix(in oklab, var(--paper) 30%, transparent);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.curtain-shell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  height: 100%;
+  padding: var(--curtain-gutter) var(--gutter-x) calc(var(--curtain-gutter) * 0.66);
+  /*
+   * `minmax(0, 1fr)`, not `1fr`: the wordmark is set at the display tier and
+   * fitted down to the measure it is given, so a column that takes its width
+   * from its content gives the fit pass the unfitted width back and nothing is
+   * ever reduced. The plate then runs off the side of a phone.
+   */
+  grid-template-rows: 1fr auto;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.curtain-middle {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/*
+ * The plate's own frame sits in the foot, with the tagline between the two
+ * captions. The reference flanks its wordmark with them, which it can because
+ * its plate wordmark is set several tiers below its hero's. Ours is the hero
+ * lockup — it spans the measure — so flanking it would run the captions into
+ * the letters. They hold the foot corners instead.
+ */
+.curtain-foot {
+  display: grid;
+  width: 100%;
+  align-items: end;
+  gap: var(--space-24);
+  grid-template-areas: "left tagline right";
+  grid-template-columns: 1fr auto 1fr;
+}
+
+.curtain-flank {
+  margin: 0;
+  font-weight: 400;
+  letter-spacing: 0.5em;
+  opacity: calc(0.72 * (1 - var(--curtain-frame-out)));
+  translate: 0 calc(var(--curtain-frame-out) * -1.25rem);
+}
+
+.curtain-flank-left {
+  justify-self: start;
+  grid-area: left;
+}
+
+.curtain-flank-right {
+  justify-self: end;
+  /* Letter-spacing trails the last glyph; pulling it back squares the edge. */
+  margin-right: -0.5em;
+  grid-area: right;
+  text-align: right;
+}
+
+/*
+ * The tagline goes early, with the lockup rather than with the captions: it is
+ * on the plate's centre line, which is where the arch rises through.
+ */
+.curtain-tagline {
+  margin: 0;
+  grid-area: tagline;
+  letter-spacing: 0.14em;
+  line-height: 1.72;
+  text-align: center;
+  opacity: calc(0.82 * (1 - var(--curtain-tagline-out)));
+  translate: 0 calc(var(--curtain-tagline-out) * -0.75rem);
+}
+
+.curtain-tagline-line {
+  display: block;
+}
+
+/*
+ * The hero held at its first frame.
+ *
+ * The plate is a hole, not a window with its own photograph in it — what shows
+ * through the arch is the hero's own media, pinned here for as long as the
+ * overlay has something to paint. Scoped off `data-boot=open` so a skipped
+ * session never pins the photograph over the real hero.
+ */
+html:not([data-boot="open"]) .home-open.is-opening .hero-media {
+  position: fixed;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+}
+
+html:not([data-boot="open"]) .home-open.is-opening .hero-media .hero-image,
+html:not([data-boot="open"]) .home-open.is-opening .hero-media .hero-grade,
+html:not([data-boot="open"]) .home-open.is-opening .hero-media .hero-pins {
+  inset: 0 0 auto 0;
+  height: var(--hero-runway);
+}
+
+/*
+ * The hero's own copy waits the rise out.
+ *
+ * Shown during it, the supporting sentence reads as label copy sliced by the
+ * arch edges — it belongs to the composition the arch finishes on, so it
+ * arrives as the overlay is spent rather than part way through it.
+ *
+ * Hidden without a fade, so when the overlay is gone the lockup's own unmask is
+ * the entrance — the same arrival the hero had before the gate existed.
+ *
+ * Scoped to `.hero` deliberately: the plate's lockup carries the same class
+ * names, and it is precisely what must not be hidden here.
+ */
+.home-open .hero .hero-copy-brand {
+  transition: none;
+}
+
+html:not([data-boot="open"]) .home-open.is-opening .hero .hero-copy-brand {
+  visibility: hidden;
+  opacity: 0;
+}
+
+@media (max-width: 991px) {
+  .curtain-stage {
+    --curtain-gutter: calc(72vw / var(--type-scale-ratio));
+  }
+
+  .curtain-shell {
+    padding-inline: var(--nav-offset);
+  }
+
+  /* Three cells across 390px crush the tagline; it takes its own row. */
+  .curtain-foot {
+    gap: calc(48vw / var(--type-scale-ratio)) var(--space-16);
+    grid-template-areas:
+      "tagline tagline"
+      "left right";
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .curtain-flank,
+  .curtain-tagline {
+    translate: none;
+  }
+
+  .home-open .hero .hero-copy-brand {
+    transition: none;
+  }
+}
+
 /*
  * Distance-as-pause: after the CTA foot, zoom settles on the held frame before
  * the arch section starts scrubbing the dome.
  */
+/*
+ * Kept to roughly a third of a viewport. A full viewport here was a dead gap:
+ * the frame is already held, so the only thing that changed across a whole
+ * screen of scrolling was a 5% zoom, and the dome then started from a standstill
+ * rather than out of the settle.
+ */
 .home-open-lead {
-  /* ~one viewport of settle/zoom before the arch scrub begins. */
-  height: 100svh;
+  height: 36svh;
   pointer-events: none;
 }

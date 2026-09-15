@@ -40,7 +40,7 @@ function revealedWaypointCount(entry, total, span = 0.85) {
   if (span <= 0) {
     return total;
   }
-  return Math.min(total, Math.ceil(clamp01(entry) / span * total));
+  return Math.min(total, Math.ceil((clamp01(entry) / span) * total));
 }
 function pinnedScrollSpan(panelCount, perPanel = 0.7, min = 1.5) {
   if (panelCount <= 0) {
@@ -80,7 +80,7 @@ function toPercent(value, extent) {
   if (extent <= 0) {
     return 0;
   }
-  return value / extent * 100;
+  return (value / extent) * 100;
 }
 function formatCount(value) {
   return String(value).padStart(2, "0");
@@ -98,5 +98,5 @@ export {
   revealedWaypointCount,
   stripIndex,
   toPercent,
-  trackTranslation
+  trackTranslation,
 };

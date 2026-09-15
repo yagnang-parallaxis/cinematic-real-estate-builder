@@ -1,19 +1,18 @@
 import {
   bedroomOptions,
-  EnquiryModal,
-  Footer,
-  Navigation,
   parseBedroomsParam,
   parseSortParam,
   parseTypeParam,
-  ResidenceGrid,
   typeOptions,
 } from "@cinematic/section-library";
 import type { Metadata } from "next";
 
-import { enquiry } from "../../content/enquiry";
-import { residenceGrid, residences } from "../../content/residences";
-import { subpageFooter, subpageNavigation } from "../../content/site";
+import { cloneResidences } from "../../lib/clone-chrome";
+import { ClonePreviewProvider } from "../../lib/clone-context";
+import { getCloneConfig } from "../../lib/load-clone";
+import { PreviewBridge } from "../PreviewBridge";
+import { ThemeStyleTag } from "../ThemeStyleTag";
+import { ResidencesSite } from "./ResidencesSite";
 
 export const metadata: Metadata = {
   title: "Select a residence — Aurelia Residences",
@@ -28,9 +27,13 @@ export default async function ResidencesPage({
     type?: string | string[];
     bedrooms?: string | string[];
     sort?: string | string[];
+    clone?: string;
+    preview?: string;
   }>;
 }) {
   const params = await searchParams;
+  const config = await getCloneConfig(params.clone);
+  const residences = cloneResidences(config);
 
   /*
    * The filters are resolved on the server against what the inventory actually
@@ -42,17 +45,16 @@ export default async function ResidencesPage({
 
   return (
     <>
-      <Navigation content={subpageNavigation} currentPath="/residences" />
-      <main id="content">
-        <ResidenceGrid
-          content={{ ...residenceGrid, residences }}
+      <ThemeStyleTag theme={config.theme} />
+      <ClonePreviewProvider serverConfig={config}>
+        {params.preview === "1" ? <PreviewBridge /> : null}
+        <ResidencesSite
+          serverConfig={config}
           initialType={parseTypeParam(params.type, knownTypes)}
           initialBedrooms={parseBedroomsParam(params.bedrooms, knownBedrooms)}
           initialSort={parseSortParam(params.sort)}
         />
-        <Footer content={subpageFooter} />
-      </main>
-      <EnquiryModal content={enquiry} />
+      </ClonePreviewProvider>
     </>
   );
 }

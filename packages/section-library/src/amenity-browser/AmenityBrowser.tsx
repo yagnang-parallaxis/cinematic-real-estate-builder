@@ -218,6 +218,7 @@ export function AmenityBrowser({ content }: { content: AmenityBrowserContent }) 
               lines={content.headingLines}
               className="t-h2 amenity-browser-heading"
               stagger={0.07}
+              fit="h2"
             />
           </div>
 
@@ -276,6 +277,7 @@ export function AmenityBrowser({ content }: { content: AmenityBrowserContent }) 
                   as="h3"
                   lines={[panel.title]}
                   className="t-h3 amenity-browser-title"
+                  fit="h3"
                 />
                 <Reveal key={`desc-${active}`} variant="block" delay={0.12}>
                   <p className="t-lead amenity-browser-desc">{panel.description}</p>

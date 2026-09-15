@@ -8,7 +8,7 @@ const height = Number(process.argv[4] ?? 900);
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width, height } });
 await page.goto(url, { waitUntil: "load" });
-await page.waitForSelector(".loader", { state: "detached", timeout: 20000 }).catch(() => {});
+await page.waitForSelector(".boot-plate", { state: "detached", timeout: 20000 }).catch(() => {});
 
 const target = await page.$(selector);
 if (target) {
@@ -24,7 +24,12 @@ const report = await page.evaluate((sel) => {
     return {
       cls: node.className.toString().slice(0, 70),
       revealed: node.getAttribute("data-revealed"),
-      rect: { x: Math.round(rect.x), y: Math.round(rect.y), w: Math.round(rect.width), h: Math.round(rect.height) },
+      rect: {
+        x: Math.round(rect.x),
+        y: Math.round(rect.y),
+        w: Math.round(rect.width),
+        h: Math.round(rect.height),
+      },
       clipPath: style.clipPath,
       opacity: style.opacity,
       transform: style.transform,

@@ -62,7 +62,7 @@ export function Contact({ content }: { content: ContactContent }) {
           <Reveal variant="block" className="t-label contact-eyebrow">
             {content.eyebrow}
           </Reveal>
-          <RevealLines lines={lines} className="t-h2 contact-heading" delay={0.06} />
+          <RevealLines lines={lines} className="t-h2 contact-heading" delay={0.06} fit="h2" />
         </header>
 
         {channels.length ? (

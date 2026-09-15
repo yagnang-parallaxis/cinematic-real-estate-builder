@@ -16,7 +16,8 @@
     "@cinematic/ui": "workspace:*",
     "next": "^16.3.5",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@cinematic/typescript-config": "workspace:*",

@@ -5,5 +5,7 @@ export function hasVistaPlate(content: Pick<VistaContent, "quote" | "imageSrc">)
 }
 
 export function vistaCite(content: Pick<VistaContent, "attribution" | "credit">): string[] {
-  return [content.attribution, content.credit].filter((line): line is string => Boolean(line?.trim()));
+  return [content.attribution, content.credit].filter((line): line is string =>
+    Boolean(line?.trim()),
+  );
 }

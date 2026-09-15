@@ -4,23 +4,21 @@ import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 
 import { BrandMark } from "../shared/BrandMark";
 import {
-  ARCH_CARRY_S,
-  ARCH_HANDOFF,
   ARCH_SCROLL_VH,
   ARCH_STATIC_PROGRESS,
   archGeometry,
   archInteriorTop,
   archPath,
-  archTextInset,
   archTextPath,
+  archTextRun,
+  archWordGaps,
   curvedTextOpacity,
-  curvedWordSpacingEm,
   archNavTone,
   hidesHeroChrome,
   interiorOpacity,
   pinProgress,
   settleProgress,
-  shouldHandoff,
+  type ArchTextMetrics,
 } from "./logic";
 import type { ArchRevealContent } from "./types";
 
@@ -55,10 +53,13 @@ export function ArchReveal({
 }) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
+  const tokenRef = useRef<SVGTextElement | null>(null);
+  const floorRef = useRef<SVGTextElement | null>(null);
 
   const [stage, setStage] = useState(FALLBACK_STAGE);
   const [progress, setProgress] = useState(ARCH_STATIC_PROGRESS);
   const [scrubbing, setScrubbing] = useState(false);
+  const [metrics, setMetrics] = useState<ArchTextMetrics | null>(null);
 
   const arcId = `arch-arc-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
 
@@ -87,6 +88,49 @@ export function ArchReveal({
     return () => observer.disconnect();
   }, []);
 
+  /*
+   * What the copy costs to set, measured rather than assumed: the fit needs the
+   * line's natural width per em, and the two tiers CSS is asking for in px. A
+   * hidden twin carries the token size so the live line can be given a derived
+   * one without the measurement chasing its own tail.
+   */
+  useEffect(() => {
+    const token = tokenRef.current;
+    const floor = floorRef.current;
+    if (!token || !floor) {
+      return;
+    }
+
+    let cancelled = false;
+
+    const measure = () => {
+      if (cancelled) {
+        return;
+      }
+      const tokenSize = Number.parseFloat(window.getComputedStyle(token).fontSize);
+      const minSize = Number.parseFloat(window.getComputedStyle(floor).fontSize);
+      const natural = token.getComputedTextLength();
+      if (!(tokenSize > 0) || !(natural > 0)) {
+        return;
+      }
+      setMetrics({
+        emWidth: natural / tokenSize,
+        gaps: archWordGaps(content.curvedText),
+        tokenSize,
+        minSize: Number.isFinite(minSize) ? minSize : 0,
+      });
+    };
+
+    measure();
+    /* A display Didone is a web font; its metrics land after the first paint. */
+    document.fonts?.ready.then(measure).catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
+    /* The stage dependency re-measures on resize — both tiers are viewport-relative. */
+  }, [content.curvedText, stage.width]);
+
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) {
@@ -98,87 +142,13 @@ export function ArchReveal({
 
     let frame = 0;
     let active = false;
-    let handed = false;
-    let carrying = false;
-    let fallback = 0;
-
-    const carryToStory = () => {
-      const story = document.getElementById("story");
-      if (!story || carrying) {
-        return;
-      }
-
-      const to = story.getBoundingClientRect().top + window.scrollY;
-      if (window.scrollY >= to - 8) {
-        return;
-      }
-
-      handed = true;
-      carrying = true;
-      const duration = ARCH_CARRY_S;
-      const ease = (t: number) => 1 - (1 - t) ** 3;
-      const done = () => {
-        carrying = false;
-      };
-      const lenis = (
-        window as Window & {
-          cinematicLenis?: {
-            scrollTo: (
-              t: HTMLElement,
-              o: {
-                duration: number;
-                offset: number;
-                lock?: boolean;
-                easing?: (n: number) => number;
-                onComplete?: () => void;
-              },
-            ) => void;
-          };
-        }
-      ).cinematicLenis;
-
-      if (lenis) {
-        lenis.scrollTo(story, {
-          duration,
-          offset: 0,
-          lock: true,
-          easing: ease,
-          onComplete: done,
-        });
-        return;
-      }
-
-      const from = window.scrollY;
-      const start = performance.now();
-      const ms = duration * 1000;
-      const step = (now: number) => {
-        const t = Math.min(1, (now - start) / ms);
-        window.scrollTo(0, from + (to - from) * ease(t));
-        if (t < 1) {
-          fallback = requestAnimationFrame(step);
-        } else {
-          done();
-        }
-      };
-      fallback = requestAnimationFrame(step);
-    };
 
     const update = () => {
       frame = 0;
       const raw = pinProgress(section.getBoundingClientRect(), window.innerHeight);
       const delay = Math.min(0.45, Math.max(0, riseAfter));
-      const mapped =
-        delay >= 0.999 ? raw : Math.min(1, Math.max(0, (raw - delay) / (1 - delay)));
+      const mapped = delay >= 0.999 ? raw : Math.min(1, Math.max(0, (raw - delay) / (1 - delay)));
       setProgress(settleProgress(mapped));
-
-      if (raw < ARCH_HANDOFF - 0.1) {
-        handed = false;
-        return;
-      }
-
-      if (!handed && !carrying && shouldHandoff(raw)) {
-        carryToStory();
-      }
     };
 
     const onScroll = () => {
@@ -214,9 +184,6 @@ export function ArchReveal({
       if (frame) {
         cancelAnimationFrame(frame);
       }
-      if (fallback) {
-        cancelAnimationFrame(fallback);
-      }
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
       desktop.removeEventListener("change", sync);
@@ -225,9 +192,15 @@ export function ArchReveal({
   }, [riseAfter]);
 
   const geometry = archGeometry(progress, stage);
-  const inset = archTextInset(geometry, stage);
   const overCta = hidesHeroChrome(progress);
-  const wordSpacing = curvedWordSpacingEm(progress, content.curvedWordSpacing ?? 1);
+  /*
+   * The heading is sized off the arc it has to fit rather than off the scale, so
+   * it neither wraps most of the way around the dome on a wide stage nor has its
+   * tracking squeezed negative on a narrow one. The words then spread into
+   * whatever room is left, which is the reference's own mechanism.
+   */
+  const run = archTextRun(geometry, metrics, progress, content.curvedWordSpacing ?? 1);
+  const navTone = archNavTone(geometry, stage);
 
   /*
    * The fixed navigation picks its contrast by sampling `data-nav-tone` on the
@@ -237,7 +210,7 @@ export function ArchReveal({
    */
   useEffect(() => {
     window.dispatchEvent(new Event("scroll"));
-  }, [overCta]);
+  }, [navTone]);
 
   return (
     <section
@@ -245,7 +218,7 @@ export function ArchReveal({
       id={content.id}
       aria-label={content.label}
       data-tone={content.tone}
-      data-nav-tone={archNavTone(progress)}
+      data-nav-tone={navTone}
       data-arch-scrub={scrubbing ? "true" : undefined}
       data-arch-covered={overCta ? "true" : undefined}
       className="arch"
@@ -279,7 +252,7 @@ export function ArchReveal({
           focusable="false"
         >
           <defs>
-            <path id={arcId} d={archTextPath(geometry, inset, progress)} fill="none" />
+            <path id={arcId} d={archTextPath(geometry, run.inset)} fill="none" />
           </defs>
 
           <path d={archPath(geometry)} className="arch-dome" />
@@ -289,7 +262,8 @@ export function ArchReveal({
             style={
               {
                 opacity: curvedTextOpacity(progress),
-                wordSpacing: `${wordSpacing.toFixed(3)}em`,
+                fontSize: run.fontSize === null ? undefined : `${run.fontSize.toFixed(2)}px`,
+                wordSpacing: `${run.wordSpacingEm.toFixed(4)}em`,
               } as CSSProperties
             }
           >
@@ -297,12 +271,32 @@ export function ArchReveal({
               href={`#${arcId}`}
               startOffset="50%"
               textAnchor="middle"
+              /*
+               * Absent on any copy the fit could size to the arc. Where it is
+               * set, spacing only: the Didone's hairlines do not survive
+               * scaling, and the shortfall lands on the tracking instead.
+               */
+              textLength={run.forcedLength ?? undefined}
+              lengthAdjust={run.forcedLength === null ? undefined : "spacing"}
               /* Sit just inside the rim — small blue margin, not a deep inset. */
               dy="0.78em"
             >
               {content.curvedText}
             </textPath>
           </text>
+
+          {/*
+           * Measured, never drawn. The first carries the tier CSS asks for, so
+           * the copy's natural width per em can be read at a size the fit has
+           * not already changed; the second carries the floor the fit may not
+           * pass, which is a token rather than a number this file can know.
+           */}
+          <g className="arch-measure" aria-hidden="true">
+            <text ref={tokenRef} className="arch-curve">
+              {content.curvedText}
+            </text>
+            <text ref={floorRef} className="arch-curve arch-curve-floor" />
+          </g>
         </svg>
 
         {/*
@@ -315,7 +309,7 @@ export function ArchReveal({
           className="arch-interior"
           style={{
             opacity: interiorOpacity(progress),
-            top: `${archInteriorTop(geometry, inset, stage.height).toFixed(1)}px`,
+            top: `${archInteriorTop(geometry, run.inset, stage.height).toFixed(1)}px`,
           }}
         >
           <div className="arch-mark-row">

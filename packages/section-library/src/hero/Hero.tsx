@@ -5,8 +5,19 @@ import { cn } from "@cinematic/ui";
 import { useEffect, useId, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 
 import { HoverSlide } from "../shared/HoverSlide";
-import { OPEN_EVENT } from "../loading/logic";
-import { brandLeaveProgress, clampHotspots, lockupChars, magneticOffset, resolveHeroMedia } from "./logic";
+import { bootOpened, bootReleased, GATE_EVENT, OPEN_EVENT } from "../loading/logic";
+import { NAV_TONE_EVENT } from "../navigation/logic";
+import { Lockup } from "./Lockup";
+import {
+  brandLeaveProgress,
+  clampHotspots,
+  heroFocusPercent,
+  heroIntroReady,
+  heroNavTone,
+  heroRunwaySvh,
+  magneticOffset,
+  resolveHeroMedia,
+} from "./logic";
 import type { HeroContent, HeroHotspot, HeroVariant } from "./types";
 
 /**
@@ -44,12 +55,12 @@ function HeroPins({ hotspots, tablistId }: { hotspots: HeroHotspot[]; tablistId:
             className="hero-pin"
             style={{ top: `${pin.y}%`, left: `${pin.x}%` }}
             onMouseEnter={() => {
-              if (window.matchMedia("(min-width: 992px)").matches) {
+              if (window.matchMedia("(min-width: 992px) and (hover: hover) and (pointer: fine)").matches) {
                 setOpenPin(pin.id);
               }
             }}
             onMouseLeave={() => {
-              if (window.matchMedia("(min-width: 992px)").matches) {
+              if (window.matchMedia("(min-width: 992px) and (hover: hover) and (pointer: fine)").matches) {
                 setOpenPin(null);
               }
             }}
@@ -79,23 +90,50 @@ function HeroPins({ hotspots, tablistId }: { hotspots: HeroHotspot[]; tablistId:
   );
 }
 
-export function Hero({ content }: { content: HeroContent }) {
-  const [variant, setVariant] = useState<HeroVariant>("day");
+/**
+ * @param variant       Day or night, when an owner above the hero shares it
+ *                      with another surface — the opening curtain reveals this
+ *                      same photograph, so the two cannot each hold their own.
+ */
+export function Hero({
+  content,
+  variant: sharedVariant,
+  onVariantChange,
+}: {
+  content: HeroContent;
+  variant?: HeroVariant;
+  onVariantChange?: (variant: HeroVariant) => void;
+}) {
+  const [ownVariant, setOwnVariant] = useState<HeroVariant>("day");
+  const variant = sharedVariant ?? ownVariant;
+  const setVariant = onVariantChange ?? setOwnVariant;
   const [pull, setPull] = useState({ x: 0, y: 0 });
   const [intro, setIntro] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const ctaRef = useRef<HTMLAnchorElement>(null);
   const brandCopyRef = useRef<HTMLDivElement>(null);
   const tablistId = useId();
   const headingLines = content.headingLines ?? [content.heading];
-  const leadLine = headingLines[0] ?? content.heading;
-  const cascadeChars = lockupChars(headingLines[1] ?? "");
   const hotspots = clampHotspots(content.hotspots);
   const day = resolveHeroMedia(content, "day");
   const night = resolveHeroMedia(content, "night");
+  const navTone = heroNavTone(variant);
+  /*
+   * Both breakpoints are published as custom properties and the media query
+   * picks one, so the crop is authored art direction without a resize listener
+   * deciding the first paint.
+   */
+  const framing = {
+    "--hero-runway-desktop": heroRunwaySvh(content.framing, "desktop"),
+    "--hero-runway-compact": heroRunwaySvh(content.framing, "compact"),
+    "--hero-focus-desktop": `${heroFocusPercent(content.framing, "desktop")}%`,
+    "--hero-focus-compact": `${heroFocusPercent(content.framing, "compact")}%`,
+  } as CSSProperties;
 
   useEffect(() => {
     const node = brandCopyRef.current;
-    if (!node) {
+    const section = sectionRef.current;
+    if (!node || !section) {
       return;
     }
 
@@ -103,7 +141,13 @@ export function Hero({ content }: { content: HeroContent }) {
 
     const apply = () => {
       frame = 0;
-      const out = brandLeaveProgress(window.scrollY, window.innerHeight);
+      /*
+       * Measured from the section's own top, not from the document's. Anything
+       * ahead of the hero — the opening curtain's pin — otherwise counts as
+       * travel the lockup has already made, and it starts the first frame gone.
+       */
+      const travelled = Math.max(0, -section.getBoundingClientRect().top);
+      const out = brandLeaveProgress(travelled, window.innerHeight);
       node.style.setProperty("--hero-brand-out", out.toFixed(4));
       node.classList.toggle("is-away", out >= 0.92);
     };
@@ -129,19 +173,53 @@ export function Hero({ content }: { content: HeroContent }) {
     };
   }, []);
 
+  /*
+   * The tone attribute has already been committed by the time this runs, so the
+   * chrome re-samples the hero it is actually sitting over.
+   */
   useEffect(() => {
-    const play = () => setIntro(true);
+    window.dispatchEvent(new Event(NAV_TONE_EVENT));
+  }, [navTone]);
+
+  useEffect(() => {
+    const root = document.querySelector(".home-open");
+
+    const play = () => {
+      const opening = root?.classList.contains("is-opening") ?? false;
+      if (heroIntroReady(opening) || bootReleased()) {
+        setIntro(true);
+      }
+    };
+
     window.addEventListener(OPEN_EVENT, play);
-    const loader = document.querySelector(".loader");
-    if (!loader || loader.classList.contains("is-leaving")) {
+    window.addEventListener(GATE_EVENT, play);
+    if (bootOpened()) {
       play();
     }
-    return () => window.removeEventListener(OPEN_EVENT, play);
+
+    if (!root) {
+      return () => {
+        window.removeEventListener(OPEN_EVENT, play);
+        window.removeEventListener(GATE_EVENT, play);
+      };
+    }
+
+    const observer = new MutationObserver(play);
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+
+    return () => {
+      window.removeEventListener(OPEN_EVENT, play);
+      window.removeEventListener(GATE_EVENT, play);
+      observer.disconnect();
+    };
   }, []);
 
   const onCtaMove = (event: MouseEvent<HTMLAnchorElement>) => {
     const node = ctaRef.current;
-    if (!node || window.matchMedia("(max-width: 991px)").matches) {
+    if (
+      !node ||
+      !window.matchMedia("(min-width: 992px) and (hover: hover) and (pointer: fine)").matches
+    ) {
       return;
     }
 
@@ -149,8 +227,14 @@ export function Hero({ content }: { content: HeroContent }) {
   };
 
   return (
-    <section id="hero" data-tone="media" data-nav-tone="on-media" data-hero-variant={variant}>
-      <div className="hero">
+    <section
+      ref={sectionRef}
+      id="hero"
+      data-tone="media"
+      data-nav-tone={navTone}
+      data-hero-variant={variant}
+    >
+      <div className="hero" style={framing}>
         {/*
          * The photograph is as tall as the runway. Scrolling the section is
          * scrolling the image — stations are landmarks along that travel.
@@ -180,31 +264,8 @@ export function Hero({ content }: { content: HeroContent }) {
         </div>
 
         <div className="hero-station hero-station-brand">
-          <div
-            ref={brandCopyRef}
-            className={cn("hero-copy hero-copy-brand", intro && "is-intro")}
-          >
-            <div className="hero-lockup">
-              <h1 className="t-h1 hero-title">
-                <span className="hero-title-line">
-                  <span className="hero-title-line-inner">{leadLine}</span>
-                </span>
-                {cascadeChars.length > 0 ? (
-                  <span className="hero-title-line hero-title-cascade">
-                    {cascadeChars.map((glyph, index) => (
-                      <span
-                        key={`${glyph}-${index}`}
-                        className="hero-title-char"
-                        style={{ "--char": index } as CSSProperties}
-                      >
-                        {glyph === " " ? "\u00a0" : glyph}
-                      </span>
-                    ))}
-                  </span>
-                ) : null}
-              </h1>
-              <p className="hero-place">{content.place}</p>
-            </div>
+          <div ref={brandCopyRef} className={cn("hero-copy hero-copy-brand", intro && "is-intro")}>
+            <Lockup lines={headingLines} place={content.place} />
 
             <div className="hero-sentence-wrap">
               <div className="hero-sentence t-h5">

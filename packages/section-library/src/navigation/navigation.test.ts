@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   formatSectionIndex,
   overlayLinks,
+  resolveNavChrome,
   resolveNavTone,
   resolveSectionIndex,
   scrollProgress,
@@ -86,6 +87,18 @@ describe("resolveNavTone", () => {
 
   it("falls back to on-dark when no section is under the probe", () => {
     expect(resolveNavTone([], 80)).toBe("on-dark");
+  });
+});
+
+describe("resolveNavChrome", () => {
+  const sections = [
+    { top: 0, bottom: 900, tone: "on-dark" as const, scrim: false },
+    { top: 900, bottom: 1800, tone: "on-light" as const, scrim: true },
+  ];
+
+  it("carries the scrim flag of the section under the header", () => {
+    expect(resolveNavChrome(sections, 80)).toEqual({ tone: "on-dark", scrim: false });
+    expect(resolveNavChrome(sections, 1100)).toEqual({ tone: "on-light", scrim: true });
   });
 });
 

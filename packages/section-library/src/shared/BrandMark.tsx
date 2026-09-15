@@ -29,10 +29,7 @@ export function BrandSeal({ label, className }: { label: string; className?: str
   return (
     <svg viewBox="0 0 120 120" fill="none" aria-hidden="true" className={className}>
       <defs>
-        <path
-          id={pathId}
-          d="M 60 60 m 0 -46 a 46 46 0 1 1 0 92 a 46 46 0 1 1 0 -92"
-        />
+        <path id={pathId} d="M 60 60 m 0 -46 a 46 46 0 1 1 0 92 a 46 46 0 1 1 0 -92" />
       </defs>
       <text className="nav-logo-seal-text">
         <textPath href={`#${pathId}`} startOffset="0%">

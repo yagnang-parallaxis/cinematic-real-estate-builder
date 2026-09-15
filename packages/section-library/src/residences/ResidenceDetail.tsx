@@ -7,6 +7,7 @@ import { CircleCta } from "../shared/CircleCta";
 import { HoverSlide } from "../shared/HoverSlide";
 import { Reveal, RevealLines } from "../shared/Reveal";
 import { Section } from "../shared/Section";
+import { lockScroll } from "../shared/scroll-lock";
 import {
   formatArea,
   formatBedrooms,
@@ -64,13 +65,11 @@ export function ResidenceDetail({ content }: { content: ResidenceDetailContent }
     }
 
     const trigger = triggerRef.current;
-    const { body } = document;
-    const previousOverflow = body.style.overflow;
-    body.style.overflow = "hidden";
+    const unlock = lockScroll();
     closeRef.current?.focus();
 
     return () => {
-      body.style.overflow = previousOverflow;
+      unlock();
       trigger?.focus();
     };
   }, [isOpen]);
@@ -186,6 +185,7 @@ export function ResidenceDetail({ content }: { content: ResidenceDetailContent }
               as="h1"
               lines={[residence.name]}
               className="t-display residence-detail-name"
+              fit="display"
             />
 
             <Reveal variant="block" delay={0.08} className="residence-detail-place">

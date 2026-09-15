@@ -12,6 +12,7 @@ import {
 } from "react";
 
 import { HoverSlide } from "../shared/HoverSlide";
+import { useFitText } from "../shared/useFitText";
 import {
   STORY_AUTO_MS,
   canAutoAdvance,
@@ -39,13 +40,7 @@ function PagArrow({ direction }: { direction: "prev" | "next" }) {
   );
 }
 
-function TitleRun({
-  title,
-  leaving,
-}: {
-  title: string;
-  leaving?: boolean;
-}) {
+function TitleRun({ title, leaving }: { title: string; leaving?: boolean }) {
   const words = titleWords(title);
   return (
     <span className={leaving ? "story-title-run is-out" : "story-title-run"} aria-hidden={leaving}>
@@ -77,6 +72,10 @@ export function Storytelling({ content }: { content: StoryContent }) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const beat = beats[index];
   const labelId = useId();
+  const [titleRef, titleFit, titleReady] = useFitText<HTMLHeadingElement>(
+    ".story-title-run:not(.is-out)",
+    beat?.title ?? "",
+  );
 
   const goTo = (next: number) => {
     if (next === index || !beats[next]) {
@@ -194,7 +193,13 @@ export function Storytelling({ content }: { content: StoryContent }) {
           </p>
 
           <div className="story-plate">
-            <h2 className="t-display story-title" aria-live="polite">
+            <h2
+              ref={titleRef}
+              className="t-display story-title"
+              data-fit-ready={titleReady ? "true" : undefined}
+              aria-live="polite"
+              style={{ "--story-fit": titleFit } as CSSProperties}
+            >
               {leaving ? (
                 <TitleRun key={`out-${leaving}`} title={leaving} leaving />
               ) : (
@@ -224,7 +229,9 @@ export function Storytelling({ content }: { content: StoryContent }) {
               >
                 <PagArrow direction="prev" />
                 <HoverSlide align="center">
-                  <span className="t-label">{formatBeatNumber(prevIndex(index, beats.length))}</span>
+                  <span className="t-label">
+                    {formatBeatNumber(prevIndex(index, beats.length))}
+                  </span>
                 </HoverSlide>
               </button>
               <div className="story-pag-track" aria-hidden="true">

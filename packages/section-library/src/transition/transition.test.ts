@@ -5,6 +5,7 @@ import {
   resolveHref,
   routeAnnouncement,
   shouldInterceptNavigation,
+  shouldPlayPageTransition,
   TRANSITION_MS,
   transitionMs,
 } from "./logic";
@@ -91,6 +92,18 @@ describe("shouldInterceptNavigation", () => {
 
   it("does nothing without an href", () => {
     expect(shouldInterceptNavigation(intent({ href: null }))).toBe(false);
+  });
+});
+
+describe("shouldPlayPageTransition", () => {
+  it("stands aside while the homepage boot is covering", () => {
+    expect(shouldPlayPageTransition("veil")).toBe(false);
+    expect(shouldPlayPageTransition("gate")).toBe(false);
+  });
+
+  it("plays once the page is open, and when there is no boot at all", () => {
+    expect(shouldPlayPageTransition("open")).toBe(true);
+    expect(shouldPlayPageTransition(null)).toBe(true);
   });
 });
 

@@ -19,8 +19,13 @@
   opacity: 0.72;
 }
 
+/*
+ * The heading is fitted, so its lines are authored rather than wrapped and a
+ * character-count measure would only starve the fit. The shell's gutters are
+ * the measure.
+ */
 .statement-heading {
-  max-width: 20ch;
+  max-width: none;
 }
 
 .statement-body {
@@ -65,7 +70,7 @@
 
 /* figures — a claim answered by numbers */
 
-.statement-figures {
+.statement-figure-row {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -116,20 +121,22 @@
 
 @media (max-width: 991px) {
   .statement-shell {
-    padding: calc(var(--nav-cell) + var(--space-32)) var(--nav-offset) var(--space-48);
+    padding: calc(var(--nav-cell) + var(--space-32)) var(--nav-offset) var(--space-48)
+      calc(var(--nav-offset) + var(--nav-cell));
     gap: var(--space-16);
   }
 
-  .statement-heading {
-    max-width: none;
-  }
-
+  /*
+   * Compact holds the panorama heading at h2. The fit alone would keep it
+   * inside the gutters, but the display tier has to reduce so far at 390px to
+   * get there that the line stops reading as a display line at all.
+   */
   .statement-callout .statement-heading,
   .statement-panorama .statement-heading {
-    font-size: var(--text-h2);
+    --fit-size: var(--text-h2);
   }
 
-  .statement-figures {
+  .statement-figure-row {
     gap: var(--space-24);
   }
 

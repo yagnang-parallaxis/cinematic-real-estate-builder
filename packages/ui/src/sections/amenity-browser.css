@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-32);
-  overflow: hidden;
+  overflow: visible;
   padding: var(--gutter-top) var(--gutter-x) var(--space-48);
 }
 
@@ -22,6 +22,17 @@
   overflow: hidden;
   aspect-ratio: 4 / 5;
   background: var(--tone-bg);
+}
+
+@media (max-width: 991px) {
+  .amenity-browser-stage {
+    aspect-ratio: 5 / 4;
+    max-height: 46svh;
+  }
+
+  .amenity-browser-rail {
+    mask-image: linear-gradient(to right, black 78%, transparent);
+  }
 }
 
 .amenity-browser-plate {
@@ -52,10 +63,14 @@
 .amenity-browser-rail {
   position: relative;
   display: flex;
+  width: 100%;
+  min-width: 0;
   gap: var(--space-32);
   overflow-x: auto;
+  overscroll-behavior-x: contain;
   border-bottom: 1px solid var(--tone-line);
   padding-bottom: var(--space-16);
+  padding-inline-end: var(--space-48);
   scrollbar-width: none;
 }
 
@@ -108,6 +123,7 @@
 .amenity-browser-panel {
   display: flex;
   max-width: 34rem;
+  min-width: 0;
   flex-direction: column;
   gap: var(--space-16);
 }
@@ -127,6 +143,8 @@
 
 .amenity-browser-title {
   line-height: 0.96;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .amenity-browser-desc {
@@ -155,6 +173,7 @@
     top: 0;
     display: grid;
     height: 100svh;
+    overflow: hidden;
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-rows: auto 1fr auto;
     align-items: start;
@@ -188,6 +207,7 @@
     border-left: 1px solid var(--tone-line);
     padding-bottom: 0;
     padding-left: var(--space-24);
+    padding-inline-end: 0;
   }
 
   .amenity-browser-indicator {
@@ -197,10 +217,6 @@
     width: 1px;
     height: var(--amenity-browser-ind-h, 0px);
     translate: 0 var(--amenity-browser-ind-y, 0px);
-  }
-
-  .amenity-browser-tab:hover {
-    opacity: 1;
   }
 
   .amenity-browser-panels {
@@ -217,6 +233,12 @@
     justify-content: flex-end;
     grid-column: 2;
     grid-row: 3;
+  }
+}
+
+@media (min-width: 992px) and (hover: hover) and (pointer: fine) {
+  .amenity-browser-tab:hover {
+    opacity: 1;
   }
 }
 
@@ -267,5 +289,36 @@
 
   .amenity-browser-cta {
     display: none;
+  }
+}
+
+@media (min-width: 700px) and (max-width: 991px) {
+  /*
+   * Compact type is vw-scaled, so 834px gets desktop-sized headings on a
+   * stacked layout. Step the amenity title down so it does not run through
+   * the fixed chrome the way a 180svh pin would have kept it clear of.
+   */
+  .amenity-browser-heading {
+    font-size: var(--text-h3);
+  }
+
+  .amenity-browser-title {
+    font-size: var(--text-h4);
+  }
+}
+
+@media (max-width: 991px) {
+  .amenity-browser-screen {
+    padding-left: calc(var(--nav-offset) + var(--nav-cell));
+    padding-right: calc(var(--nav-offset) + var(--space-24));
+  }
+
+  .amenity-browser-heading,
+  .amenity-browser-title {
+    padding-right: var(--space-16);
+  }
+
+  .amenity-browser-rail {
+    gap: var(--space-24);
   }
 }

@@ -1,12 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  clampFigures,
-  clampStatementLines,
-  hasAccents,
-  headingClass,
-  isOverMedia,
-} from "./logic";
+import { clampFigures, clampStatementLines, hasAccents, headingClass, isOverMedia } from "./logic";
 import type { StatementContent } from "./types";
 
 const base: StatementContent = {

@@ -14,7 +14,7 @@ const height = Number(process.argv[3] ?? 900);
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width, height } });
 await page.goto(url, { waitUntil: "load" });
-await page.waitForSelector(".loader", { state: "detached", timeout: 20000 }).catch(() => {});
+await page.waitForSelector(".boot-plate", { state: "detached", timeout: 20000 }).catch(() => {});
 await page.waitForTimeout(1200);
 
 const total = await page.evaluate(() => document.body.scrollHeight);
@@ -45,7 +45,7 @@ for (let step = 0; step < steps; step += 1) {
     );
 
     for (const node of candidates) {
-      if (node.closest(".nav-chrome, .loader, .enquiry-modal")) {
+      if (node.closest(".nav-chrome, .boot-plate, .enquiry-modal")) {
         continue;
       }
       const style = getComputedStyle(node);

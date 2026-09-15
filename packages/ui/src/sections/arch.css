@@ -10,7 +10,20 @@
  */
 
 .arch {
-  --arch-curve: calc(52vw / var(--type-scale-ratio));
+  /*
+   * The SVG's viewBox matches the stage in pixels, so a token length here is a
+   * rendered size. `textLength` still guarantees the fit along the arc.
+   */
+  --arch-curve: var(--text-h3);
+  /*
+   * Floor the fit may not pass: the smallest tier the display face still reads
+   * as a heading at. The curve's size is derived from the arc it has to fit, and
+   * every bound in that derivation is scale-invariant — so without a floor in
+   * absolute terms a narrow dome would ask for type nobody can read. On compact
+   * this resolves to the same numerator as `--arch-curve`, which is the honest
+   * answer there: a 390px dome has no arc to give back.
+   */
+  --arch-curve-min: var(--text-h6);
   --arch-mark: calc(56vw / var(--type-scale-ratio));
   --arch-rule: calc(176vw / var(--type-scale-ratio));
   --arch-flank-gap: calc(96vw / var(--type-scale-ratio));
@@ -64,16 +77,6 @@
   pointer-events: none;
 }
 
-.arch-cap {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: 34%;
-  background: linear-gradient(to bottom, var(--tone-bg) 42%, transparent);
-  pointer-events: none;
-}
-
 .arch-svg {
   position: absolute;
   inset: 0;
@@ -85,6 +88,11 @@
   fill: var(--tone-bg);
 }
 
+/*
+ * The tier is what the line asks for, not what it gets: the rendered size is
+ * written inline from the arc the copy has to fit. This declaration is the pose
+ * before the client has measured the face.
+ */
 .arch-curve {
   fill: var(--tone-fg);
   font-family: var(--font-arch, var(--font-display));
@@ -92,8 +100,23 @@
   font-weight: 500;
   font-optical-sizing: auto;
   font-variation-settings: "opsz" 72;
-  letter-spacing: 0.06em;
+  /*
+   * The h3 tracking, which is also the reference's own on this line (−0.016em,
+   * measured). It used to carry a bespoke +0.06em, which cost 11% of the run's
+   * width in a face that is already 1.7× wider per character than the
+   * reference's — width the arc had to find somewhere.
+   */
+  letter-spacing: -0.016em;
   text-transform: uppercase;
+}
+
+/* Measured for its metrics, never drawn. */
+.arch-measure {
+  visibility: hidden;
+}
+
+.arch-curve-floor {
+  font-size: var(--arch-curve-min);
 }
 
 /* The interior arrives once the dome is nearly closed. */
@@ -159,7 +182,7 @@
 
 @media (min-width: 992px) {
   .arch[data-arch-scrub="true"] {
-    height: var(--arch-run, 200svh);
+    height: var(--arch-run, 250svh);
   }
 
   .arch[data-arch-scrub="true"] .arch-stage {
@@ -176,7 +199,8 @@
 
 @media (max-width: 991px) {
   .arch {
-    --arch-curve: calc(24vw / var(--type-scale-ratio));
+    /* A narrow dome is a shorter arc, so the curve steps down one tier. */
+    --arch-curve: var(--text-h4);
     --arch-mark: calc(36vw / var(--type-scale-ratio));
     --arch-rule: calc(72vw / var(--type-scale-ratio));
     --arch-flank-gap: calc(48vw / var(--type-scale-ratio));

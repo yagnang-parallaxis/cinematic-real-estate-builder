@@ -74,6 +74,14 @@ export function shouldInterceptNavigation(intent: NavigationIntent): boolean {
   return true;
 }
 
+/**
+ * The homepage boot plate is the cover on a first visit. Playing the route
+ * overlay at the same time is two covers; stand aside until the page is open.
+ */
+export function shouldPlayPageTransition(bootPhase: string | null): boolean {
+  return bootPhase !== "veil" && bootPhase !== "gate";
+}
+
 /** The path (plus query and hash) to hand to the router. */
 export function navigationPath(href: string | null, currentUrl: string): string | null {
   const target = resolveHref(href, currentUrl);

@@ -79,6 +79,17 @@
   background: linear-gradient(to bottom, rgb(0 0 0 / 0.55), rgb(0 0 0 / 0.2) 34%, transparent 62%);
 }
 
+/*
+ * Chrome-safe decoration. Absolutely positioned florals, sprays and accents
+ * stay out of the fixed nav band unless they opt out with `.decor-bleed`.
+ * Opt-outs must sit in a section that declares `data-nav-scrim` (or already
+ * uses an `on-media` tone) so the rail still has contrast.
+ */
+.decor-safe:not(.decor-bleed)[data-corner="top-left"],
+.decor-safe:not(.decor-bleed)[data-corner="top-right"] {
+  top: var(--gutter-top);
+}
+
 .section-scrim-bottom {
   background: linear-gradient(to top, rgb(0 0 0 / 0.66), rgb(0 0 0 / 0.24) 38%, transparent 66%);
 }
@@ -105,8 +116,19 @@
   --reveal-stagger: 0s;
 }
 
-/* Mask: content unmasks upward from behind a clip edge. */
-.reveal[data-reveal="mask"] {
+/*
+ * Mask: content unmasks upward from behind a clip edge.
+ *
+ * The clip belongs to an inner box and never to the reveal element itself. An
+ * element clipped to nothing reports an empty intersection rect, so a reveal
+ * that clipped itself would never be told it had entered the viewport — it
+ * would hold its own entry closed for good.
+ */
+.reveal-mask {
+  display: block;
+}
+
+.reveal[data-reveal="mask"] > .reveal-mask {
   clip-path: inset(0 0 110% 0);
   transform: translateY(0.22em);
   transition:
@@ -114,18 +136,12 @@
     transform var(--reveal-dur) var(--ease-out) var(--reveal-delay);
 }
 
-.reveal[data-reveal="mask"][data-revealed="true"] {
+.reveal[data-reveal="mask"][data-revealed="true"] > .reveal-mask {
   clip-path: inset(0 0 -25% 0);
   transform: translateY(0);
 }
 
-/* A multi-line heading unmasks a line at a time. */
-.reveal-lines[data-reveal="mask"] {
-  clip-path: none;
-  transform: none;
-  transition: none;
-}
-
+/* Lines: a multi-line heading unmasks a line at a time, each behind its own edge. */
 .reveal-line {
   display: block;
   overflow: hidden;
@@ -303,7 +319,7 @@
   transition: translate var(--dur-s) var(--ease-out);
 }
 
-@media (min-width: 992px) {
+@media (min-width: 992px) and (hover: hover) and (pointer: fine) {
   .circle-cta:hover .circle-cta-ring {
     border-color: currentColor;
     scale: 1.04;
@@ -363,6 +379,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .reveal,
+  .reveal-mask,
   .reveal-line-inner,
   .reveal[data-reveal="media"] > *,
   .reveal[data-reveal-stagger="true"][data-reveal="block"] > * {

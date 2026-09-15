@@ -104,6 +104,7 @@ export function ResidenceGrid({
             as="h1"
             lines={content.headingLines}
             className="t-h1 residence-grid-heading"
+            fit="h1"
           />
           <Reveal variant="block" delay={0.1} className="residence-grid-intro">
             <p className="t-body">{content.intro}</p>

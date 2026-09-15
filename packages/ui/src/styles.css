@@ -37,9 +37,12 @@
   --input: oklch(0.32 0.012 75);
   --ring: oklch(0.84 0.05 85);
   --radius: 0.25rem;
-  --font-display-family: var(--font-display-next), "Times New Roman", serif;
-  --font-arch-family: var(--font-arch-next), "Bodoni MT", "Didot", "Times New Roman", serif;
+  --font-display-family: var(--font-display-next), "Bodoni MT", "Didot", "Times New Roman", serif;
+  /* The arch curve is the display face set on a path, not a family of its own. */
+  --font-arch-family: var(--font-display-family);
   --font-body-family: var(--font-body-next), "Helvetica Neue", sans-serif;
+  /* Reference grotesque is an extended cut; Archivo's width axis matches it. */
+  --font-body-width: 108;
   --font-accent-family: var(--font-accent-next), "Palatino Linotype", cursive;
   --type-scale-ratio: 16;
   --text-display: calc(192vw / var(--type-scale-ratio));
@@ -53,7 +56,14 @@
   --text-body: calc(13vw / var(--type-scale-ratio));
   --text-label: calc(11vw / var(--type-scale-ratio));
   --text-caption: calc(11vw / var(--type-scale-ratio));
-  --text-accent: calc(192vw / var(--type-scale-ratio));
+  --text-micro: calc(9vw / var(--type-scale-ratio));
+  --text-accent: calc(120vw / var(--type-scale-ratio));
+  /*
+   * A script that annotates a heading is sized as a fraction of that heading
+   * rather than assigned a tier, so it keeps its ratio to the caps beside it
+   * after the heading has been fitted back.
+   */
+  --accent-companion: 0.625;
   --space-4: calc(4vw / var(--type-scale-ratio));
   --space-16: calc(16vw / var(--type-scale-ratio));
   --space-24: calc(24vw / var(--type-scale-ratio));
@@ -62,6 +72,13 @@
   --nav-offset: calc(48vw / var(--type-scale-ratio));
   --nav-cell: calc(136vw / var(--type-scale-ratio));
   --nav-mark: calc(48vw / var(--type-scale-ratio));
+  /*
+   * The seal's ring text lives inside a 120-unit viewBox scaled to `--nav-cell`,
+   * so it cannot take `--text-micro` directly — inside the box a CSS length is a
+   * user-space length, not a rendered one. These are the user-space equivalents
+   * of the micro tier at each width.
+   */
+  --seal-ring-units: 8px;
   /* Columns and top band the fixed chrome occupies; section content clears these. */
   --gutter-x: calc(var(--nav-offset) * 2 + var(--nav-cell));
   --gutter-top: calc(var(--nav-offset) * 2 + var(--nav-cell));
@@ -183,13 +200,21 @@
     --text-body: calc(13vw / var(--type-scale-ratio));
     --text-label: calc(11vw / var(--type-scale-ratio));
     --text-caption: calc(11vw / var(--type-scale-ratio));
-    --text-accent: calc(96vw / var(--type-scale-ratio));
+    --text-micro: calc(9vw / var(--type-scale-ratio));
+    --text-accent: calc(72vw / var(--type-scale-ratio));
     --space-24: calc(16vw / var(--type-scale-ratio));
     --space-48: calc(32vw / var(--type-scale-ratio));
     --nav-offset: calc(24vw / var(--type-scale-ratio));
     --nav-cell: calc(80vw / var(--type-scale-ratio));
     --nav-mark: calc(32vw / var(--type-scale-ratio));
-    --gutter-x: var(--nav-offset);
+    /* Smaller seal, so the ring needs more user-space units to land on micro. */
+    --seal-ring-units: 13.5px;
+    /*
+     * Same rule as desktop: the measure starts past the seal, not at the
+     * viewport edge. Fitted headings and body copy were running under the
+     * chrome when this was only `--nav-offset`.
+     */
+    --gutter-x: calc(var(--nav-offset) + var(--nav-cell));
     --gutter-top: calc(var(--nav-offset) + var(--nav-cell));
   }
 }
@@ -206,6 +231,20 @@
   text-transform: uppercase;
   font-variant-numeric: lining-nums proportional-nums;
   font-feature-settings: "case" on;
+  /*
+   * The display face is a Didone with an optical-size axis. Letting it track
+   * the rendered size is what thins the hairlines on the big tiers and keeps
+   * them printable at label size — the reference's defining texture.
+   */
+  font-optical-sizing: auto;
+}
+
+.t-lead,
+.t-body,
+.t-label,
+.t-caption,
+.t-micro {
+  font-variation-settings: "wdth" var(--font-body-width);
 }
 
 .t-display {
@@ -255,7 +294,8 @@
 .t-lead,
 .t-body,
 .t-label,
-.t-caption {
+.t-caption,
+.t-micro {
   font-family: var(--font-body);
 }
 
@@ -288,6 +328,19 @@
   line-height: 1.45455;
 }
 
+/*
+ * The chrome's own labels. Smaller and far wider-tracked than the label tier,
+ * so instrumentation — menu trigger, scene counter, scroll prompt — reads as
+ * instrumentation rather than as content.
+ */
+.t-micro {
+  font-size: var(--text-micro);
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  line-height: 1.45455;
+  text-transform: uppercase;
+}
+
 .t-accent {
   font-family: var(--font-accent);
   font-size: var(--text-accent);
@@ -295,6 +348,70 @@
   letter-spacing: 0;
   line-height: 1;
   text-transform: none;
+}
+
+/*
+ * Fitted display headings.
+ *
+ * `--fit-size` names the tier the heading aspires to and `--fit` is the scale a
+ * measurement pass reports, so the server renders the full tier and the client
+ * only ever pulls it back. Lines are laid out `nowrap`, which is what makes the
+ * measurement meaningful — and what stops arbitrary clone copy from wrapping
+ * into shapes the tier was never drawn for.
+ */
+.fit-heading {
+  --fit: 1;
+  --fit-size: var(--text-display);
+  /* Spans the measure, so the fit pass has a container width to fit against. */
+  width: 100%;
+  /*
+   * A flex or grid item refuses to go below its min-content width by default,
+   * and a `nowrap` line's min-content width is the whole line — which would
+   * make the heading wider than its container and hand the fit pass the one
+   * measurement it must never see: its own overflow.
+   */
+  min-width: 0;
+  max-width: 100%;
+  font-size: calc(var(--fit-size) * var(--fit));
+}
+
+.fit-heading .reveal-line-inner {
+  white-space: nowrap;
+}
+
+/*
+ * Fitted headings stay invisible until the Didone has loaded and the first
+ * measure has landed. Without this, `/residences` paints a fallback serif at
+ * the token size and then jumps — a layout shift, not a glyph swap.
+ */
+.fit-heading:not([data-fit-ready]),
+.hero-lockup:not([data-fit-ready]),
+.location-plaque:not([data-fit-ready]),
+.story-title:not([data-fit-ready]) {
+  opacity: 0;
+  animation: fit-ready-show 0s linear 2.1s forwards;
+}
+
+@keyframes fit-ready-show {
+  to {
+    opacity: 1;
+  }
+}
+
+.fit-tier-display {
+  --fit-size: var(--text-display);
+}
+
+.fit-tier-h1 {
+  --fit-size: var(--text-h1);
+}
+
+.fit-tier-h2 {
+  --fit-size: var(--text-h2);
+}
+
+.fit-tier-h3 {
+  --fit-size: var(--text-h3);
 }
 
 /* Navigation */
@@ -329,6 +446,27 @@
   --nav-ink: var(--paper);
   --nav-line: color-mix(in oklab, var(--paper) 30%, transparent);
   text-shadow: 0 1px 16px rgb(0 0 0 / 0.55);
+}
+
+/*
+ * After dark the frame supplies its own contrast. The scrim only softens the
+ * hairlines, so it lifts and the rules are drawn a shade brighter instead.
+ */
+.nav-chrome[data-nav-contrast="on-media-night"] {
+  --nav-ink: var(--paper);
+  --nav-line: color-mix(in oklab, var(--paper) 42%, transparent);
+  text-shadow: 0 1px 10px rgb(0 0 0 / 0.28);
+}
+
+/*
+ * A section that lets decoration into the chrome band opts into a scrim so
+ * the rail stays readable against whatever is actually painted behind it.
+ * Ink colour still follows the section tone; this only adds the shadow.
+ */
+.nav-chrome[data-nav-scrim] {
+  text-shadow:
+    0 1px 14px rgb(0 0 0 / 0.45),
+    0 0 18px rgb(255 255 255 / 0.55);
 }
 
 .nav-skip:focus {
@@ -370,7 +508,7 @@
 .nav-logo-seal-text {
   fill: currentColor;
   font-family: var(--font-body);
-  font-size: 8.6px;
+  font-size: var(--seal-ring-units);
   font-weight: 400;
   letter-spacing: 0.16em;
   word-spacing: 0.35em;
@@ -405,6 +543,14 @@
   color: inherit;
   text-align: right;
   line-height: 1.04;
+}
+
+/*
+ * The lead nav item carries a rule under it. It sits on the slide frame rather
+ * than on the text, so the rule holds while the two label layers travel.
+ */
+.nav-primary > .hover-slide {
+  border-bottom: 1px solid color-mix(in oklab, currentColor 60%, transparent);
 }
 
 .nav-action {
@@ -634,7 +780,9 @@
   .nav-scroll {
     display: flex;
   }
+}
 
+@media (min-width: 992px) and (hover: hover) and (pointer: fine) {
   .hover-slide > .hover-slide-layer {
     transition:
       transform var(--hover-dur) var(--hover-ease),
@@ -679,258 +827,85 @@
   }
 }
 
-/* Loading */
+/* Boot plate */
 
 /*
- * Loading screen. One composition, assembled in order: the mark at the top
- * gutter, the wordmark on the optical centre with the script crossing its last
- * line, the two captions framing it at the page gutters, then — in the foot —
- * a vertical rule that carries the hold, and the tagline at the bottom gutter.
+ * The plate that covers first paint.
  *
- * Every part of the entry is animated here rather than in JavaScript. The
- * loader is on screen because the page has not booted yet, so its composition
- * has to be complete on the first paint — a scroll-entry reveal would leave an
- * empty field until hydration finished.
+ * It carries no brand of its own. The wordmark belongs to the opening gate,
+ * which is a once-only overlay rather than a page chapter, so putting a copy
+ * here would show it twice across the handoff. The plate is the same ink as
+ * that gate's own, which is why leaving is a fade and not the lift it used to
+ * be: a lift would slide one ink field off an identical one. What the fade
+ * reveals is the composition arriving on a plate that never moved.
  *
- * The progress rule sits in the foot with the tagline, never in the centred
- * lockup stack. That is what keeps it from painting through the Harbor script.
+ * Its one mark is the progress rule, and that is here rather than on the
+ * gate because it reports the boot — by the time the composition is on
+ * screen the document has arrived and there is nothing left to report.
  */
 
-.loader {
-  --loader-hold: 2000ms;
-  --loader-gutter: calc(96vw / var(--type-scale-ratio));
-  --loader-mark: calc(64vw / var(--type-scale-ratio));
-  --loader-title: calc(116vw / var(--type-scale-ratio));
-  --loader-flank: calc(20vw / var(--type-scale-ratio));
-  --loader-flank-track: 0.88em;
-  --loader-tagline: calc(14vw / var(--type-scale-ratio));
-  --loader-place: calc(96vw / var(--type-scale-ratio));
-  /* Script hang below the wordmark (translate + flourish overflow). */
-  --loader-place-hang: calc(var(--loader-place) * 0.88);
-  --loader-rule: calc(96vw / var(--type-scale-ratio));
-  --loader-rule-gap: calc(48vw / var(--type-scale-ratio));
+.boot-plate {
+  --boot-exit: 520ms;
+  --boot-rule: calc(96vw / var(--type-scale-ratio));
+  --boot-gutter: calc(96vw / var(--type-scale-ratio));
   position: fixed;
   inset: 0;
   z-index: 90;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--ink);
-  color: var(--paper);
+  display: grid;
+  padding-bottom: calc(var(--boot-gutter) * 0.62);
   overflow: hidden;
-}
-
-.loader.is-leaving {
-  animation: loader-out 0.45s var(--hover-ease) forwards;
-}
-
-.loader-shell {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  width: 100%;
-  height: 100%;
-  /* The tagline sits closer to the foot than the mark does to the head. */
-  padding: var(--loader-gutter) var(--gutter-x) calc(var(--loader-gutter) * 0.62);
-  grid-template-rows: auto 1fr auto;
-  justify-items: center;
-}
-
-.loader-top {
-  width: var(--loader-mark);
-  height: var(--loader-mark);
-}
-
-.loader-middle {
-  display: flex;
-  min-height: 0;
-  width: 100%;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.loader-foot {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--loader-rule-gap);
-}
-
-.loader-lockup {
-  display: grid;
-  width: 100%;
-  align-items: center;
-  gap: var(--space-32);
-  grid-template-areas: "flankleft wordmark flankright";
-  grid-template-columns: 1fr auto 1fr;
-}
-
-.loader-flank {
-  margin: 0;
-  font-size: var(--loader-flank);
-  font-weight: 400;
-  letter-spacing: var(--loader-flank-track);
-  /* Letter-spacing trails the last glyph; pulling it back re-centres the word. */
-  margin-right: calc(var(--loader-flank-track) * -1);
-  text-align: center;
-  opacity: 0.72;
-}
-
-.loader-flank-left {
-  grid-area: flankleft;
-}
-
-.loader-flank-right {
-  grid-area: flankright;
-}
-
-.loader-wordmark {
-  position: relative;
-  grid-area: wordmark;
+  color: var(--paper);
+  background: var(--ink);
+  place-items: end center;
 }
 
 /*
- * The place script is absolutely positioned, so reserve its hang in-flow so
- * the centred lockup's box includes the swash.
+ * The plate is still in the SSR markup on a later load in the same session —
+ * the bootstrap script marks the root open before this node is parsed, so the
+ * cover never paints. The component then unmounts it without locking scroll.
  */
-.loader-wordmark:has(.loader-place) {
-  padding-bottom: var(--loader-place-hang);
+html[data-boot="open"] .boot-plate {
+  display: none;
 }
 
-.loader .loader-title {
-  margin: 0;
-  font-size: var(--loader-title);
-  line-height: 1.04;
-  text-align: center;
-  white-space: nowrap;
-}
-
-/* Each line is masked by its own frame, so the lines arrive one at a time. */
-.loader-title-line {
-  display: block;
+html[data-boot="veil"],
+html[data-boot="gate"] {
   overflow: hidden;
 }
 
-.loader-title-line-inner {
-  display: block;
-}
-
-.loader-place {
-  position: absolute;
-  bottom: var(--loader-place-hang);
-  left: 50%;
-  z-index: 1;
-  margin: 0;
-  font-family: var(--font-accent);
-  font-size: var(--loader-place);
-  line-height: 1;
-  /* Sits under the wordmark's last baseline, a shade right of its axis. */
-  translate: -40% 76%;
-  rotate: -7deg;
-  white-space: nowrap;
+.boot-plate.is-leaving {
+  animation: boot-plate-out var(--boot-exit) var(--ease-in-out) forwards;
   pointer-events: none;
 }
 
-.loader-progress {
+.boot-progress {
   display: flex;
   justify-content: center;
 }
 
-.loader-progress-track {
+.boot-progress-track {
   position: relative;
   width: 1px;
-  height: var(--loader-rule);
+  height: var(--boot-rule);
   background: color-mix(in oklab, currentColor 22%, transparent);
   transform-origin: top center;
+  animation: boot-draw 0.7s var(--ease-in-out) 0.2s both;
 }
 
-.loader-progress-fill {
+/*
+ * Driven by measured readiness rather than by a timer, so the rule reports
+ * something. It only ever advances, so the transition can be a plain ease.
+ */
+.boot-progress-fill {
   position: absolute;
   inset: 0;
   background: currentColor;
   transform-origin: top center;
+  scale: 1 var(--boot-progress, 0);
+  transition: scale 0.24s var(--ease-out);
 }
 
-.loader-tagline {
-  margin: 0;
-  font-size: var(--loader-tagline);
-  letter-spacing: 0.14em;
-  line-height: 1.72;
-  text-align: center;
-  opacity: 0.82;
-}
-
-.loader-tagline-line {
-  display: block;
-}
-
-/* Entry choreography */
-
-.loader-top,
-.loader-flank,
-.loader-place,
-.loader-tagline {
-  animation: loader-rise 0.9s var(--ease-out) both;
-}
-
-.loader-top {
-  animation-delay: 0s;
-}
-
-.loader-title-line-inner {
-  animation: loader-unmask 0.9s var(--ease-out) both;
-  animation-delay: calc(0.1s + var(--line, 0) * 0.14s);
-}
-
-.loader-place {
-  animation-delay: 0.42s;
-}
-
-.loader-flank-left {
-  animation-delay: 0.5s;
-}
-
-.loader-flank-right {
-  animation-delay: 0.56s;
-}
-
-.loader-progress-track {
-  animation: loader-draw 0.7s var(--ease-in-out) both;
-  animation-delay: 0.34s;
-}
-
-.loader-progress-fill {
-  animation: loader-fill var(--loader-hold) linear both;
-}
-
-.loader-tagline {
-  animation-delay: 0.62s;
-}
-
-@keyframes loader-rise {
-  from {
-    opacity: 0;
-    transform: translateY(1rem);
-  }
-
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes loader-unmask {
-  from {
-    transform: translateY(105%);
-  }
-
-  to {
-    transform: translateY(0);
-  }
-}
-
-@keyframes loader-draw {
+@keyframes boot-draw {
   from {
     transform: scale(1, 0);
   }
@@ -940,88 +915,35 @@
   }
 }
 
-@keyframes loader-fill {
+@keyframes boot-plate-out {
   from {
-    transform: scaleY(0);
+    opacity: 1;
   }
 
-  to {
-    transform: scaleY(1);
-  }
-}
-
-@keyframes loader-out {
   to {
     opacity: 0;
-    visibility: hidden;
   }
 }
 
-/*
- * Compact: the wordmark takes the full width, so the two captions drop beneath
- * it and hold its outer edges instead of flanking it.
- */
-
 @media (max-width: 991px) {
-  .loader {
-    --loader-gutter: calc(72vw / var(--type-scale-ratio));
-    --loader-mark: calc(40vw / var(--type-scale-ratio));
-    --loader-title: calc(54vw / var(--type-scale-ratio));
-    --loader-flank: calc(13vw / var(--type-scale-ratio));
-    --loader-flank-track: 0.5em;
-    --loader-tagline: calc(11vw / var(--type-scale-ratio));
-    --loader-place: calc(56vw / var(--type-scale-ratio));
-    --loader-place-hang: calc(var(--loader-place) * 0.82);
-    --loader-rule: calc(64vw / var(--type-scale-ratio));
-    --loader-rule-gap: calc(32vw / var(--type-scale-ratio));
-  }
-
-  .loader-shell {
-    padding-inline: var(--nav-offset);
-  }
-
-  .loader-lockup {
-    /* The script hangs below the wordmark, so the captions need clearance. */
-    gap: calc(64vw / var(--type-scale-ratio)) var(--space-16);
-    grid-template-areas:
-      "wordmark wordmark"
-      "flankleft flankright";
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .loader-flank-left {
-    justify-self: start;
-    text-align: left;
-  }
-
-  .loader-flank-right {
-    justify-self: end;
-    text-align: right;
-  }
-
-  .loader-place {
-    translate: -42% 72%;
+  .boot-plate {
+    --boot-rule: calc(64vw / var(--type-scale-ratio));
+    --boot-gutter: calc(72vw / var(--type-scale-ratio));
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* The composition arrives complete; only the hold still passes. */
-  .loader-top,
-  .loader-flank,
-  .loader-place,
-  .loader-tagline,
-  .loader-title-line-inner,
-  .loader-progress-track {
+  .boot-progress-track {
     animation-duration: 0.01ms;
     animation-delay: 0ms;
   }
 
-  /* A static, finished rule rather than one that crawls for two seconds. */
-  .loader-progress-fill {
-    animation: none;
+  /* The rule still reports readiness; it just does not glide between steps. */
+  .boot-progress-fill {
+    transition: none;
   }
 
-  .loader.is-leaving {
+  .boot-plate.is-leaving {
     animation-duration: 0.01ms;
   }
 }
@@ -1033,13 +955,24 @@
    * Tall runway over one photograph (Era-style). Three stations, each a
    * viewport: brand → navigators mid-image → CTA at the foot.
    */
-  --hero-title: calc(120vw / var(--type-scale-ratio));
-  --hero-place: calc(88vw / var(--type-scale-ratio));
-  --hero-sentence: calc(26vw / var(--type-scale-ratio));
+  /*
+   * The wordmark, its script and the supporting sentence all sit on the shared
+   * scale rather than on hero-only sizes: display, accent and h4 respectively.
+   * The lockup is fitted to the measure, so display can stay at full tier.
+   */
+  --hero-title: var(--text-display);
+  --hero-place: calc(var(--hero-title) * var(--accent-companion));
+  --hero-sentence: var(--text-h4);
   --hero-circle: calc(168vw / var(--type-scale-ratio));
-  /* ~1.8 viewports: brand → navigators → CTA. */
-  --hero-runway: 180svh;
-  --hero-station: 60svh;
+  /*
+   * Runway height is authored framing, not a round number: it is what puts the
+   * residence where the photograph wants it in the first viewport. The section
+   * publishes one value per breakpoint and the media query picks. Three equal
+   * stations — brand → navigators → CTA — divide whatever travel that gives.
+   */
+  --hero-runway: calc(var(--hero-runway-desktop, 180) * 1svh);
+  --hero-station: calc(var(--hero-runway) / 3);
+  --hero-focus: var(--hero-focus-desktop, 50%);
   position: relative;
   z-index: 1;
   display: flex;
@@ -1122,7 +1055,8 @@
   bottom: auto;
   left: 0;
   object-fit: cover;
-  object-position: center center;
+  /* Same box height and same focus as the runway, so the hold is not a re-crop. */
+  object-position: var(--hero-focus) center;
 }
 
 .hero-media.is-held .hero-grade,
@@ -1134,14 +1068,16 @@
   left: 0;
 }
 
+/*
+ * The CTA is held, not zoomed. Scaling it with the photograph pushed the ring
+ * off the bottom of the viewport as the dome rose — the push-in belongs to the
+ * image; the chrome over it stays where the visitor left it.
+ */
 .home-open.is-held .hero-station-cta {
   position: fixed;
   inset: 0;
   z-index: 2;
   padding-bottom: var(--space-48);
-  transform: scale(var(--hero-zoom, 1));
-  transform-origin: center center;
-  will-change: transform;
 }
 
 /* Dome has closed over the plate — CTA stays under it, not interactive. */
@@ -1165,7 +1101,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center center;
+  /*
+   * The box is far taller than the source, so cover crops horizontally only —
+   * this percentage is the one axis of the frame the author still controls.
+   */
+  object-position: var(--hero-focus) center;
   opacity: 0;
   transition: opacity 0.8s var(--hover-ease);
 }
@@ -1174,10 +1114,20 @@
   opacity: 1;
 }
 
+/*
+ * The scrims exist to hold paper ink against a bright sky. A night frame is
+ * already dark, so they pull back with the swap rather than crushing it.
+ */
 .hero-grade {
   position: absolute;
   inset: 0;
+  opacity: var(--hero-scrim, 1);
   pointer-events: none;
+  transition: opacity 0.8s var(--hover-ease);
+}
+
+[data-hero-variant="night"] .hero {
+  --hero-scrim: 0.55;
 }
 
 .hero-grade-top {
@@ -1223,17 +1173,24 @@
 }
 
 .hero-lockup {
+  --hero-fit: 1;
   position: relative;
   display: flex;
+  /* Spans the measure so the fit pass has a container width to fit against. */
+  width: 100%;
   flex-direction: column;
   align-items: center;
 }
 
-.hero .hero-title {
+/* The lockup is shared with the opening curtain, which carries it on the plate. */
+.hero .hero-title,
+.curtain-stage .hero-title {
   margin: 0;
-  font-size: var(--hero-title);
-  line-height: 0.96;
+  font-size: calc(var(--hero-title) * var(--hero-fit, 1));
+  line-height: 0.875;
   text-align: center;
+  /* Each line is its own element; wrapping would defeat the fit measurement. */
+  white-space: nowrap;
 }
 
 .hero-title-line {
@@ -1259,7 +1216,8 @@
   margin-top: -0.18em;
   margin-right: -0.6em;
   font-family: var(--font-accent);
-  font-size: var(--hero-place);
+  /* Tracks the fitted wordmark, so the script keeps its ratio to the caps. */
+  font-size: calc(var(--hero-place) * var(--hero-fit, 1));
   line-height: 1;
   transform: rotate(-7deg);
 }
@@ -1329,8 +1287,7 @@
   transition: opacity 0.4s var(--hover-ease);
 }
 
-.hero-tab.is-active,
-.hero-tab:hover {
+.hero-tab.is-active {
   opacity: 1;
 }
 
@@ -1386,17 +1343,27 @@
   transition: stroke-dashoffset 0.8s var(--hover-ease);
 }
 
-.hero-cta:hover .hero-cta-ring-rest,
 .hero-cta:focus-visible .hero-cta-ring-rest {
   opacity: 0.2;
 }
 
-.hero-cta:hover .hero-cta-ring-arc,
 .hero-cta:focus-visible .hero-cta-ring-arc {
   stroke-dashoffset: 0;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 992px) and (hover: hover) and (pointer: fine) {
+  .hero-tab:hover {
+    opacity: 1;
+  }
+
+  .hero-cta:hover .hero-cta-ring-rest {
+    opacity: 0.2;
+  }
+
+  .hero-cta:hover .hero-cta-ring-arc {
+    stroke-dashoffset: 0;
+  }
+
   .hero-cta:hover .hover-slide > .hover-slide-layer,
   .hero-cta:focus-visible .hover-slide > .hover-slide-layer {
     transform: translateY(-100%);
@@ -1407,6 +1374,10 @@
   .hero-cta:focus-visible .hover-slide > .hover-slide-layer-2 {
     transform: translateY(-100%);
     opacity: 1;
+  }
+
+  .hero-pin-btn:hover .hero-pin-dot {
+    inset: 0;
   }
 }
 
@@ -1456,7 +1427,6 @@
   transition: inset 0.8s var(--hover-ease);
 }
 
-.hero-pin-btn:hover .hero-pin-dot,
 .hero-pin-btn.is-open .hero-pin-dot {
   inset: 0;
 }
@@ -1547,12 +1517,15 @@
 
 @media (max-width: 991px) {
   .hero {
-    --hero-title: calc(64vw / var(--type-scale-ratio));
-    --hero-place: calc(48vw / var(--type-scale-ratio));
-    --hero-sentence: calc(20vw / var(--type-scale-ratio));
+    /* Title, script and sentence all follow the compact scale unchanged. */
     --hero-circle: min(calc(120vw / var(--type-scale-ratio)), 16svh);
-    --hero-runway: 180svh;
-    --hero-station: 60svh;
+    /*
+     * A narrow viewport reads the same photograph as a much taller box, which
+     * pushes the residence further down the travel. The compact landing point
+     * is authored higher in the first viewport to answer that.
+     */
+    --hero-runway: calc(var(--hero-runway-compact, 140) * 1svh);
+    --hero-focus: var(--hero-focus-compact, 50%);
   }
 
   .hero-pins {
@@ -1571,10 +1544,29 @@
     margin-top: var(--space-16);
   }
 
+  /*
+   * The sentence holds the two gutters and the toggle drops to its own row,
+   * rather than the three parts wrapping wherever they happen to break.
+   */
   .hero-sentence {
+    width: 100%;
     flex-wrap: wrap;
+    justify-content: space-between;
     white-space: normal;
-    gap: var(--space-16) var(--space-24);
+    gap: var(--space-24) 0;
+  }
+
+  .hero-sentence-lead {
+    order: 1;
+  }
+
+  .hero-sentence-tail {
+    order: 2;
+  }
+
+  .hero-tabs {
+    order: 3;
+    flex-basis: 100%;
   }
 
   .hero-place {
@@ -1617,6 +1609,7 @@
   }
 
   .hero-image,
+  .hero-grade,
   .hero-tab-rule,
   .hero-cta-label,
   .hero-pin-dot {
@@ -1646,10 +1639,16 @@
   align-items: center;
 }
 
+/*
+ * The chapter is paced top to bottom rather than clustered in the middle:
+ * title on the top gutter, plate centred in what is left, pager and copy on
+ * the foot. Centring the whole stack leaves the title floating mid-screen and
+ * loses the sense of a page turning.
+ */
 .story-browser {
   box-sizing: border-box;
   min-height: 100svh;
-  justify-content: center;
+  justify-content: space-between;
   gap: clamp(2rem, 5vh, 3.5rem);
   padding: calc(var(--nav-cell) + var(--space-16)) var(--gutter-x) var(--space-48);
   outline: none;
@@ -1660,22 +1659,29 @@
   display: flex;
   box-sizing: border-box;
   width: 100%;
+  flex: 1;
   flex-direction: column;
   align-items: center;
   gap: clamp(2rem, 6vh, 4rem);
 }
 
+/*
+ * The browser title is the display tier, fitted to the measure — the same
+ * treatment as the hero wordmark, so a one-word and a three-word chapter
+ * title both span the plate instead of one of them sitting small.
+ */
 .story-title {
+  --story-fit: 1;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0;
-  min-height: 0.96em;
-  max-width: 100%;
-  font-size: clamp(2.4rem, 7.6vw, 7.75rem);
-  letter-spacing: -0.03em;
-  line-height: 0.86;
+  width: 100%;
+  min-height: 0.875em;
+  font-size: calc(var(--text-display) * var(--story-fit, 1));
+  letter-spacing: -0.024em;
+  line-height: 0.875;
   text-align: center;
 }
 
@@ -1727,9 +1733,11 @@
   }
 }
 
+/* Title holds the top of the plate; the photograph centres under it. */
 .story-slide {
   display: flex;
   width: 100%;
+  margin-block: auto;
   flex-direction: column;
   align-items: center;
 }
@@ -1863,10 +1871,6 @@
     gap: clamp(1.75rem, 5vh, 3rem);
   }
 
-  .story-title {
-    font-size: clamp(2.25rem, 13vw, 3.75rem);
-  }
-
   .story-title-run {
     flex-wrap: wrap;
     white-space: normal;
@@ -1950,6 +1954,12 @@
   opacity: 0.75;
 }
 
+/*
+ * This heading is a sentence in a narrow side column, not a wordmark: it is
+ * meant to wrap, so it takes the h2 tier verbatim rather than being fitted.
+ * Fitting it would have to reduce so far to hold one line inside the column
+ * that it would stop reading as a heading at all.
+ */
 .architecture-heading {
   display: flex;
   flex-direction: column;
@@ -1959,6 +1969,7 @@
 
 .architecture-heading-line {
   display: block;
+  text-wrap: balance;
 }
 
 .architecture-quote {
@@ -2020,7 +2031,7 @@
 @media (max-width: 991px) {
   .architecture-copy {
     max-width: none;
-    padding: calc(var(--nav-cell) + var(--space-32)) var(--nav-offset) var(--space-48);
+    padding: calc(var(--nav-cell) + var(--space-32)) var(--gutter-x) var(--space-48);
   }
 }
 
@@ -2041,7 +2052,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100svh;
-  padding: calc(var(--nav-cell) + var(--space-16)) var(--nav-offset) max(var(--space-48), 3.5rem);
+  padding: calc(var(--nav-cell) + var(--space-16)) var(--gutter-x) max(var(--space-48), 3.5rem);
   touch-action: pan-y;
 }
 
@@ -2138,6 +2149,10 @@
 }
 
 @media (max-width: 991px) {
+  .residence-types-browser {
+    padding-inline: calc(var(--nav-offset) + var(--nav-cell));
+  }
+
   .residence-types-data {
     gap: var(--space-24);
   }
@@ -2287,5 +2302,21 @@
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
+  }
+}
+
+@media (max-width: 991px) {
+  .footer-cta-copy {
+    padding-inline: var(--gutter-x);
+  }
+
+  .footer-base {
+    padding-left: var(--gutter-x);
+  }
+}
+
+@media (min-width: 700px) and (max-width: 991px) {
+  .footer-cta-heading {
+    font-size: var(--text-h2);
   }
 }

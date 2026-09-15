@@ -1,24 +1,51 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { ArchReveal } from "../arch/ArchReveal";
 import type { ArchRevealContent } from "../arch/types";
 import { Hero } from "../hero/Hero";
 import type { HeroContent } from "../hero/types";
+import { bootReleased, GATE_EVENT } from "../loading/logic";
+import type { LoadingContent } from "../loading/types";
+import { Curtain } from "./Curtain";
 
 /**
- * Opening chapter: scroll the tall photograph, then hold the finale frame
- * (image + CTA) while a short lead zooms the plate and the oval arch rises
- * over it — one photograph, the dome overlapping it. No second image.
+ * Opening chapter, in one continuous gesture over one photograph.
+ *
+ * On a first visit the once-only gate plays as a preloader overlay: a brand
+ * plate with an arch that opens onto this photograph, then is gone. After that
+ * — and on every later load in the session — the visitor is on the hero, then
+ * the photograph scrolls its own runway, then the finale frame is held while a
+ * short lead zooms the plate and the oval dome rises over it. One photograph
+ * throughout — no second image and no handoff between copies of it.
  */
 export function HomeOpen({
   hero,
   arch,
+  curtain,
 }: {
   hero: HeroContent;
   arch: ArchRevealContent;
+  /** The branded gate. Omitted when the loading section is switched off. */
+  curtain?: LoadingContent;
 }) {
+  const [opening, setOpening] = useState(Boolean(curtain));
+
+  useEffect(() => {
+    if (!curtain) {
+      setOpening(false);
+      return;
+    }
+
+    const done = () => setOpening(false);
+    window.addEventListener(GATE_EVENT, done);
+    if (bootReleased()) {
+      done();
+    }
+    return () => window.removeEventListener(GATE_EVENT, done);
+  }, [curtain]);
+
   useEffect(() => {
     const root = document.querySelector<HTMLElement>(".home-open");
     const heroNode = document.getElementById("hero");
@@ -103,14 +130,25 @@ export function HomeOpen({
   }, [arch.id]);
 
   return (
-    <div className="home-open">
+    <div className={opening ? "home-open is-opening" : "home-open"}>
+      {curtain ? <Curtain content={curtain} hero={hero} /> : null}
+      {/*
+       * The hero keeps its own lockup whatever precedes it. The gate is the
+       * brand's entrance and the hero's is the composition it arrives at — the
+       * same lettering doing two different jobs, in sequence. Taking the hero's
+       * away left the first screen a photograph with a caption on it.
+       */}
       <Hero content={hero} />
       {/*
        * Scroll room after the CTA so the held frame can zoom and settle before
        * the arch section begins — the “pause” is distance, not a timer.
        */}
       <div className="home-open-lead" aria-hidden="true" />
-      <ArchReveal content={arch} omitBackdrop riseAfter={0.1} />
+      {/*
+       * No `riseAfter`: the dome now starts from nothing, so a delay ahead of it
+       * is scroll in which nothing happens at all. The lead above is the beat.
+       */}
+      <ArchReveal content={arch} omitBackdrop />
     </div>
   );
 }

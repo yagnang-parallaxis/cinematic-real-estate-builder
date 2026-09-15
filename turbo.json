@@ -23,5 +23,5 @@
     }
   },
   "globalEnv": ["NODE_ENV"],
-  "globalPassThroughEnv": ["NEXT_PUBLIC_API_URL"]
+  "globalPassThroughEnv": ["NEXT_PUBLIC_API_URL", "NEXT_PUBLIC_WEB_URL"]
 }

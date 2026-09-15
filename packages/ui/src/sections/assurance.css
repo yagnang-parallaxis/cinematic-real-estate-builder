@@ -195,7 +195,9 @@
     grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
     gap: calc(var(--space-48) * 1.5);
   }
+}
 
+@media (min-width: 992px) and (hover: hover) and (pointer: fine) {
   .assurance-row-trigger:hover .assurance-row-title,
   .assurance-row-trigger:hover .assurance-mark {
     opacity: 0.55;

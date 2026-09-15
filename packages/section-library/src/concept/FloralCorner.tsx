@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
+import { decorativeMediaShouldPlay } from "./logic";
 import type { ConceptFloralAccent } from "./types";
 
 function isVideoSrc(src: string) {
@@ -11,6 +12,9 @@ function isVideoSrc(src: string) {
 /**
  * One floral seat. Corner sprays hang as shot; the seam bushes are the
  * same footage stood on its head so they grow up from the join.
+ *
+ * Playback is visibility-gated: off-screen clips stay paused with nothing
+ * in flight, so two seats cannot tear down the same request on load.
  */
 export function FloralCorner({ place, corner, src }: ConceptFloralAccent) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -28,33 +32,48 @@ export function FloralCorner({ place, corner, src }: ConceptFloralAccent) {
       }
     };
 
-    play();
-    video.addEventListener("loadeddata", play);
-    const onVis = () => {
-      if (document.visibilityState === "visible") {
+    const sync = (isIntersecting: boolean, ratio: number) => {
+      if (decorativeMediaShouldPlay(isIntersecting, ratio)) {
         play();
+        return;
       }
+      video.pause();
     };
-    document.addEventListener("visibilitychange", onVis);
+
+    if (typeof IntersectionObserver === "undefined") {
+      play();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry) {
+          return;
+        }
+        sync(entry.isIntersecting, entry.intersectionRatio);
+      },
+      { threshold: 0.01 },
+    );
+    observer.observe(video);
 
     return () => {
-      video.removeEventListener("loadeddata", play);
-      document.removeEventListener("visibilitychange", onVis);
+      observer.disconnect();
+      video.pause();
     };
   }, [src]);
 
   return (
-    <div className="concept-floral" data-place={place} data-corner={corner} aria-hidden="true">
+    <div className="concept-floral decor-safe" data-place={place} data-corner={corner} aria-hidden="true">
       {isVideoSrc(src) ? (
         <video
           ref={videoRef}
           className="concept-floral-media"
           src={src}
-          autoPlay
           loop
           muted
           playsInline
-          preload="auto"
+          preload="none"
           disablePictureInPicture
           disableRemotePlayback
         />

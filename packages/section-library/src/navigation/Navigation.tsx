@@ -10,9 +10,10 @@ import { BrandMark, BrandSeal, ScrollChevron } from "../shared/BrandMark";
 import { HoverSlide } from "../shared/HoverSlide";
 import {
   formatSectionIndex,
+  NAV_TONE_EVENT,
   overlayLinks,
   readSectionTones,
-  resolveNavTone,
+  resolveNavChrome,
   resolveSectionIndex,
   scrollProgress,
   sealDirectionFromVelocity,
@@ -55,6 +56,7 @@ export function Navigation({
   const [open, setOpen] = useState(false);
   const [progress, setProgress] = useState(0);
   const [tone, setTone] = useState<NavTone>("on-dark");
+  const [scrim, setScrim] = useState(false);
   const [sceneIndex, setSceneIndex] = useState(1);
   const overlayRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -70,8 +72,10 @@ export function Navigation({
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const sections = readSectionTones();
       const probeY = window.scrollY + 48;
+      const chrome = resolveNavChrome(sections, probeY);
       setProgress(scrollProgress(window.scrollY, max));
-      setTone(resolveNavTone(sections, probeY));
+      setTone(chrome.tone);
+      setScrim(chrome.scrim);
       setSceneIndex(resolveSectionIndex(sections, probeY));
     };
 
@@ -129,11 +133,13 @@ export function Navigation({
     frame = requestAnimationFrame(tick);
     window.addEventListener("scroll", sampleScroll, { passive: true });
     window.addEventListener("resize", syncChrome);
+    window.addEventListener(NAV_TONE_EVENT, syncChrome);
 
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("scroll", sampleScroll);
       window.removeEventListener("resize", syncChrome);
+      window.removeEventListener(NAV_TONE_EVENT, syncChrome);
       logo?.style.removeProperty("--seal-turn");
     };
   }, []);
@@ -196,8 +202,12 @@ export function Navigation({
       >
         Skip to content
       </a>
-      <div className="nav-chrome" data-nav-contrast={tone}>
-        <a href={content.homeHref} className="nav-logo" aria-label={`${content.brand} — back to top`}>
+      <div className="nav-chrome" data-nav-contrast={tone} data-nav-scrim={scrim ? "" : undefined}>
+        <a
+          href={content.homeHref}
+          className="nav-logo"
+          aria-label={`${content.brand} — back to top`}
+        >
           <BrandSeal label={content.sealLabel ?? content.brand} className="nav-logo-seal" />
           <BrandMark className="nav-logo-mark" />
         </a>
@@ -233,7 +243,7 @@ export function Navigation({
             aria-controls={menuId}
             onClick={() => setOpen((value) => !value)}
           >
-            <HoverSlide className="t-label">{open ? "Close" : "Menu"}</HoverSlide>
+            <HoverSlide className="t-micro">{open ? "Close" : "Menu"}</HoverSlide>
             <span className={cn("nav-menu-ico", open && "is-open")} aria-hidden="true">
               <span />
               <span />
@@ -245,17 +255,20 @@ export function Navigation({
         {content.showProgress ? (
           <>
             <div className="nav-progress" aria-hidden="true">
-              <div className="nav-progress-track" style={{ ["--progress" as string]: `${progress * 100}%` }}>
+              <div
+                className="nav-progress-track"
+                style={{ ["--progress" as string]: `${progress * 100}%` }}
+              >
                 <div className="nav-progress-fill" />
                 <div className="nav-progress-rest" />
                 <div className="nav-progress-thumb">
-                  <span className="t-label">{sceneLabel}</span>
+                  <span className="t-micro">{sceneLabel}</span>
                 </div>
               </div>
             </div>
             <a href="#content" className="nav-scroll">
               <ScrollChevron className="nav-scroll-arrow" />
-              <span className="t-label">{content.scrollLabel ?? "Scroll"}</span>
+              <span className="t-micro">{content.scrollLabel ?? "Scroll"}</span>
             </a>
           </>
         ) : null}
@@ -271,7 +284,11 @@ export function Navigation({
           aria-label={content.overlayTitle ?? "Menu"}
           onKeyDown={trapFocus}
         >
-          <Animated type="fadeUp" config={{ duration: 0.45, distance: 24 }} className="nav-overlay-panel">
+          <Animated
+            type="fadeUp"
+            config={{ duration: 0.45, distance: 24 }}
+            className="nav-overlay-panel"
+          >
             <div className="nav-overlay-title">
               {content.overlayAccent ? (
                 <p className="t-accent nav-overlay-accent">{content.overlayAccent}</p>

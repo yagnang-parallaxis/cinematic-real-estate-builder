@@ -19,6 +19,7 @@ export type { ResidenceType, ResidenceTypesContent } from "./types";
 export function ResidenceTypes({ content }: { content: ResidenceTypesContent }) {
   const types = clampTypes(content.types);
   const [index, setIndex] = useState(0);
+  const dragX = useRef<number | null>(null);
   const type = types[index];
 
   if (!type) {
@@ -26,10 +27,14 @@ export function ResidenceTypes({ content }: { content: ResidenceTypesContent }) 
   }
 
   const goTo = (next: number) => setIndex(next);
-  const dragX = useRef<number | null>(null);
 
   return (
-    <section id="residence-types" data-tone="light" data-nav-tone="on-light" className="residence-types">
+    <section
+      id="residence-types"
+      data-tone="light"
+      data-nav-tone="on-light"
+      className="residence-types"
+    >
       <div
         className="residence-types-browser"
         onPointerDown={(event) => {
@@ -91,7 +96,11 @@ export function ResidenceTypes({ content }: { content: ResidenceTypesContent }) 
           </Animated>
 
           <div className="residence-types-copy">
-            <Animated key={`${type.id}-desc`} type="fadeUp" config={{ duration: 0.6, trigger: "on-load" }}>
+            <Animated
+              key={`${type.id}-desc`}
+              type="fadeUp"
+              config={{ duration: 0.6, trigger: "on-load" }}
+            >
               <p className="t-body residence-types-desc">{type.description}</p>
             </Animated>
             <a href={type.cta.href} className="residence-types-cta">

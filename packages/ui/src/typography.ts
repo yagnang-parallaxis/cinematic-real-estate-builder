@@ -10,13 +10,33 @@ export const typeRoles = [
   "body",
   "label",
   "caption",
+  "micro",
   "accent",
 ] as const;
 
 export type TypeRole = (typeof typeRoles)[number];
 
+/**
+ * Tiers a heading may be fitted to. Fitting only makes sense where the copy is
+ * meant to span its measure, which is the display tier and the three below it.
+ */
+export const fitTiers = ["display", "h1", "h2", "h3"] as const;
+
+export type FitTier = (typeof fitTiers)[number];
+
+/**
+ * Size of a script accent that annotates a heading, as a fraction of that
+ * heading's rendered size.
+ *
+ * The script is never assigned a tier of its own in these positions: it has to
+ * keep its ratio to the caps beside it, including after a fit pass has pulled
+ * the heading back. Expressing it as a ratio is what makes that automatic —
+ * and keeps the accent off the list of authored sizes.
+ */
+export const accentCompanionRatio = 0.625;
+
 export const fontFamilies = {
-  display: "Italiana",
+  display: "Bodoni Moda",
   body: "Archivo",
   accent: "Great Vibes",
 } as const;
@@ -38,7 +58,8 @@ export const desktopTypeNumerators = {
   body: 13,
   label: 11,
   caption: 11,
-  accent: 192,
+  micro: 9,
+  accent: 120,
 } as const;
 
 export const compactTypeNumerators = {
@@ -53,7 +74,8 @@ export const compactTypeNumerators = {
   body: 13,
   label: 11,
   caption: 11,
-  accent: 96,
+  micro: 9,
+  accent: 72,
 } as const;
 
 export const typeScale: Record<
@@ -142,6 +164,18 @@ export const typeScale: Record<
     tracking: "-0.024em",
     leading: "1.45455",
     transform: "none",
+  },
+  /*
+   * The smallest cut in the language: a wide-tracked bold used for the chrome's
+   * own labels — menu trigger, scene counter, scroll prompt — where the label
+   * tier would read as content rather than as instrumentation.
+   */
+  micro: {
+    font: "body",
+    weight: 700,
+    tracking: "0.32em",
+    leading: "1.45455",
+    transform: "uppercase",
   },
   accent: {
     font: "accent",

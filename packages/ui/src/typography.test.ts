@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  accentCompanionRatio,
   compactTypeNumerators,
   desktopTypeNumerators,
+  fitTiers,
   fontFamilies,
   typeRoles,
   typeScale,
@@ -23,12 +25,40 @@ describe("global typography tokens", () => {
       "body",
       "label",
       "caption",
+      "micro",
       "accent",
     ]);
   });
 
+  it("gives the chrome a micro tier under the label cut", () => {
+    expect(desktopTypeNumerators.micro).toBeLessThan(desktopTypeNumerators.label);
+    expect(typeScale.micro).toMatchObject({
+      font: "body",
+      weight: 700,
+      tracking: "0.32em",
+      transform: "uppercase",
+    });
+  });
+
+  it("gives the script accent a tier of its own rather than the display size", () => {
+    expect(desktopTypeNumerators.accent).not.toBe(desktopTypeNumerators.display);
+    expect(compactTypeNumerators.accent).not.toBe(compactTypeNumerators.display);
+  });
+
+  it("only fits the tiers whose copy is meant to span the measure", () => {
+    expect(fitTiers).toEqual(["display", "h1", "h2", "h3"]);
+    for (const tier of fitTiers) {
+      expect(typeRoles).toContain(tier);
+    }
+  });
+
+  it("keeps a companion script smaller than the heading it annotates", () => {
+    expect(accentCompanionRatio).toBeGreaterThan(0);
+    expect(accentCompanionRatio).toBeLessThan(1);
+  });
+
   it("pairs a condensed didone, an extended grotesque, and a script accent", () => {
-    expect(fontFamilies.display).toBe("Italiana");
+    expect(fontFamilies.display).toBe("Bodoni Moda");
     expect(fontFamilies.body).toBe("Archivo");
     expect(fontFamilies.accent).toBe("Great Vibes");
   });

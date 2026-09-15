@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "cinematic-clones": {
+      "command": "pnpm",
+      "args": ["mcp:clones"],
+      "env": {
+        "CLONE_API_URL": "http://localhost:4000",
+        "CLONE_WEB_URL": "http://localhost:3000",
+        "CLONE_BUILDER_URL": "http://localhost:3001"
+      }
+    }
+  }
+}

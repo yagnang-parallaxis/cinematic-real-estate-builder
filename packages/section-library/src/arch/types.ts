@@ -12,9 +12,12 @@ export interface ArchRevealContent {
    */
   curvedText: string;
   /**
-   * Multiplier for space between words on the curve. `1` is the default rise;
-   * raise it to spread words further apart as the arch grows, lower it to keep
-   * them tighter.
+   * How far the words open along the curve, 0 to 1. `1` takes them to the
+   * coverage the reference's closed dome measures by the end of the rise; `0`
+   * leaves the line at its own width for the whole of it.
+   *
+   * It cannot spread the words past the arc or past that coverage, so there is
+   * no value of it that clips the line or crowds the rim.
    */
   curvedWordSpacing?: number;
   /** The photograph the arch rises over. Omit when a parent already supplies it. */

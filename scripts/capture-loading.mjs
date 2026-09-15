@@ -3,8 +3,16 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 
-const url = process.env.PROTOTYPE_URL ?? "http://localhost:3000/?loader=1";
-const outDir = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", ".screenshots/loading");
+/*
+ * The branded composition is the page's own first screen now, not the cover, so
+ * this waits the boot plate out rather than pinning it up with `?loader=1`.
+ */
+const url = process.env.PROTOTYPE_URL ?? "http://localhost:3000/";
+const outDir = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+  ".screenshots/loading",
+);
 await mkdir(outDir, { recursive: true });
 
 const viewports = [
@@ -21,13 +29,14 @@ const browser = await chromium.launch();
 for (const viewport of viewports) {
   const page = await browser.newPage({ viewport });
   await page.goto(url, { waitUntil: "networkidle" });
-  await page.waitForTimeout(500);
+  await page.waitForSelector(".boot-plate", { state: "detached", timeout: 20000 }).catch(() => {});
+  await page.waitForTimeout(1600);
   const metrics = await page.evaluate(() => {
-    const loader = document.querySelector(".loader");
-    const flank = document.querySelector(".loader-flank");
-    const title = document.querySelector(".loader-title");
-    const place = document.querySelector(".loader-place");
-    const bar = document.querySelector(".loader-progress-track");
+    const stage = document.querySelector(".curtain-stage");
+    const flank = document.querySelector(".curtain-flank");
+    const title = document.querySelector(".curtain-stage .hero-title");
+    const place = document.querySelector(".curtain-stage .hero-place");
+    const bar = document.querySelector(".curtain-tagline");
     const box = (el) => {
       if (!el) {
         return null;
@@ -44,13 +53,13 @@ for (const viewport of viewports) {
       };
     };
     return {
-      visible: Boolean(loader),
+      visible: Boolean(stage),
       title: title?.textContent,
       place: place?.textContent,
       flank: box(flank),
       wordmark: box(title),
       placeBox: box(place),
-      bar: box(bar),
+      tagline: box(bar),
     };
   });
   console.log(JSON.stringify({ name: viewport.name, ...metrics }, null, 2));

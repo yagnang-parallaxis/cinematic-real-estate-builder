@@ -1,25 +1,31 @@
-import { Archivo, Bodoni_Moda, Great_Vibes, Italiana } from "next/font/google";
+import { Archivo, Bodoni_Moda, Great_Vibes } from "next/font/google";
 
-export const displayFont = Italiana({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-display-next",
-  display: "swap",
-});
-
-/** High-contrast Didone for the arch curve — Era-adjacent. */
-export const archFont = Bodoni_Moda({
+/**
+ * One high-contrast Didone carries both the display tier and the arch curve.
+ * The reference language sets every heading in a single condensed Didone, so
+ * splitting display and arch across two families read as two design systems.
+ */
+export const displayFont = Bodoni_Moda({
   subsets: ["latin"],
   weight: "variable",
-  variable: "--font-arch-next",
+  variable: "--font-display-next",
   display: "swap",
+  adjustFontFallback: true,
+  fallback: ["Times New Roman", "Times", "serif"],
 });
 
+/**
+ * The reference grotesque is an extended cut, so labels and body copy run a
+ * touch wider than a default Archivo. The variable width axis covers it
+ * without introducing a second body family.
+ */
 export const bodyFont = Archivo({
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: "variable",
+  axes: ["wdth"],
   variable: "--font-body-next",
   display: "swap",
+  adjustFontFallback: true,
 });
 
 export const accentFont = Great_Vibes({

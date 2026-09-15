@@ -1,5 +1,12 @@
 import type { NavigationContent, NavigationLink, NavTone } from "./types";
 
+/**
+ * Chrome contrast is sampled from `data-nav-tone` on scroll and resize. A
+ * section that re-tones in place — the hero's day/night swap — has neither, so
+ * it announces the change instead.
+ */
+export const NAV_TONE_EVENT = "cinematic:nav-tone";
+
 export function scrollProgress(scrollY: number, maxScroll: number): number {
   if (maxScroll <= 0) {
     return 0;
@@ -131,13 +138,28 @@ export function sealRingText(label: string): string {
 
 export function readSectionTones(
   root: ParentNode = document,
-): { top: number; bottom: number; tone: NavTone }[] {
+): { top: number; bottom: number; tone: NavTone; scrim: boolean }[] {
   return [...root.querySelectorAll<HTMLElement>("[data-nav-tone]")].map((node) => {
     const rect = node.getBoundingClientRect();
     return {
       top: rect.top + window.scrollY,
       bottom: rect.bottom + window.scrollY,
       tone: (node.dataset.navTone as NavTone) || "on-dark",
+      scrim: node.hasAttribute("data-nav-scrim"),
     };
   });
+}
+
+export function resolveNavChrome(
+  sections: { top: number; bottom: number; tone: NavTone; scrim?: boolean }[],
+  probeY: number,
+): { tone: NavTone; scrim: boolean } {
+  const match = [...sections]
+    .reverse()
+    .find((section) => probeY >= section.top && probeY < section.bottom);
+
+  return {
+    tone: match?.tone ?? "on-dark",
+    scrim: Boolean(match?.scrim),
+  };
 }

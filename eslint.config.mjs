@@ -100,6 +100,20 @@ export default tseslint.config(
     },
   },
   {
+    /*
+     * Capture and probe scripts are Node programs that also carry browser code:
+     * the bodies passed to `page.evaluate` and `page.addInitScript` are compiled
+     * in the page, not here. Both sets of globals are legitimately in scope.
+     */
+    files: ["scripts/**/*.mjs", "packages/*/scripts/**/*.mjs"],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.browser,
+      },
+    },
+  },
+  {
     files: ["**/*.{spec,test}.{ts,tsx}"],
     languageOptions: {
       globals: {

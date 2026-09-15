@@ -56,6 +56,16 @@ export const hero: HeroContent = {
   imageAlt: "Sunlit gated courtyard with a turquoise pool, stone residences and open sky.",
   nightImageSrc: "/hero/gated-community-night.webp",
   nightImageAlt: "The courtyard at dusk, pool lights on and residences lit against the night sky.",
+  /*
+   * The residences and the pool sit a little past halfway down this frame, and
+   * a compact crop reads that frame as much taller — so the landing point is
+   * pulled higher there to keep the first viewport off the sky.
+   */
+  framing: {
+    subject: 0.55,
+    land: { desktop: 0.99, compact: 0.77 },
+    focus: { desktop: 0.5, compact: 0.5 },
+  },
   hotspots: [
     {
       id: "light",
@@ -69,16 +79,16 @@ export const hero: HeroContent = {
       label: "Stone that lasts",
       description:
         "Limewashed stone and dark timber, chosen to weather the salt rather than stay new.",
-        x: 57.5,
-        y: 62.5,
+      x: 57.5,
+      y: 62.5,
     },
     {
       id: "street",
       label: "The quiet street wall",
       description:
         "From the road, only a timber wall and a single opening. The water is kept for the people who live here.",
-        x: 76.6,
-        y: 73.2,
+      x: 76.6,
+      y: 73.2,
     },
   ],
 };

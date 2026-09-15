@@ -1,0 +1,34 @@
+{
+  "name": "@cinematic/clone-mcp",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "cinematic-clone-mcp": "./dist/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/index.js",
+    "smoke": "node scripts/smoke.mjs",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@cinematic/schemas": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@cinematic/typescript-config": "workspace:*",
+    "@types/node": "^22.18.1",
+    "typescript": "^5.9.2"
+  }
+}

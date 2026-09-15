@@ -197,11 +197,31 @@ export function toPercent(value: number, extent: number): number {
   return (value / extent) * 100;
 }
 
+/**
+ * Mid-pin copy must stay inside the chrome columns. A box that meets this
+ * test does not kiss a viewport edge; the sticky screen clips to the same inset.
+ */
+export function textClearsViewportEdge(
+  box: { left: number; right: number },
+  viewportWidth: number,
+  gutterX: number,
+): boolean {
+  if (!Number.isFinite(viewportWidth) || viewportWidth <= 0) {
+    return false;
+  }
+
+  const inset = Number.isFinite(gutterX) ? Math.max(0, gutterX) : 0;
+  return box.left >= inset - 0.5 && box.right <= viewportWidth - inset + 0.5;
+}
+
 export function formatCount(value: number): string {
   return String(value).padStart(2, "0");
 }
 
-function floralSrc(floral: ConceptFloral | undefined, place: ConceptFloralPlace): string | undefined {
+function floralSrc(
+  floral: ConceptFloral | undefined,
+  place: ConceptFloralPlace,
+): string | undefined {
   if (!floral) {
     return undefined;
   }
@@ -235,4 +255,16 @@ export function floralAccentsForPanel(
 
     return [{ place: slot.place, corner: slot.corner, src }];
   });
+}
+
+/**
+ * Decorative video plays only while it occupies the viewport. Off-screen
+ * clips stay paused so two seats never tear down the same request, and so
+ * a phone is not decoding four loops at once.
+ */
+export function decorativeMediaShouldPlay(
+  isIntersecting: boolean,
+  intersectionRatio: number,
+): boolean {
+  return isIntersecting && intersectionRatio > 0;
 }

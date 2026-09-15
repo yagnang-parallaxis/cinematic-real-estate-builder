@@ -4,7 +4,13 @@ export interface NavigationLink {
   lines?: [string, string];
 }
 
-export type NavTone = "on-dark" | "on-light" | "on-color" | "on-brand" | "on-media";
+export type NavTone =
+  | "on-dark"
+  | "on-light"
+  | "on-color"
+  | "on-brand"
+  | "on-media"
+  | "on-media-night";
 
 export interface NavigationContent {
   brand: string;

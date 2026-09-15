@@ -333,7 +333,7 @@ export function Concept({ content }: { content: ConceptContent }) {
   };
 
   return (
-    <Section id="concept" tone="light" label={content.label} className="concept">
+    <Section id="concept" tone="light" label={content.label} className="concept" navScrim>
       <div
         ref={areaRef}
         className="concept-area"
@@ -368,6 +368,7 @@ export function Concept({ content }: { content: ConceptContent }) {
                 lines={content.intro.headingLines}
                 className="t-h1 concept-heading"
                 delay={0.06}
+                fit="h1"
               />
               <div className="concept-copy">
                 <Reveal variant="block" delay={0.12}>
@@ -388,6 +389,7 @@ export function Concept({ content }: { content: ConceptContent }) {
                 lines={content.between.headingLines}
                 className="t-h2 concept-heading"
                 delay={0.06}
+                fit="h2"
               />
               <div className="concept-between">
                 <Reveal variant="block" delay={0.1} className="concept-pole">
@@ -414,6 +416,7 @@ export function Concept({ content }: { content: ConceptContent }) {
                   lines={[content.route.heading]}
                   className="t-h3 concept-heading"
                   delay={0.06}
+                  fit="h3"
                 />
                 <div className="concept-copy">
                   <Reveal variant="block" delay={0.12}>
@@ -455,7 +458,11 @@ export function Concept({ content }: { content: ConceptContent }) {
                         <stop offset="1" stopColor="#fff" stopOpacity="0" />
                       </linearGradient>
                       <mask id="concept-water-mask">
-                        <rect width={PLOT_WIDTH} height={PLOT_HEIGHT} fill="url(#concept-water-edge)" />
+                        <rect
+                          width={PLOT_WIDTH}
+                          height={PLOT_HEIGHT}
+                          fill="url(#concept-water-edge)"
+                        />
                       </mask>
                     </defs>
                     <path

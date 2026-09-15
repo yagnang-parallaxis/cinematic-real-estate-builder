@@ -57,10 +57,6 @@
   font-size: var(--text-h6);
 }
 
-.contact-channel[data-kind="tel"] .contact-channel-value {
-  white-space: nowrap;
-}
-
 /* Socials */
 
 .contact-socials {
@@ -166,22 +162,11 @@
   stroke-width: 1.2;
 }
 
-.contact-chart-label,
-.contact-chart-caption,
 .contact-chart-compass text {
   fill: color-mix(in oklab, var(--paper) 78%, transparent);
   font-family: var(--font-body-family);
   letter-spacing: 0.18em;
   text-transform: uppercase;
-}
-
-.contact-chart-label {
-  font-size: 22px;
-}
-
-.contact-chart-caption {
-  font-size: 13px;
-  letter-spacing: 0.16em;
 }
 
 .contact-chart-compass circle,
@@ -267,6 +252,10 @@
 }
 
 @media (max-width: 991px) {
+  .contact-shell {
+    padding-left: calc(var(--nav-offset) + var(--nav-cell));
+  }
+
   .contact-pin-card {
     left: 50%;
     translate: -50% calc(-100% - var(--space-16));
@@ -291,7 +280,7 @@
 
 @media (min-width: 992px) {
   .contact-channels {
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
     column-gap: var(--space-24);
     padding-block: var(--space-16);
     border-block: 1px solid var(--tone-line);
@@ -310,7 +299,9 @@
   .contact-map-frame {
     height: min(68vh, calc(720vw / var(--type-scale-ratio)));
   }
+}
 
+@media (min-width: 992px) and (hover: hover) and (pointer: fine) {
   .contact-social-link:hover svg {
     scale: 1.14;
   }

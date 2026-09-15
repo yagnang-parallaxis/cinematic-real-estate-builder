@@ -1,0 +1,49 @@
+# Local infra for cinematic-real-estate-builder.
+# Host ports are non-default so they won't clash with typical Postgres :5432 / Redis :6379.
+#
+# Data is bind-mounted under ./.docker-data (on this project volume) so Docker
+# Desktop's internal disk is not required for large DB files.
+#
+#   pnpm docker:up
+#   pnpm docker:down
+#
+# Connection strings (also in .env.example):
+#   DATABASE_URL=postgresql://cinematic:cinematic@localhost:15432/cinematic
+#   REDIS_URL=redis://localhost:16379
+
+name: cinematic-real-estate
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: cinematic-postgres
+    restart: unless-stopped
+    ports:
+      - "15432:5432"
+    environment:
+      POSTGRES_USER: cinematic
+      POSTGRES_PASSWORD: cinematic
+      POSTGRES_DB: cinematic
+    volumes:
+      - ./.docker-data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cinematic -d cinematic"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: cinematic-redis
+    restart: unless-stopped
+    ports:
+      - "16379:6379"
+    # No AOF on MVP — lighter on disk; data still persisted via RDB to the bind mount.
+    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+    volumes:
+      - ./.docker-data/redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10

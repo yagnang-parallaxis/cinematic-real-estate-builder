@@ -5,6 +5,7 @@
  *
  * `idle` keeps the layer out of the way entirely; only `covering` and
  * `revealing` paint. Under reduced motion the wipe becomes a plain cross-fade.
+ * While the homepage boot is up the loader is the cover, so this plate hides.
  */
 
 .page-transition {
@@ -14,6 +15,11 @@
   background: var(--ink);
   pointer-events: none;
   will-change: clip-path, opacity;
+}
+
+html[data-boot="veil"] .page-transition,
+html[data-boot="gate"] .page-transition {
+  display: none;
 }
 
 .page-transition[data-phase="idle"] {

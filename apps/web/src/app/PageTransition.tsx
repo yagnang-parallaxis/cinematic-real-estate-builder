@@ -4,6 +4,7 @@ import {
   navigationPath,
   routeAnnouncement,
   shouldInterceptNavigation,
+  shouldPlayPageTransition,
   transitionMs,
   type PageTransitionContent,
 } from "@cinematic/section-library";
@@ -55,6 +56,16 @@ export function PageTransition({ content = {} }: { content?: PageTransitionConte
       };
 
       if (!shouldInterceptNavigation(intent)) {
+        return;
+      }
+
+      const bootPhase = document.documentElement.getAttribute("data-boot");
+      if (!shouldPlayPageTransition(bootPhase)) {
+        const path = navigationPath(intent.href, intent.currentUrl);
+        if (path) {
+          event.preventDefault();
+          router.push(path);
+        }
         return;
       }
 

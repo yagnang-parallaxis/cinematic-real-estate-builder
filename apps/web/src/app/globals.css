@@ -10,6 +10,15 @@ body {
   min-height: 100%;
 }
 
+/*
+ * The scroll lock (loader, menu, modal) hides the document's overflow. Holding
+ * the gutter open means taking it away does not shift the whole page sideways
+ * on platforms with classic scrollbars.
+ */
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -26,14 +35,3 @@ body {
   color: var(--foreground);
 }
 
-@keyframes loader-out {
-  to {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
-}
-
-.animate-loader-out {
-  animation: loader-out 0.45s ease forwards;
-}

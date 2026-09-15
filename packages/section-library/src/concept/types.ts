@@ -41,10 +41,7 @@ export interface ConceptRoutePanel {
 
 /** The four places the horizontal strip actually uses. */
 export type ConceptFloralPlace =
-  | "intro-top-left"
-  | "intro-bottom-right"
-  | "between-bottom-right"
-  | "route-top-right";
+  "intro-top-left" | "intro-bottom-right" | "between-bottom-right" | "route-top-right";
 
 export type ConceptFloralCorner = "top-left" | "top-right" | "bottom-right";
 

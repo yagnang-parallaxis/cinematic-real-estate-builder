@@ -2,10 +2,19 @@
 
 import { useEffect } from "react";
 
+import { SCROLL_LOCK_ATTR } from "./scroll-lock";
+
 /**
  * Sitewide virtual scrolling. The damped scroll is what lets the pinned and
  * scrub-driven sections read as deliberate rather than twitchy; it is disabled
  * outright under reduced-motion so those users keep native scrolling.
+ *
+ * It also answers for scroll locks itself. A lock hides the document's overflow,
+ * which stops user input but not this scroller — it moves the page by script, so
+ * it would keep travelling underneath a covered page. Watching the root
+ * attribute rather than being told directly means the state is correct however
+ * the two happen to be ordered: this module is imported dynamically, so a lock
+ * may well be taken before it exists.
  */
 export function SmoothScroll() {
   useEffect(() => {
@@ -37,6 +46,20 @@ export function SmoothScroll() {
         frame = requestAnimationFrame(raf);
       });
 
+      const root = document.documentElement;
+      const syncLock = () => {
+        if (root.hasAttribute(SCROLL_LOCK_ATTR)) {
+          lenis.stop();
+        } else {
+          lenis.start();
+        }
+      };
+
+      /* A lock may already be held by the time this module finishes loading. */
+      syncLock();
+      const lockWatch = new MutationObserver(syncLock);
+      lockWatch.observe(root, { attributeFilter: [SCROLL_LOCK_ATTR] });
+
       const onAnchor = (event: globalThis.MouseEvent) => {
         const anchor = (event.target as HTMLElement | null)?.closest?.<HTMLAnchorElement>(
           'a[href^="#"]',
@@ -58,6 +81,7 @@ export function SmoothScroll() {
 
       dispose = () => {
         cancelAnimationFrame(frame);
+        lockWatch.disconnect();
         document.removeEventListener("click", onAnchor);
         document.documentElement.removeAttribute("data-smooth-scroll");
         delete (window as Window & { cinematicLenis?: typeof lenis }).cinematicLenis;

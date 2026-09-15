@@ -1,0 +1,1895 @@
+{
+  "schemaVersion": "1.0.0",
+  "identity": {
+    "projectName": "7 Seasons - Resort & Spa",
+    "brand": "7 Seasons Resort",
+    "place": "Jamnagar",
+    "tagline": "More Than a Stay. A Season to Remember."
+  },
+  "theme": {
+    "paper": "oklch(0.971 0.009 85)",
+    "paperDeep": "oklch(0.936 0.016 83)",
+    "ink": "oklch(0.267 0.011 254)",
+    "inkDeep": "oklch(0.198 0.014 253)",
+    "primary": "oklch(0.578 0.133 151)",
+    "primaryForeground": "oklch(1 0 0)",
+    "tide": "oklch(0.462 0.171 264)",
+    "shell": "oklch(0.683 0.182 42)"
+  },
+  "sections": {
+    "loading": {
+      "brand": "MePass",
+      "wordmark": ["Me", "Pass"],
+      "place": "Harbor",
+      "leftCaption": "North",
+      "rightCaption": "Coast",
+      "tagline": "Eighteen residences\nabove a quiet harbor.",
+      "progressStyle": "bar",
+      "maxDurationMs": 2000
+    },
+    "navigation": {
+      "brand": "Aurelia",
+      "sealLabel": "Aurelia Residences",
+      "homeHref": "/",
+      "primary": {
+        "label": "Select a residence",
+        "href": "/residences",
+        "lines": ["Select a", "residence"]
+      },
+      "links": [],
+      "cta": {
+        "label": "Book a call",
+        "href": "#visit"
+      },
+      "contact": {
+        "label": "Contact",
+        "href": "#visit"
+      },
+      "overlayAccent": "The",
+      "overlayTitle": "Menu",
+      "scrollLabel": "Scroll",
+      "showProgress": true
+    },
+    "hero": {
+      "heading": "Aurelia Residences",
+      "headingLines": ["Aurelia", "Residences"],
+      "place": "Harbor",
+      "supportingBefore": "A house",
+      "supportingAfter": "above the water",
+      "dayLabel": "by day",
+      "nightLabel": "by night",
+      "cta": {
+        "label": "Select a residence",
+        "href": "/residences"
+      },
+      "imageSrc": "/hero/gated-community-day.webp",
+      "imageAlt": "Sunlit gated courtyard with a turquoise pool, stone residences and open sky.",
+      "nightImageSrc": "/hero/gated-community-night.webp",
+      "nightImageAlt": "The courtyard at dusk, pool lights on and residences lit against the night sky.",
+      "hotspots": [
+        {
+          "id": "light",
+          "label": "Light through the rooms",
+          "description": "Every primary room turns toward the inlet, so the day is read in reflections.",
+          "x": 26.9,
+          "y": 58.3
+        },
+        {
+          "id": "stone",
+          "label": "Stone that lasts",
+          "description": "Limewashed stone and dark timber, chosen to weather the salt rather than stay new.",
+          "x": 57.5,
+          "y": 62.5
+        },
+        {
+          "id": "street",
+          "label": "The quiet street wall",
+          "description": "From the road, only a timber wall and a single opening. The water is kept for the people who live here.",
+          "x": 76.6,
+          "y": 73.2
+        }
+      ]
+    },
+    "arch": {
+      "id": "story-arch",
+      "tone": "color",
+      "label": "Into the three reasons to return",
+      "curvedText": "Three reasons to return",
+      "curvedWordSpacing": 1,
+      "leftCaption": "North",
+      "rightCaption": "Coast",
+      "tagline": ["A place to live —", "to return year after year"]
+    },
+    "story": {
+      "leftCaption": "North",
+      "rightCaption": "Coast",
+      "tagline": "A place to live — and to come back to.",
+      "heading": "Boutique Concept",
+      "caption": "Designed as a community, not a complex.",
+      "beats": [
+        {
+          "title": "Boutique Concept",
+          "body": "A boutique gated community of eighteen residences, designed around privacy, wellbeing and quiet harbour living.",
+          "imageSrc": "/hero/gated-community-day.webp",
+          "imageAlt": "The courtyard and residences in afternoon light."
+        },
+        {
+          "title": "Built to Stay",
+          "body": "Stone, timber and a courtyard that will take the weather. The houses are made to be lived in for decades, not seasons.",
+          "imageSrc": "/hero/concept-garden.jpg",
+          "imageAlt": "A quiet living room — a house, not a corridor of doors."
+        },
+        {
+          "title": "Made to Return",
+          "body": "Rooms turn toward the water, so the day is read in reflections rather than in a corridor of doors.",
+          "imageSrc": "/hero/gated-community-night.webp",
+          "imageAlt": "The courtyard at dusk, pool lights on and residences lit."
+        }
+      ]
+    },
+    "vista": {
+      "quote": "Instead of corridors, walking paths connect the residences — making Aurelia feel closer to a group of private homes than a complex.",
+      "attribution": "Architecture Team",
+      "credit": "Aurelia Residences",
+      "imageSrc": "/hero/cam-05-alpha.webp",
+      "imageAlt": "A stone residence with flowering vines beside a still pool and palms."
+    },
+    "concept": {
+      "label": "The idea behind Aurelia",
+      "dragHint": "Drag to see more",
+      "intro": {
+        "tag": "Premise",
+        "eyebrow": "One site, read once",
+        "headingLines": ["Eighteen homes", "on one shoreline"],
+        "body": "Aurelia stands on the north bank, above a harbour that still works for a living. Eighteen residences, three storeys, one stair. Nothing rises above the pines behind it.",
+        "aside": "Laid along the bank rather than across it."
+      },
+      "between": {
+        "tag": "Position",
+        "eyebrow": "Between two things",
+        "headingLines": ["Between the quay", "and the treeline"],
+        "poles": [
+          {
+            "label": "The quay",
+            "body": "Boat sheds, a fuel pump, the six o'clock ferry. The water is in use from first light, and the building sits close enough to hear it."
+          },
+          {
+            "label": "The treeline",
+            "body": "Spruce and birch hold the slope behind. The last residence stops where the ridge path starts, and the ground is left as it was found."
+          }
+        ],
+        "imageSrc": "https://images.unsplash.com/photo-1439066615861-d1af74d74000?auto=format&fit=crop&w=1800&q=80",
+        "imageAlt": "A timber jetty on still water, with a treeline along the far shore."
+      },
+      "route": {
+        "tag": "The walk",
+        "eyebrow": "On foot",
+        "heading": "Eleven minutes, end to end",
+        "body": "Everything the harbour keeps sits inside a short walk. The line below follows the way it is walked, along the water and up into the trees.",
+        "waypoints": [
+          {
+            "id": "door",
+            "label": "Front door",
+            "detail": "0 min",
+            "x": 62,
+            "y": 330
+          },
+          {
+            "id": "sheds",
+            "label": "Boat sheds",
+            "detail": "2 min",
+            "x": 270,
+            "y": 262
+          },
+          {
+            "id": "quay",
+            "label": "Ferry quay",
+            "detail": "4 min",
+            "x": 452,
+            "y": 214
+          },
+          {
+            "id": "market",
+            "label": "Market lane",
+            "detail": "6 min",
+            "x": 664,
+            "y": 276
+          },
+          {
+            "id": "steps",
+            "label": "Bathing steps",
+            "detail": "8 min",
+            "x": 900,
+            "y": 190
+          },
+          {
+            "id": "ridge",
+            "label": "Ridge path",
+            "detail": "11 min",
+            "x": 1138,
+            "y": 92
+          }
+        ],
+        "footnote": "Times measured from the north entrance, at walking pace."
+      },
+      "floral": {
+        "introTopLeft": "/flowers/bougainvillea-flowers_01.webm",
+        "introBottomRight": "/flowers/bougainvillea-flowers_02.webm",
+        "betweenBottomRight": "/flowers/bougainvillea-flowers_01.webm",
+        "routeTopRight": "/flowers/bougainvillea-flowers_07.webm"
+      }
+    },
+    "location": {
+      "eyebrow": "Location",
+      "placeLines": ["Norhavn", "on the Aldemark coast"],
+      "regionLabel": "Nordkvist county, 61° north",
+      "description": "A working harbour of two thousand people. Aurelia stands on the last ridge before the water, eight minutes above the quay.",
+      "imageSrc": "/hero/era-residence-master-plan.webp",
+      "imageAlt": "Aerial view of the shoreline, with the residences along the beach and the hills behind.",
+      "points": [
+        {
+          "id": "quay",
+          "label": "The quay",
+          "travelTime": "8 min on foot"
+        },
+        {
+          "id": "ferry",
+          "label": "Ferry terminal",
+          "travelTime": "4 min"
+        },
+        {
+          "id": "market",
+          "label": "Fish market",
+          "travelTime": "7 min"
+        },
+        {
+          "id": "old-town",
+          "label": "Old town",
+          "travelTime": "12 min"
+        },
+        {
+          "id": "airport",
+          "label": "Aldemark airport",
+          "travelTime": "50 min"
+        }
+      ],
+      "cta": {
+        "label": "See available residences",
+        "href": "#residence-types"
+      }
+    },
+    "residenceTypes": {
+      "eyebrow": "Residences",
+      "types": [
+        {
+          "id": "garden",
+          "name": "Garden residence",
+          "bedrooms": "3",
+          "areaRange": "128 – 148 m²",
+          "description": "A private basement level and direct access to the shared garden, for a household that wants its own entrance.",
+          "imageSrc": "https://images.unsplash.com/photo-1600585153490-76fb20a32601?auto=format&fit=crop&w=1800&q=80",
+          "cta": {
+            "label": "Explore garden residences",
+            "href": "/residences?type=garden"
+          }
+        },
+        {
+          "id": "harbor",
+          "name": "Harbor residence",
+          "bedrooms": "2",
+          "areaRange": "97 – 104 m²",
+          "description": "Step directly onto a terrace that opens toward the water, with the communal garden just beyond.",
+          "imageSrc": "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&w=1800&q=80",
+          "cta": {
+            "label": "Explore harbor residences",
+            "href": "/residences?type=harbor"
+          }
+        },
+        {
+          "id": "penthouse",
+          "name": "Penthouse residence",
+          "bedrooms": "3 – 4",
+          "areaRange": "164 – 198 m²",
+          "description": "The top level of the building, under a high ceiling, with a rooftop solarium reached by its own stair.",
+          "imageSrc": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1800&q=80",
+          "cta": {
+            "label": "Explore penthouse residences",
+            "href": "/residences?type=penthouse"
+          }
+        }
+      ]
+    },
+    "amenityBrowser": {
+      "label": "Shared rooms",
+      "eyebrow": "Shared rooms",
+      "headingLines": ["Five rooms", "held in common"],
+      "tablistLabel": "Shared rooms at Aurelia",
+      "hint": "Drag the tabs",
+      "panels": [
+        {
+          "id": "courtyard",
+          "name": "Courtyard",
+          "title": "The courtyard",
+          "description": "A walled lawn between the two blocks, planted with birch and shaded through the afternoon.",
+          "imageSrc": "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1800&q=80",
+          "imageAlt": "A dark timber house opening onto a lawn shaded by one mature tree."
+        },
+        {
+          "id": "pool-terrace",
+          "name": "Pool terrace",
+          "title": "The pool terrace",
+          "description": "Eighteen metres of heated water on the south deck, open from April to the first frost.",
+          "imageSrc": "https://images.unsplash.com/photo-1544984243-ec57ea16fe25?auto=format&fit=crop&w=1800&q=80",
+          "imageAlt": "A narrow lap pool along a timber deck under a low evening sky."
+        },
+        {
+          "id": "bath-house",
+          "name": "Bath house",
+          "title": "The bath house",
+          "description": "A sauna, a cold plunge, and two changing rooms, one floor below the courtyard.",
+          "imageSrc": "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1800&q=80",
+          "imageAlt": "A dark tiled bathing room with a deep tub under a long clerestory window."
+        },
+        {
+          "id": "long-table",
+          "name": "Long table",
+          "title": "The long table",
+          "description": "A kitchen and a table for twelve, booked by the night for the dinners a flat cannot hold.",
+          "imageSrc": "https://images.unsplash.com/photo-1604014237800-1c9102c219da?auto=format&fit=crop&w=1800&q=80",
+          "imageAlt": "A timber-lined dining room open along one side to the garden."
+        },
+        {
+          "id": "guest-suite",
+          "name": "Guest suite",
+          "title": "The guest suite",
+          "description": "One room with its own bath and balcony, kept for visitors who stay more than an evening.",
+          "imageSrc": "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&w=1800&q=80",
+          "imageAlt": "A guest bedroom with a glazed door onto a small balcony above the trees."
+        }
+      ],
+      "cta": {
+        "label": "Arrange a visit",
+        "href": "#enquire"
+      }
+    },
+    "interiors": {
+      "eyebrow": "Interiors",
+      "headingPrefix": "The space to",
+      "rotatingWords": ["live", "work", "rest", "gather"],
+      "rotationMs": 2600,
+      "body": "Oak floors, lime plaster, deep sills. The rooms were drawn long, so the light has somewhere to travel before it reaches the far wall.",
+      "galleryLabel": "Interiors",
+      "lightboxLabel": "Interiors gallery",
+      "expandLabel": "Expand",
+      "closeLabel": "Close",
+      "previousLabel": "Previous interior",
+      "nextLabel": "Next interior",
+      "dragHint": "Drag to see the rooms",
+      "images": [
+        {
+          "id": "long-room",
+          "room": "The long room",
+          "src": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=80",
+          "alt": "A long living room with a timber-clad wall, a low sofa, and sliding glass onto a terrace.",
+          "caption": "The long room, with the kitchen kept at the far end."
+        },
+        {
+          "id": "kitchen",
+          "room": "Kitchen",
+          "src": "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1800&q=80",
+          "alt": "A pale kitchen island with four oak stools beneath three black pendant lamps.",
+          "caption": "One island, four stools, and the stair to the floor above."
+        },
+        {
+          "id": "bath",
+          "room": "Bathroom",
+          "src": "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1800&q=80",
+          "alt": "A dark-tiled bathroom with a freestanding bath and a long window set at eye level.",
+          "caption": "A window at eye level, so the bath looks out and nothing looks in."
+        },
+        {
+          "id": "garden-room",
+          "room": "Garden room",
+          "src": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1800&q=80",
+          "alt": "A grey sofa under a timber ceiling, facing a glass wall that opens onto trees.",
+          "caption": "The garden room, where the glass wall folds back in summer."
+        },
+        {
+          "id": "sitting-room",
+          "room": "Sitting room",
+          "src": "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1800&q=80",
+          "alt": "A green sitting room with two woven pendant shades, a sofa, and plants at the window.",
+          "caption": "Green walls, woven shades, and one window kept for the morning."
+        },
+        {
+          "id": "hearth",
+          "room": "Hearth",
+          "src": "https://images.unsplash.com/photo-1616137466211-f939a420be84?auto=format&fit=crop&w=1800&q=80",
+          "alt": "A pale grey room with a fireplace and a row of shuttered windows along one wall.",
+          "caption": "The hearth wall, with shutters that close the room down at dusk."
+        },
+        {
+          "id": "second-room",
+          "room": "Second sitting room",
+          "src": "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1800&q=80",
+          "alt": "A pale room with a long sofa, a round timber table, and framed prints on the far wall.",
+          "caption": "A second room for the evening, kept back from the water."
+        }
+      ]
+    },
+    "architecture": {
+      "eyebrow": "Architecture",
+      "heading": "Stone that remembers the tide.",
+      "quote": "We kept the rooms long and the openings few, so the house would feel like it had always been looking at the water.",
+      "attribution": "Lena Voss",
+      "credit": "Studio North",
+      "materials": "Dark timber, limewashed stone, and bronze that will dull in the salt air. Nothing that asks to stay new.",
+      "imageSrc": "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=2400&q=80",
+      "cta": {
+        "label": "Book a call",
+        "href": "#visit"
+      }
+    },
+    "assurance": {
+      "eyebrow": "Assurance",
+      "heading": "The facts behind the drawings",
+      "headingLines": ["The facts behind", "the drawings"],
+      "intro": "Who is building Aurelia, where the permits stand, and what has been poured so far. Every line here can be checked against a document.",
+      "exclusive": false,
+      "rows": [
+        {
+          "id": "developer",
+          "title": "The developer",
+          "detail": "Aurelia is built by Halvard Estate, a family firm working this coastline since 1994. Eleven completed schemes, none of them larger than twenty-four homes. The same site manager has run the last four."
+        },
+        {
+          "id": "sales",
+          "title": "Sales and marketing",
+          "detail": "Sales are handled by Meridian Harbour Partners from the office at 12 Harbor Path. One team, one price list, no intermediaries. Viewings are booked for the morning, when the light is on the water."
+        },
+        {
+          "id": "planning",
+          "title": "Planning and permits",
+          "detail": "Outline consent was granted in March 2025 under reference NH/2025/0148. The building permit followed that June, with no conditions outstanding. Both documents travel with the reservation pack."
+        },
+        {
+          "id": "construction",
+          "title": "Construction status",
+          "detail": "The frame is complete to the third floor and the roof closes in spring. First handovers are set for autumn 2027. A camera on the east crane runs through daylight hours.",
+          "link": {
+            "label": "Watch the site camera",
+            "href": "https://stream.aurelia-residences.example/harbour"
+          }
+        },
+        {
+          "id": "deposits",
+          "title": "Deposits and warranty",
+          "detail": "Deposits are held in a client account at Nordbank and released against certified stages. Each residence carries a ten-year structural warranty and two years on the finishes."
+        }
+      ],
+      "image": {
+        "src": "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1800&q=80",
+        "alt": "The north elevation in flat daylight, concrete frame and deep window reveals.",
+        "caption": "North elevation, September."
+      },
+      "note": "Figures current at 1 September 2026."
+    },
+    "residenceFigures": {
+      "id": "residence-figures",
+      "variant": "figures",
+      "tone": "light-deep",
+      "eyebrow": "The range",
+      "lines": ["Residences from 97", "to 198 square metres."],
+      "body": "Two, three and four bedrooms, each with its own outdoor room — a garden at the lower level, a terrace in the middle, a solarium at the top.",
+      "figures": [
+        {
+          "value": "18",
+          "label": "Residences"
+        },
+        {
+          "value": "97–198",
+          "label": "Square metres"
+        },
+        {
+          "value": "2–4",
+          "label": "Bedrooms"
+        },
+        {
+          "value": "2028",
+          "label": "Completion"
+        }
+      ]
+    },
+    "closingView": {
+      "id": "closing-view",
+      "variant": "panorama",
+      "tone": "media",
+      "eyebrow": "The outlook",
+      "lines": ["Water in every", "principal room."],
+      "body": "The slope does the work. Every residence sits half a level above the one in front of it, so the harbour is never somebody else's view.",
+      "imageSrc": "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=2400&q=80",
+      "imageAlt": "",
+      "action": {
+        "label": "Select a residence",
+        "href": "#residence-types"
+      }
+    },
+    "contact": {
+      "eyebrow": "Visit",
+      "heading": "Contact us",
+      "headingLines": ["Contact us"],
+      "channels": [
+        {
+          "id": "write",
+          "label": "Write us",
+          "value": "hello@aurelia.example",
+          "href": "mailto:hello@aurelia.example",
+          "kind": "email"
+        },
+        {
+          "id": "office",
+          "label": "Sales office",
+          "value": "12 Harbor Path, Norhavn",
+          "href": "https://maps.google.com/?q=Harbor+Path+Norhavn",
+          "kind": "maps"
+        },
+        {
+          "id": "place",
+          "label": "Location",
+          "value": "North Harbour, Aldemark coast",
+          "href": "https://maps.google.com/?q=Norhavn+harbour",
+          "kind": "maps"
+        },
+        {
+          "id": "talk",
+          "label": "Talk to us",
+          "value": "+1 (555) 010-0142",
+          "href": "tel:+15550100142",
+          "kind": "tel"
+        },
+        {
+          "id": "whatsapp",
+          "label": "WhatsApp",
+          "value": "WhatsApp",
+          "href": "https://wa.me/15550100142",
+          "kind": "whatsapp"
+        }
+      ],
+      "socials": [
+        {
+          "id": "linkedin",
+          "label": "LinkedIn",
+          "href": "https://example.com/aurelia/linkedin",
+          "network": "linkedin"
+        },
+        {
+          "id": "facebook",
+          "label": "Facebook",
+          "href": "https://example.com/aurelia/facebook",
+          "network": "facebook"
+        },
+        {
+          "id": "instagram",
+          "label": "Instagram",
+          "href": "https://example.com/aurelia/instagram",
+          "network": "instagram"
+        }
+      ],
+      "map": {
+        "src": "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=2400&q=80",
+        "alt": "A cool northern inlet seen from above, dark water against a wooded shore."
+      },
+      "pin": {
+        "label": "Sales office",
+        "hours": "Open daily, 09:00–18:00",
+        "x": 58,
+        "y": 42
+      },
+      "cta": {
+        "label": "Book a call",
+        "source": "contact"
+      },
+      "dragHint": "Drag to see more"
+    },
+    "footer": {
+      "ctaEyebrow": "Visit",
+      "ctaHeadingLines": ["Come see", "the water"],
+      "ctaSubheading": "A short conversation is enough to know if it fits.",
+      "ctaBackgroundSrc": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=80",
+      "ctaAction": {
+        "label": "Book a call",
+        "href": "#visit"
+      },
+      "phone": "+1 (555) 010-0142",
+      "phoneHref": "tel:+15550100142",
+      "officeLabel": "Sales office",
+      "officeAddress": "12 Harbor Path, North Coast",
+      "officeMapHref": "https://maps.google.com/?q=Harbor+Path",
+      "brand": "Aurelia Residences",
+      "legalLinks": [
+        {
+          "label": "Privacy policy",
+          "href": "#"
+        },
+        {
+          "label": "Terms of use",
+          "href": "#"
+        }
+      ],
+      "credit": {
+        "label": "Studio North",
+        "href": "#"
+      }
+    },
+    "enquiry": {
+      "brand": "Aurelia Residences",
+      "eyebrow": "Enquire",
+      "heading": "Book a call",
+      "intro": "Tell us how to reach you. The sales office answers within one working day.",
+      "fields": {
+        "name": {
+          "label": "Name",
+          "placeholder": "First and last"
+        },
+        "email": {
+          "label": "Email",
+          "placeholder": "name@domain.com"
+        },
+        "phone": {
+          "label": "Phone",
+          "hint": "Optional",
+          "placeholder": "+1 555 010 0142"
+        },
+        "message": {
+          "label": "Message",
+          "placeholder": "Which residence, and when you would like to see it."
+        }
+      },
+      "honeypotLabel": "Company",
+      "submitLabel": "Send enquiry",
+      "submittingLabel": "Sending",
+      "closeLabel": "Close",
+      "note": "Your details are used for this enquiry and nothing else.",
+      "errorMessage": "That did not send. Try again, or call the sales office.",
+      "success": {
+        "eyebrow": "Received",
+        "heading": "Thank you",
+        "body": "Your note is with the sales office. Someone will call you within one working day.",
+        "dismissLabel": "Back to the site"
+      }
+    }
+  },
+  "residences": {
+    "listing": {
+      "crumbs": [
+        {
+          "label": "Home",
+          "href": "/"
+        },
+        {
+          "label": "Select a residence"
+        }
+      ],
+      "eyebrow": "Residences",
+      "headingLines": ["Eighteen homes", "above the harbour"],
+      "intro": "Six garden homes, eight over the quay, and four under the roof. Filter by type or by bedrooms, then open a unit to see its plan.",
+      "controlsLabel": "Filter and sort the residences",
+      "typeLabel": "Type",
+      "bedroomsLabel": "Bedrooms",
+      "sortLabel": "Sort by",
+      "allLabel": "All",
+      "resetLabel": "Reset",
+      "countOne": "residence",
+      "countMany": "residences",
+      "countNone": "No residences",
+      "emptyHeading": "Nothing matches those two filters.",
+      "emptyBody": "There is no home at Aurelia with that combination of type and bedroom count. Clear the filters to see all eighteen.",
+      "bedroomsSuffixOne": "bed",
+      "bedroomsSuffixMany": "bed",
+      "types": [
+        {
+          "id": "garden",
+          "label": "Garden residence"
+        },
+        {
+          "id": "harbor",
+          "label": "Harbor residence"
+        },
+        {
+          "id": "penthouse",
+          "label": "Penthouse residence"
+        }
+      ],
+      "sortOptions": [
+        {
+          "id": "relevant",
+          "label": "Block and floor"
+        },
+        {
+          "id": "area-asc",
+          "label": "Smallest area"
+        },
+        {
+          "id": "area-desc",
+          "label": "Largest area"
+        }
+      ],
+      "cardCtaLabel": "View residence",
+      "listLabel": "Residences"
+    },
+    "items": [
+      {
+        "slug": "011",
+        "number": "011",
+        "name": "No. 011",
+        "type": "garden",
+        "typeLabel": "Garden residence",
+        "block": "Quay",
+        "floor": 0,
+        "floorLabel": "Garden level",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "interiorSqm": 132,
+        "outdoorSqm": 46,
+        "outdoorLabel": "Garden",
+        "orientation": "South-west, over the water",
+        "status": "available",
+        "completion": "Q2 2027",
+        "description": "Three bedrooms on one level, with a second door straight onto the garden. The lower level holds a workshop, a store, and the plant room. The living room reads the water across the lawn.",
+        "features": [
+          "Private lower level",
+          "Direct garden access",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "Two parking bays",
+          "Cycle store",
+          "Heat pump"
+        ],
+        "schematic": {
+          "src": "/residences/key-011.svg",
+          "alt": "Key plan: Garden residence No. 011 marked on the Garden level of the Quay block.",
+          "caption": "Key plan — where No. 011 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-011.svg",
+          "alt": "Floor plan: No. 011, 3 bedrooms, 132 m² inside and 46 m² of garden.",
+          "caption": "Floor plan — No. 011, 132 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1600585154340-be6161a56a0c",
+            "src": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=80",
+            "alt": "Dark timber and limewashed stone seen across a lawn in afternoon light.",
+            "caption": "The garden front. Timber above, stone at the base.",
+            "room": "From the garden"
+          },
+          {
+            "id": "photo-1513694203232-719a280e022f",
+            "src": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A pale living room with a low table and dried grasses in a tall vase.",
+            "caption": "The living room, kept pale so the water does the colouring.",
+            "room": "Living room"
+          },
+          {
+            "id": "photo-1600585152220-90363fe7e115",
+            "src": "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A kitchen with timber fronts, black pendants, and a pale stone island.",
+            "caption": "Timber fronts and a stone island, with stools along one side.",
+            "room": "Kitchen"
+          },
+          {
+            "id": "photo-1502005229762-cf1b2da7c5d6",
+            "src": "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A pale stair with a timber handrail turning down out of a hall.",
+            "caption": "The stair down to the workshop and the store.",
+            "room": "To the lower level"
+          }
+        ]
+      },
+      {
+        "slug": "012",
+        "number": "012",
+        "name": "No. 012",
+        "type": "garden",
+        "typeLabel": "Garden residence",
+        "block": "Quay",
+        "floor": 0,
+        "floorLabel": "Garden level",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "interiorSqm": 128,
+        "outdoorSqm": 38,
+        "outdoorLabel": "Garden",
+        "orientation": "South-west, over the water",
+        "status": "reserved",
+        "completion": "Q2 2027",
+        "description": "The narrower of the Quay garden homes. The kitchen sits at the path end and the three bedrooms run along the garden wall, so the noise of the road never reaches them.",
+        "features": [
+          "Private lower level",
+          "Direct garden access",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "Two parking bays",
+          "Cycle store",
+          "Heat pump"
+        ],
+        "schematic": {
+          "src": "/residences/key-012.svg",
+          "alt": "Key plan: Garden residence No. 012 marked on the Garden level of the Quay block.",
+          "caption": "Key plan — where No. 012 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-012.svg",
+          "alt": "Floor plan: No. 012, 3 bedrooms, 128 m² inside and 38 m² of garden.",
+          "caption": "Floor plan — No. 012, 128 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1484154218962-a197022b5858",
+            "src": "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A white kitchen with a long counter, open shelves, and a tall window.",
+            "caption": "A long counter, with the window over the sink.",
+            "room": "Kitchen"
+          },
+          {
+            "id": "photo-1583847268964-b28dc8f51f92",
+            "src": "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A living room with plants and a rug, looking toward a garden door.",
+            "caption": "The garden door sits at the end of the living room.",
+            "room": "Toward the garden"
+          },
+          {
+            "id": "photo-1631889993959-41b4e9c6e3c5",
+            "src": "https://images.unsplash.com/photo-1631889993959-41b4e9c6e3c5?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A bathroom in timber and pale tile with a long mirror over the basin.",
+            "caption": "Timber, pale tile, and a window at the end of the bath.",
+            "room": "Bathroom"
+          }
+        ]
+      },
+      {
+        "slug": "013",
+        "number": "013",
+        "name": "No. 013",
+        "type": "garden",
+        "typeLabel": "Garden residence",
+        "block": "Quay",
+        "floor": 0,
+        "floorLabel": "Garden level",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "interiorSqm": 136,
+        "outdoorSqm": 52,
+        "outdoorLabel": "Garden",
+        "orientation": "South-west, over the water",
+        "status": "available",
+        "completion": "Q2 2027",
+        "description": "The end home in the Quay block, with windows on two sides. The garden wraps the corner and takes the evening light until late.",
+        "features": [
+          "Private lower level",
+          "Direct garden access",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "Two parking bays",
+          "Cycle store",
+          "Heat pump"
+        ],
+        "schematic": {
+          "src": "/residences/key-013.svg",
+          "alt": "Key plan: Garden residence No. 013 marked on the Garden level of the Quay block.",
+          "caption": "Key plan — where No. 013 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-013.svg",
+          "alt": "Floor plan: No. 013, 3 bedrooms, 136 m² inside and 52 m² of garden.",
+          "caption": "Floor plan — No. 013, 136 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1600607688969-a5bfcd646154",
+            "src": "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A timber and glass house seen from a lawn under a mature tree.",
+            "caption": "The building from the shared lawn, late in the day.",
+            "room": "From the lawn"
+          },
+          {
+            "id": "photo-1513694203232-719a280e022f",
+            "src": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A pale living room with a low table and dried grasses in a tall vase.",
+            "caption": "The living room, kept pale so the water does the colouring.",
+            "room": "Living room"
+          },
+          {
+            "id": "photo-1600585152220-90363fe7e115",
+            "src": "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A kitchen with timber fronts, black pendants, and a pale stone island.",
+            "caption": "Timber fronts and a stone island, with stools along one side.",
+            "room": "Kitchen"
+          },
+          {
+            "id": "photo-1600585154526-990dced4db0d",
+            "src": "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A lit timber doorway opening into a pale hall after dark.",
+            "caption": "The entrance from the path, seen after dark.",
+            "room": "The entrance"
+          }
+        ]
+      },
+      {
+        "slug": "021",
+        "number": "021",
+        "name": "No. 021",
+        "type": "garden",
+        "typeLabel": "Garden residence",
+        "block": "Path",
+        "floor": 0,
+        "floorLabel": "Garden level",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "interiorSqm": 141,
+        "outdoorSqm": 58,
+        "outdoorLabel": "Garden",
+        "orientation": "West, over the garden to the channel",
+        "status": "sold",
+        "completion": "Q2 2027",
+        "description": "A wide plan with the living room across the garden front. The lower level is laid out for a studio rather than storage, with a window onto the light well.",
+        "features": [
+          "Private lower level",
+          "Direct garden access",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "Two parking bays",
+          "Cycle store",
+          "Heat pump"
+        ],
+        "schematic": {
+          "src": "/residences/key-021.svg",
+          "alt": "Key plan: Garden residence No. 021 marked on the Garden level of the Path block.",
+          "caption": "Key plan — where No. 021 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-021.svg",
+          "alt": "Floor plan: No. 021, 3 bedrooms, 141 m² inside and 58 m² of garden.",
+          "caption": "Floor plan — No. 021, 141 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1600566753190-17f0baa2a6c3",
+            "src": "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A dark timber wall with a single gate opening into a planted court.",
+            "caption": "The gate from the path into the private court.",
+            "room": "The garden wall"
+          },
+          {
+            "id": "photo-1583847268964-b28dc8f51f92",
+            "src": "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A living room with plants and a rug, looking toward a garden door.",
+            "caption": "The garden door sits at the end of the living room.",
+            "room": "Toward the garden"
+          },
+          {
+            "id": "photo-1502005229762-cf1b2da7c5d6",
+            "src": "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A pale stair with a timber handrail turning down out of a hall.",
+            "caption": "The stair down to the workshop and the store.",
+            "room": "To the lower level"
+          }
+        ]
+      },
+      {
+        "slug": "022",
+        "number": "022",
+        "name": "No. 022",
+        "type": "garden",
+        "typeLabel": "Garden residence",
+        "block": "Path",
+        "floor": 0,
+        "floorLabel": "Garden level",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "interiorSqm": 134,
+        "outdoorSqm": 44,
+        "outdoorLabel": "Garden",
+        "orientation": "West, over the garden to the channel",
+        "status": "available",
+        "completion": "Q2 2027",
+        "description": "Three bedrooms, two baths, and a utility room off the hall. The garden is enclosed on three sides by the timber wall.",
+        "features": [
+          "Private lower level",
+          "Direct garden access",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "Two parking bays",
+          "Cycle store",
+          "Heat pump"
+        ],
+        "schematic": {
+          "src": "/residences/key-022.svg",
+          "alt": "Key plan: Garden residence No. 022 marked on the Garden level of the Path block.",
+          "caption": "Key plan — where No. 022 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-022.svg",
+          "alt": "Floor plan: No. 022, 3 bedrooms, 134 m² inside and 44 m² of garden.",
+          "caption": "Floor plan — No. 022, 134 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1600585152220-90363fe7e115",
+            "src": "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A kitchen with timber fronts, black pendants, and a pale stone island.",
+            "caption": "Timber fronts and a stone island, with stools along one side.",
+            "room": "Kitchen"
+          },
+          {
+            "id": "photo-1513694203232-719a280e022f",
+            "src": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A pale living room with a low table and dried grasses in a tall vase.",
+            "caption": "The living room, kept pale so the water does the colouring.",
+            "room": "Living room"
+          },
+          {
+            "id": "photo-1631889993959-41b4e9c6e3c5",
+            "src": "https://images.unsplash.com/photo-1631889993959-41b4e9c6e3c5?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A bathroom in timber and pale tile with a long mirror over the basin.",
+            "caption": "Timber, pale tile, and a window at the end of the bath.",
+            "room": "Bathroom"
+          },
+          {
+            "id": "photo-1600566753190-17f0baa2a6c3",
+            "src": "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A dark timber wall with a single gate opening into a planted court.",
+            "caption": "The gate from the path into the private court.",
+            "room": "The garden wall"
+          }
+        ]
+      },
+      {
+        "slug": "023",
+        "number": "023",
+        "name": "No. 023",
+        "type": "garden",
+        "typeLabel": "Garden residence",
+        "block": "Path",
+        "floor": 0,
+        "floorLabel": "Garden level",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "interiorSqm": 148,
+        "outdoorSqm": 62,
+        "outdoorLabel": "Garden",
+        "orientation": "West, over the garden to the channel",
+        "status": "available",
+        "completion": "Q2 2027",
+        "description": "The largest garden home. The living room, the kitchen, and the main bedroom all open onto the same stretch of garden, under the row of birches along the path.",
+        "features": [
+          "Private lower level",
+          "Direct garden access",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "Two parking bays",
+          "Cycle store",
+          "Heat pump"
+        ],
+        "schematic": {
+          "src": "/residences/key-023.svg",
+          "alt": "Key plan: Garden residence No. 023 marked on the Garden level of the Path block.",
+          "caption": "Key plan — where No. 023 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-023.svg",
+          "alt": "Floor plan: No. 023, 3 bedrooms, 148 m² inside and 62 m² of garden.",
+          "caption": "Floor plan — No. 023, 148 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1600585154340-be6161a56a0c",
+            "src": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=80",
+            "alt": "Dark timber and limewashed stone seen across a lawn in afternoon light.",
+            "caption": "The garden front. Timber above, stone at the base.",
+            "room": "From the garden"
+          },
+          {
+            "id": "photo-1484154218962-a197022b5858",
+            "src": "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A white kitchen with a long counter, open shelves, and a tall window.",
+            "caption": "A long counter, with the window over the sink.",
+            "room": "Kitchen"
+          },
+          {
+            "id": "photo-1583847268964-b28dc8f51f92",
+            "src": "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A living room with plants and a rug, looking toward a garden door.",
+            "caption": "The garden door sits at the end of the living room.",
+            "room": "Toward the garden"
+          },
+          {
+            "id": "photo-1600607688969-a5bfcd646154",
+            "src": "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A timber and glass house seen from a lawn under a mature tree.",
+            "caption": "The building from the shared lawn, late in the day.",
+            "room": "From the lawn"
+          }
+        ]
+      },
+      {
+        "slug": "111",
+        "number": "111",
+        "name": "No. 111",
+        "type": "harbor",
+        "typeLabel": "Harbor residence",
+        "block": "Quay",
+        "floor": 1,
+        "floorLabel": "First floor",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "interiorSqm": 99,
+        "outdoorSqm": 18,
+        "outdoorLabel": "Terrace",
+        "orientation": "South-west, over the water",
+        "status": "available",
+        "completion": "Q2 2027",
+        "description": "Two bedrooms and one long room facing the channel. The terrace runs the width of the living room and sits above the jetty.",
+        "features": [
+          "Terrace over the water",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "One parking bay",
+          "Cycle store",
+          "Heat pump",
+          "Storage room"
+        ],
+        "schematic": {
+          "src": "/residences/key-111.svg",
+          "alt": "Key plan: Harbor residence No. 111 marked on the First floor of the Quay block.",
+          "caption": "Key plan — where No. 111 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-111.svg",
+          "alt": "Floor plan: No. 111, 2 bedrooms, 99 m² inside and 18 m² of terrace.",
+          "caption": "Floor plan — No. 111, 99 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1600573472591-ee6b68d14c68",
+            "src": "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A sliding door open onto a terrace with a single chair and water beyond.",
+            "caption": "The terrace door stays open most of the summer.",
+            "room": "Terrace"
+          },
+          {
+            "id": "photo-1600607687939-ce8a6c25118c",
+            "src": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A tall living room with a timber wall and a window the height of the room.",
+            "caption": "One timber wall, and a window the height of the room.",
+            "room": "Living room"
+          },
+          {
+            "id": "photo-1598928506311-c55ded91a20c",
+            "src": "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A bedroom kept dark, with curtains half drawn across a wide window.",
+            "caption": "The main bedroom, kept dark, facing the channel.",
+            "room": "Bedroom"
+          }
+        ]
+      },
+      {
+        "slug": "112",
+        "number": "112",
+        "name": "No. 112",
+        "type": "harbor",
+        "typeLabel": "Harbor residence",
+        "block": "Quay",
+        "floor": 1,
+        "floorLabel": "First floor",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "interiorSqm": 97,
+        "outdoorSqm": 14,
+        "outdoorLabel": "Terrace",
+        "orientation": "South-west, over the water",
+        "status": "sold",
+        "completion": "Q2 2027",
+        "description": "The compact Quay plan. The kitchen is open to the living room and the second bedroom takes the inland window, which keeps it cool in summer.",
+        "features": [
+          "Terrace over the water",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "One parking bay",
+          "Cycle store",
+          "Heat pump",
+          "Storage room"
+        ],
+        "schematic": {
+          "src": "/residences/key-112.svg",
+          "alt": "Key plan: Harbor residence No. 112 marked on the First floor of the Quay block.",
+          "caption": "Key plan — where No. 112 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-112.svg",
+          "alt": "Floor plan: No. 112, 2 bedrooms, 97 m² inside and 14 m² of terrace.",
+          "caption": "Floor plan — No. 112, 97 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1616486338812-3dadae4b4ace",
+            "src": "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A pale living room with a round table, a low sofa, and a woven rug.",
+            "caption": "A round table at the window end of the room.",
+            "room": "Dining end"
+          },
+          {
+            "id": "photo-1519710164239-da123dc03ef4",
+            "src": "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A white corner with an arc lamp, a small table, and two chairs.",
+            "caption": "A corner kept for reading, by the window.",
+            "room": "Reading corner"
+          },
+          {
+            "id": "photo-1600566752355-35792bedcfea",
+            "src": "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A bathroom in dark stone with a free-standing bath under a high window.",
+            "caption": "Dark stone, and a bath under the high window.",
+            "room": "Bathroom"
+          }
+        ]
+      },
+      {
+        "slug": "113",
+        "number": "113",
+        "name": "No. 113",
+        "type": "harbor",
+        "typeLabel": "Harbor residence",
+        "block": "Quay",
+        "floor": 1,
+        "floorLabel": "First floor",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "interiorSqm": 104,
+        "outdoorSqm": 22,
+        "outdoorLabel": "Terrace",
+        "orientation": "South-west, over the water",
+        "status": "available",
+        "completion": "Q2 2027",
+        "description": "A corner home with the terrace on the water side and a second window facing north up the coast. The main bedroom has its own shower room.",
+        "features": [
+          "Terrace over the water",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "One parking bay",
+          "Cycle store",
+          "Heat pump",
+          "Storage room"
+        ],
+        "schematic": {
+          "src": "/residences/key-113.svg",
+          "alt": "Key plan: Harbor residence No. 113 marked on the First floor of the Quay block.",
+          "caption": "Key plan — where No. 113 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-113.svg",
+          "alt": "Floor plan: No. 113, 2 bedrooms, 104 m² inside and 22 m² of terrace.",
+          "caption": "Floor plan — No. 113, 104 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1503174971373-b1f69850bded",
+            "src": "https://images.unsplash.com/photo-1503174971373-b1f69850bded?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A living room opening onto a terrace through a wall of glass.",
+            "caption": "The living room opens the full width of the terrace.",
+            "room": "Living room"
+          },
+          {
+            "id": "photo-1507089947368-19c1da9775ae",
+            "src": "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A living room with pale walls, long windows, and a cased ceiling.",
+            "caption": "Long windows on the water side of the room.",
+            "room": "Window wall"
+          },
+          {
+            "id": "photo-1439066615861-d1af74d74000",
+            "src": "https://images.unsplash.com/photo-1439066615861-d1af74d74000?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A wooden jetty reaching into still water under a clear sky.",
+            "caption": "The jetty below the building, early in the morning.",
+            "room": "The jetty"
+          },
+          {
+            "id": "photo-1598928506311-c55ded91a20c",
+            "src": "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A bedroom kept dark, with curtains half drawn across a wide window.",
+            "caption": "The main bedroom, kept dark, facing the channel.",
+            "room": "Bedroom"
+          }
+        ]
+      },
+      {
+        "slug": "121",
+        "number": "121",
+        "name": "No. 121",
+        "type": "harbor",
+        "typeLabel": "Harbor residence",
+        "block": "Path",
+        "floor": 1,
+        "floorLabel": "First floor",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "interiorSqm": 101,
+        "outdoorSqm": 19,
+        "outdoorLabel": "Terrace",
+        "orientation": "West, over the garden to the channel",
+        "status": "available",
+        "completion": "Q2 2027",
+        "description": "The living room sits over the garden, with the channel beyond the trees. A low hearth stands on the inland wall.",
+        "features": [
+          "Terrace over the water",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "One parking bay",
+          "Cycle store",
+          "Heat pump",
+          "Storage room"
+        ],
+        "schematic": {
+          "src": "/residences/key-121.svg",
+          "alt": "Key plan: Harbor residence No. 121 marked on the First floor of the Path block.",
+          "caption": "Key plan — where No. 121 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-121.svg",
+          "alt": "Floor plan: No. 121, 2 bedrooms, 101 m² inside and 19 m² of terrace.",
+          "caption": "Floor plan — No. 121, 101 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1616137466211-f939a420be84",
+            "src": "https://images.unsplash.com/photo-1616137466211-f939a420be84?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A living room with a low fireplace, pale walls, and two sofas.",
+            "caption": "A low hearth on the inland wall.",
+            "room": "By the hearth"
+          },
+          {
+            "id": "photo-1600121848594-d8644e57abab",
+            "src": "https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A grey living room with a long window and a low shelf along one wall.",
+            "caption": "A long window, and a shelf the length of the wall.",
+            "room": "Along the window"
+          },
+          {
+            "id": "photo-1600566752355-35792bedcfea",
+            "src": "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A bathroom in dark stone with a free-standing bath under a high window.",
+            "caption": "Dark stone, and a bath under the high window.",
+            "room": "Bathroom"
+          }
+        ]
+      },
+      {
+        "slug": "122",
+        "number": "122",
+        "name": "No. 122",
+        "type": "harbor",
+        "typeLabel": "Harbor residence",
+        "block": "Path",
+        "floor": 1,
+        "floorLabel": "First floor",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "interiorSqm": 98,
+        "outdoorSqm": 16,
+        "outdoorLabel": "Terrace",
+        "orientation": "West, over the garden to the channel",
+        "status": "reserved",
+        "completion": "Q2 2027",
+        "description": "Two bedrooms off a short hall, with the living room and kitchen in one room along the garden front. A storage room sits at the stair.",
+        "features": [
+          "Terrace over the water",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "One parking bay",
+          "Cycle store",
+          "Heat pump",
+          "Storage room"
+        ],
+        "schematic": {
+          "src": "/residences/key-122.svg",
+          "alt": "Key plan: Harbor residence No. 122 marked on the First floor of the Path block.",
+          "caption": "Key plan — where No. 122 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-122.svg",
+          "alt": "Floor plan: No. 122, 2 bedrooms, 98 m² inside and 16 m² of terrace.",
+          "caption": "Floor plan — No. 122, 98 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1600121848594-d8644e57abab",
+            "src": "https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A grey living room with a long window and a low shelf along one wall.",
+            "caption": "A long window, and a shelf the length of the wall.",
+            "room": "Along the window"
+          },
+          {
+            "id": "photo-1519710164239-da123dc03ef4",
+            "src": "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A white corner with an arc lamp, a small table, and two chairs.",
+            "caption": "A corner kept for reading, by the window.",
+            "room": "Reading corner"
+          },
+          {
+            "id": "photo-1476514525535-07fb3b4ae5f1",
+            "src": "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A wooden boat on still water with low hills behind it.",
+            "caption": "The channel off the quay, on a still morning.",
+            "room": "The water"
+          }
+        ]
+      },
+      {
+        "slug": "211",
+        "number": "211",
+        "name": "No. 211",
+        "type": "harbor",
+        "typeLabel": "Harbor residence",
+        "block": "Quay",
+        "floor": 2,
+        "floorLabel": "Second floor",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "interiorSqm": 103,
+        "outdoorSqm": 21,
+        "outdoorLabel": "Terrace",
+        "orientation": "South-west, over the water",
+        "status": "available",
+        "completion": "Q4 2027",
+        "description": "One floor higher, so the terrace clears the jetty roof and reads straight out to the channel mouth. The ceiling is a little taller than the floor below.",
+        "features": [
+          "Terrace over the water",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "One parking bay",
+          "Cycle store",
+          "Heat pump",
+          "Storage room"
+        ],
+        "schematic": {
+          "src": "/residences/key-211.svg",
+          "alt": "Key plan: Harbor residence No. 211 marked on the Second floor of the Quay block.",
+          "caption": "Key plan — where No. 211 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-211.svg",
+          "alt": "Floor plan: No. 211, 2 bedrooms, 103 m² inside and 21 m² of terrace.",
+          "caption": "Floor plan — No. 211, 103 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1507089947368-19c1da9775ae",
+            "src": "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A living room with pale walls, long windows, and a cased ceiling.",
+            "caption": "Long windows on the water side of the room.",
+            "room": "Window wall"
+          },
+          {
+            "id": "photo-1600573472591-ee6b68d14c68",
+            "src": "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A sliding door open onto a terrace with a single chair and water beyond.",
+            "caption": "The terrace door stays open most of the summer.",
+            "room": "Terrace"
+          },
+          {
+            "id": "photo-1439066615861-d1af74d74000",
+            "src": "https://images.unsplash.com/photo-1439066615861-d1af74d74000?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A wooden jetty reaching into still water under a clear sky.",
+            "caption": "The jetty below the building, early in the morning.",
+            "room": "The jetty"
+          },
+          {
+            "id": "photo-1598928506311-c55ded91a20c",
+            "src": "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A bedroom kept dark, with curtains half drawn across a wide window.",
+            "caption": "The main bedroom, kept dark, facing the channel.",
+            "room": "Bedroom"
+          }
+        ]
+      },
+      {
+        "slug": "212",
+        "number": "212",
+        "name": "No. 212",
+        "type": "harbor",
+        "typeLabel": "Harbor residence",
+        "block": "Quay",
+        "floor": 2,
+        "floorLabel": "Second floor",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "interiorSqm": 100,
+        "outdoorSqm": 17,
+        "outdoorLabel": "Terrace",
+        "orientation": "South-west, over the water",
+        "status": "available",
+        "completion": "Q4 2027",
+        "description": "The plan repeats 112 a floor up, with the kitchen moved to the inland wall. That leaves the whole water side of the room to the windows.",
+        "features": [
+          "Terrace over the water",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "One parking bay",
+          "Cycle store",
+          "Heat pump",
+          "Storage room"
+        ],
+        "schematic": {
+          "src": "/residences/key-212.svg",
+          "alt": "Key plan: Harbor residence No. 212 marked on the Second floor of the Quay block.",
+          "caption": "Key plan — where No. 212 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-212.svg",
+          "alt": "Floor plan: No. 212, 2 bedrooms, 100 m² inside and 17 m² of terrace.",
+          "caption": "Floor plan — No. 212, 100 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1600607687939-ce8a6c25118c",
+            "src": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A tall living room with a timber wall and a window the height of the room.",
+            "caption": "One timber wall, and a window the height of the room.",
+            "room": "Living room"
+          },
+          {
+            "id": "photo-1616486338812-3dadae4b4ace",
+            "src": "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A pale living room with a round table, a low sofa, and a woven rug.",
+            "caption": "A round table at the window end of the room.",
+            "room": "Dining end"
+          },
+          {
+            "id": "photo-1476514525535-07fb3b4ae5f1",
+            "src": "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A wooden boat on still water with low hills behind it.",
+            "caption": "The channel off the quay, on a still morning.",
+            "room": "The water"
+          }
+        ]
+      },
+      {
+        "slug": "221",
+        "number": "221",
+        "name": "No. 221",
+        "type": "harbor",
+        "typeLabel": "Harbor residence",
+        "block": "Path",
+        "floor": 2,
+        "floorLabel": "Second floor",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "interiorSqm": 97,
+        "outdoorSqm": 15,
+        "outdoorLabel": "Terrace",
+        "orientation": "West, over the garden to the channel",
+        "status": "sold",
+        "completion": "Q4 2027",
+        "description": "The last of the Path harbor homes. Two bedrooms, one bath and one shower room, and a terrace at the south end of the living room.",
+        "features": [
+          "Terrace over the water",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "One parking bay",
+          "Cycle store",
+          "Heat pump",
+          "Storage room"
+        ],
+        "schematic": {
+          "src": "/residences/key-221.svg",
+          "alt": "Key plan: Harbor residence No. 221 marked on the Second floor of the Path block.",
+          "caption": "Key plan — where No. 221 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-221.svg",
+          "alt": "Floor plan: No. 221, 2 bedrooms, 97 m² inside and 15 m² of terrace.",
+          "caption": "Floor plan — No. 221, 97 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1503174971373-b1f69850bded",
+            "src": "https://images.unsplash.com/photo-1503174971373-b1f69850bded?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A living room opening onto a terrace through a wall of glass.",
+            "caption": "The living room opens the full width of the terrace.",
+            "room": "Living room"
+          },
+          {
+            "id": "photo-1616137466211-f939a420be84",
+            "src": "https://images.unsplash.com/photo-1616137466211-f939a420be84?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A living room with a low fireplace, pale walls, and two sofas.",
+            "caption": "A low hearth on the inland wall.",
+            "room": "By the hearth"
+          },
+          {
+            "id": "photo-1519710164239-da123dc03ef4",
+            "src": "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A white corner with an arc lamp, a small table, and two chairs.",
+            "caption": "A corner kept for reading, by the window.",
+            "room": "Reading corner"
+          }
+        ]
+      },
+      {
+        "slug": "311",
+        "number": "311",
+        "name": "No. 311",
+        "type": "penthouse",
+        "typeLabel": "Penthouse residence",
+        "block": "Quay",
+        "floor": 3,
+        "floorLabel": "Roof level",
+        "bedrooms": 3,
+        "bathrooms": 3,
+        "interiorSqm": 164,
+        "outdoorSqm": 48,
+        "outdoorLabel": "Solarium",
+        "orientation": "South-west, over the water",
+        "status": "available",
+        "completion": "Q4 2027",
+        "description": "The top of the Quay block, under the pitch of the roof. A stair off the hall goes up to a solarium with the channel on one side and the hills on the other.",
+        "features": [
+          "Roof solarium",
+          "Own stair to the roof",
+          "Ceilings to the roof pitch",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "Two parking bays",
+          "Heat pump"
+        ],
+        "schematic": {
+          "src": "/residences/key-311.svg",
+          "alt": "Key plan: Penthouse residence No. 311 marked on the Roof level of the Quay block.",
+          "caption": "Key plan — where No. 311 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-311.svg",
+          "alt": "Floor plan: No. 311, 3 bedrooms, 164 m² inside and 48 m² of solarium.",
+          "caption": "Floor plan — No. 311, 164 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1618221195710-dd6b41faaea6",
+            "src": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A living room under a timber ceiling with a low seating group.",
+            "caption": "The ceiling follows the pitch of the roof.",
+            "room": "Living room"
+          },
+          {
+            "id": "photo-1600566753086-00f18fb6b3ea",
+            "src": "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A timber and steel stair rising from a pale living room to a roof hatch.",
+            "caption": "The stair from the living room to the solarium.",
+            "room": "To the roof"
+          },
+          {
+            "id": "photo-1617104678098-de229db51175",
+            "src": "https://images.unsplash.com/photo-1617104678098-de229db51175?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A bedroom in dark tones looking out into trees through a wide window.",
+            "caption": "The second bedroom looks inland, into the trees.",
+            "room": "Bedroom"
+          }
+        ]
+      },
+      {
+        "slug": "312",
+        "number": "312",
+        "name": "No. 312",
+        "type": "penthouse",
+        "typeLabel": "Penthouse residence",
+        "block": "Quay",
+        "floor": 3,
+        "floorLabel": "Roof level",
+        "bedrooms": 4,
+        "bathrooms": 3,
+        "interiorSqm": 186,
+        "outdoorSqm": 72,
+        "outdoorLabel": "Solarium",
+        "orientation": "South-west, over the water",
+        "status": "reserved",
+        "completion": "Q4 2027",
+        "description": "Four bedrooms and a room long enough to dine at one end and sit at the other. A roof light runs over the dining table. The solarium takes the whole west corner.",
+        "features": [
+          "Roof solarium",
+          "Own stair to the roof",
+          "Ceilings to the roof pitch",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "Two parking bays",
+          "Heat pump"
+        ],
+        "schematic": {
+          "src": "/residences/key-312.svg",
+          "alt": "Key plan: Penthouse residence No. 312 marked on the Roof level of the Quay block.",
+          "caption": "Key plan — where No. 312 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-312.svg",
+          "alt": "Floor plan: No. 312, 4 bedrooms, 186 m² inside and 72 m² of solarium.",
+          "caption": "Floor plan — No. 312, 186 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1600607687920-4e2a09cf159d",
+            "src": "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A long black dining table under a roof light, with a stair behind it.",
+            "caption": "The dining table sits under the roof light.",
+            "room": "Dining"
+          },
+          {
+            "id": "photo-1604014237800-1c9102c219da",
+            "src": "https://images.unsplash.com/photo-1604014237800-1c9102c219da?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A long room with a timber wall, a dining end, and a view west.",
+            "caption": "The room runs the depth of the building, west to east.",
+            "room": "Living room"
+          },
+          {
+            "id": "photo-1616594039964-ae9021a400a0",
+            "src": "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A bedroom with heavy curtains and a bench at the foot of the bed.",
+            "caption": "Heavy curtains, and a bench at the foot of the bed.",
+            "room": "Bedroom"
+          },
+          {
+            "id": "photo-1600585153490-76fb20a32601",
+            "src": "https://images.unsplash.com/photo-1600585153490-76fb20a32601?auto=format&fit=crop&w=1800&q=80",
+            "alt": "The top of a dark timber building lit from within at dusk.",
+            "caption": "The top of the building, lit from inside at dusk.",
+            "room": "At dusk"
+          }
+        ]
+      },
+      {
+        "slug": "321",
+        "number": "321",
+        "name": "No. 321",
+        "type": "penthouse",
+        "typeLabel": "Penthouse residence",
+        "block": "Path",
+        "floor": 3,
+        "floorLabel": "Roof level",
+        "bedrooms": 3,
+        "bathrooms": 3,
+        "interiorSqm": 171,
+        "outdoorSqm": 54,
+        "outdoorLabel": "Solarium",
+        "orientation": "West, over the garden to the channel",
+        "status": "available",
+        "completion": "Q4 2027",
+        "description": "Three bedrooms along the inland wall and one long room facing the garden. The stair to the roof rises out of the living room rather than the hall.",
+        "features": [
+          "Roof solarium",
+          "Own stair to the roof",
+          "Ceilings to the roof pitch",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "Two parking bays",
+          "Heat pump"
+        ],
+        "schematic": {
+          "src": "/residences/key-321.svg",
+          "alt": "Key plan: Penthouse residence No. 321 marked on the Roof level of the Path block.",
+          "caption": "Key plan — where No. 321 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-321.svg",
+          "alt": "Floor plan: No. 321, 3 bedrooms, 171 m² inside and 54 m² of solarium.",
+          "caption": "Floor plan — No. 321, 171 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1615529182904-14819c35db37",
+            "src": "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1800&q=80",
+            "alt": "Woven pendant lights hung low over a pale seating group.",
+            "caption": "Pendants hung low over the seating group.",
+            "room": "Seating group"
+          },
+          {
+            "id": "photo-1567767292278-a4f21aa2d36e",
+            "src": "https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A pale living room with tall plants and a glass table.",
+            "caption": "Tall plants at the corner window.",
+            "room": "Corner window"
+          },
+          {
+            "id": "photo-1600566753086-00f18fb6b3ea",
+            "src": "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A timber and steel stair rising from a pale living room to a roof hatch.",
+            "caption": "The stair from the living room to the solarium.",
+            "room": "To the roof"
+          }
+        ]
+      },
+      {
+        "slug": "322",
+        "number": "322",
+        "name": "No. 322",
+        "type": "penthouse",
+        "typeLabel": "Penthouse residence",
+        "block": "Path",
+        "floor": 3,
+        "floorLabel": "Roof level",
+        "bedrooms": 4,
+        "bathrooms": 3,
+        "interiorSqm": 198,
+        "outdoorSqm": 86,
+        "outdoorLabel": "Solarium",
+        "orientation": "West, over the garden to the channel",
+        "status": "available",
+        "completion": "Q4 2027",
+        "description": "The largest home at Aurelia, on the corner of the Path block. Four bedrooms, three baths, and a solarium that keeps the sun from the middle of the morning until it goes down over the water.",
+        "features": [
+          "Roof solarium",
+          "Own stair to the roof",
+          "Ceilings to the roof pitch",
+          "Underfloor heating",
+          "Stone floors",
+          "Timber joinery",
+          "Two parking bays",
+          "Heat pump"
+        ],
+        "schematic": {
+          "src": "/residences/key-322.svg",
+          "alt": "Key plan: Penthouse residence No. 322 marked on the Roof level of the Path block.",
+          "caption": "Key plan — where No. 322 sits on its floor."
+        },
+        "plan": {
+          "src": "/residences/plan-322.svg",
+          "alt": "Floor plan: No. 322, 4 bedrooms, 198 m² inside and 86 m² of solarium.",
+          "caption": "Floor plan — No. 322, 198 m²."
+        },
+        "photos": [
+          {
+            "id": "photo-1604014237800-1c9102c219da",
+            "src": "https://images.unsplash.com/photo-1604014237800-1c9102c219da?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A long room with a timber wall, a dining end, and a view west.",
+            "caption": "The room runs the depth of the building, west to east.",
+            "room": "Living room"
+          },
+          {
+            "id": "photo-1600210492486-724fe5c67fb0",
+            "src": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A living room with a leather sofa and a wall hung with framed prints.",
+            "caption": "A leather sofa, and a wall kept for framed prints.",
+            "room": "Sitting room"
+          },
+          {
+            "id": "photo-1616594039964-ae9021a400a0",
+            "src": "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1800&q=80",
+            "alt": "A bedroom with heavy curtains and a bench at the foot of the bed.",
+            "caption": "Heavy curtains, and a bench at the foot of the bed.",
+            "room": "Bedroom"
+          },
+          {
+            "id": "photo-1600585153490-76fb20a32601",
+            "src": "https://images.unsplash.com/photo-1600585153490-76fb20a32601?auto=format&fit=crop&w=1800&q=80",
+            "alt": "The top of a dark timber building lit from within at dusk.",
+            "caption": "The top of the building, lit from inside at dusk.",
+            "room": "At dusk"
+          }
+        ]
+      }
+    ]
+  }
+}

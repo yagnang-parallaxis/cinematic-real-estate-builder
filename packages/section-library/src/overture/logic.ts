@@ -10,5 +10,8 @@ export function archRadius(widthPercent: number): string {
 
 /** Lines beyond the third would push the arch below the fold on a laptop. */
 export function clampLines(lines: string[], max = 3): string[] {
-  return lines.map((line) => line.trim()).filter(Boolean).slice(0, max);
+  return lines
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .slice(0, max);
 }

@@ -9,6 +9,7 @@ import {
   clampStatementLines,
   hasAccents,
   headingClass,
+  headingTier,
   isOverMedia,
 } from "./logic";
 import type { StatementContent } from "./types";
@@ -52,7 +53,11 @@ export function Statement({ content }: { content: StatementContent }) {
         {hasAccents(content) ? (
           <div className="statement-accents" aria-hidden="true">
             {content.imageSrc ? (
-              <Parallax role="bed" intensity={0.8} className="statement-accent statement-accent-l">
+              <Parallax
+                role="bed"
+                intensity={0.8}
+                className="statement-accent statement-accent-l decor-safe"
+              >
                 <Reveal variant="media">
                   <img src={content.imageSrc} alt="" />
                 </Reveal>
@@ -62,7 +67,7 @@ export function Statement({ content }: { content: StatementContent }) {
               <Parallax
                 role="accent"
                 intensity={0.8}
-                className="statement-accent statement-accent-r"
+                className="statement-accent statement-accent-r decor-safe"
               >
                 <Reveal variant="media" delay={0.08}>
                   <img src={content.secondaryImageSrc} alt="" />
@@ -77,6 +82,7 @@ export function Statement({ content }: { content: StatementContent }) {
           as="h2"
           stagger={0.09}
           className={cn(headingClass(content.variant), "statement-heading")}
+          fit={headingTier(content.variant)}
         />
 
         {content.body ? (
@@ -85,8 +91,13 @@ export function Statement({ content }: { content: StatementContent }) {
           </Reveal>
         ) : null}
 
+        {/*
+         * The row is not `statement-figures`: the section already carries that
+         * class as its variant, and sharing the name made the section itself a
+         * flex row, which broke the heading's measure.
+         */}
         {figures.length ? (
-          <Reveal variant="block" stagger={0.08} delay={0.14} className="statement-figures">
+          <Reveal variant="block" stagger={0.08} delay={0.14} className="statement-figure-row">
             {figures.map((figure) => (
               <div key={figure.label} className="statement-figure">
                 <p className="t-h4 statement-figure-value">{figure.value}</p>

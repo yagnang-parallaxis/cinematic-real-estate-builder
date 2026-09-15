@@ -1,8 +1,13 @@
+import type { FitTier } from "@cinematic/ui";
+
 import type { StatementContent, StatementFigure, StatementVariant } from "./types";
 
 /** A statement is one thought; past four lines it stops reading as one. */
 export function clampStatementLines(lines: string[], max = 4): string[] {
-  return lines.map((line) => line.trim()).filter(Boolean).slice(0, max);
+  return lines
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .slice(0, max);
 }
 
 /** The figures row is laid out as a single line, so it caps at four columns. */
@@ -23,12 +28,23 @@ export function isOverMedia(variant: StatementVariant): boolean {
 }
 
 /** The heading tier steps down as the variant carries more supporting content. */
-export function headingClass(variant: StatementVariant): string {
-  if (variant === "panorama") {
-    return "t-display";
+export function headingTier(variant: StatementVariant): FitTier {
+  switch (variant) {
+    case "panorama":
+      return "display";
+    case "figures":
+      return "h3";
+    case "callout":
+      return "h2";
+    default: {
+      const exhaustive: never = variant;
+      return exhaustive;
+    }
   }
+}
 
-  return variant === "figures" ? "t-h3" : "t-h2";
+export function headingClass(variant: StatementVariant): string {
+  return `t-${headingTier(variant)}`;
 }
 
 export function hasAccents(content: StatementContent): boolean {

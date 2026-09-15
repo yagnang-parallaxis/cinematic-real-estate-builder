@@ -6,6 +6,7 @@ import {
   clamp01,
   clampIndex,
   floralAccentsForPanel,
+  decorativeMediaShouldPlay,
   formatCount,
   labelAlign,
   labelPlacement,
@@ -15,6 +16,7 @@ import {
   revealedWaypointCount,
   smoothApproach,
   stripIndex,
+  textClearsViewportEdge,
   toPercent,
   trackTranslation,
 } from "./logic";
@@ -314,5 +316,25 @@ describe("floralAccentsForPanel", () => {
       { place: "intro-top-left", corner: "top-left", src: "/flowers/a.webm" },
     ]);
     expect(floralAccentsForPanel(undefined, "intro")).toEqual([]);
+  });
+});
+
+describe("decorativeMediaShouldPlay", () => {
+  it("plays only while the clip has a visible box", () => {
+    expect(decorativeMediaShouldPlay(true, 0.4)).toBe(true);
+    expect(decorativeMediaShouldPlay(true, 0)).toBe(false);
+    expect(decorativeMediaShouldPlay(false, 0.9)).toBe(false);
+  });
+});
+
+describe("textClearsViewportEdge", () => {
+  it("rejects copy that meets either viewport edge", () => {
+    expect(textClearsViewportEdge({ left: 0, right: 400 }, 1440, 208)).toBe(false);
+    expect(textClearsViewportEdge({ left: 1200, right: 1440 }, 1440, 208)).toBe(false);
+  });
+
+  it("accepts copy that sits inside the chrome columns", () => {
+    expect(textClearsViewportEdge({ left: 208, right: 1232 }, 1440, 208)).toBe(true);
+    expect(textClearsViewportEdge({ left: 98, right: 292 }, 390, 98)).toBe(true);
   });
 });

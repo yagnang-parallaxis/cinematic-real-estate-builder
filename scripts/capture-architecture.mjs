@@ -4,7 +4,11 @@ import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 
 const url = process.env.PROTOTYPE_URL ?? "http://localhost:3000";
-const outDir = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", ".screenshots/architecture");
+const outDir = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+  ".screenshots/architecture",
+);
 await mkdir(outDir, { recursive: true });
 
 const viewports = [

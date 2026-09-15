@@ -27,6 +27,7 @@ Thumbs.db
 
 # Local verification
 .screenshots
+.docker-data
 apps/**/AGENTS.md
 apps/**/CLAUDE.md
 

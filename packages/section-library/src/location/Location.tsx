@@ -4,11 +4,8 @@ import { useEffect, useRef, type CSSProperties } from "react";
 
 import { Reveal, RevealLines } from "../shared/Reveal";
 import { Section } from "../shared/Section";
-import {
-  cloudLanes,
-  CLOUD_SHAPES_PER_LANE,
-  panProgress,
-} from "./logic";
+import { useFitText } from "../shared/useFitText";
+import { cloudLanes, CLOUD_SHAPES_PER_LANE, panProgress } from "./logic";
 import type { LocationContent } from "./types";
 
 const shapes = Array.from({ length: CLOUD_SHAPES_PER_LANE }, (_, index) => index);
@@ -27,6 +24,15 @@ export function Location({ content }: { content: LocationContent }) {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const frameRef = useRef<HTMLDivElement | null>(null);
   const lanes = cloudLanes();
+  /*
+   * The plaque is the fit scope rather than the heading, because the script
+   * shore beside the place name has to be reduced by the same amount to keep
+   * its ratio to the caps — the same relationship the hero lockup has.
+   */
+  const [plaqueRef, plaqueFit, plaqueReady] = useFitText<HTMLDivElement>(
+    ".location-place .reveal-line-inner, .location-shore",
+    content.placeLines.join("|"),
+  );
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -131,7 +137,12 @@ export function Location({ content }: { content: LocationContent }) {
 
           <div className="location-veil" aria-hidden="true" />
 
-          <div className="location-plaque">
+          <div
+            ref={plaqueRef}
+            className="location-plaque"
+            data-fit-ready={plaqueReady ? "true" : undefined}
+            style={{ "--fit": plaqueFit } as CSSProperties}
+          >
             <RevealLines
               lines={[content.placeLines[0] ?? ""]}
               as="h2"

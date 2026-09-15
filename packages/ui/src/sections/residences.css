@@ -66,10 +66,10 @@
   color: color-mix(in oklab, currentColor 62%, transparent);
 }
 
+/* Fitted, so the authored lines hold and there is nothing left to balance. */
 .residence-grid .residence-grid-heading {
   margin: 0;
   line-height: 0.94;
-  text-wrap: balance;
 }
 
 .residence-grid-intro {
@@ -893,12 +893,20 @@
 /* Compact: media above info, and the media row becomes a swipe strip. */
 
 @media (max-width: 991px) {
+  /*
+   * Both headings are fitted, so compact steps the tier down rather than the
+   * rendered size: the fit then works to the smaller tier's measure.
+   */
   .residence-grid .residence-grid-heading {
-    font-size: calc(64vw / var(--type-scale-ratio));
+    --fit-size: var(--text-h2);
   }
 
   .residence-detail .residence-detail-name {
-    font-size: calc(80vw / var(--type-scale-ratio));
+    --fit-size: var(--text-h1);
+  }
+
+  .residence-grid-shell {
+    padding-left: calc(var(--nav-offset) + var(--nav-cell));
   }
 
   .residence-grid-controls {
@@ -979,21 +987,15 @@
   }
 
   /* The lifted card has to sit above its neighbours for the shadow to read. */
-  .residence-card-item:hover,
   .residence-card-item:focus-within {
     z-index: 2;
   }
 
-  .residence-card:hover,
   .residence-card:focus-visible {
     translate: 0 calc(-8vw / var(--type-scale-ratio));
     border-color: color-mix(in oklab, currentColor 32%, transparent);
     box-shadow: 0 calc(24vw / var(--type-scale-ratio)) calc(48vw / var(--type-scale-ratio))
       color-mix(in oklab, currentColor 16%, transparent);
-  }
-
-  .residence-card:hover .residence-card-schematic {
-    scale: 1.03;
   }
 
   .residence-similar-list {
@@ -1004,11 +1006,6 @@
     transition:
       translate var(--dur-m) var(--ease-out),
       border-color var(--dur-s) var(--ease-out);
-  }
-
-  .residence-similar-card:hover {
-    translate: 0 calc(-6vw / var(--type-scale-ratio));
-    border-color: color-mix(in oklab, currentColor 32%, transparent);
   }
 
   .residence-detail-split {
@@ -1056,11 +1053,6 @@
     transition: opacity var(--hover-dur) var(--hover-ease);
   }
 
-  .residence-media-button:hover .residence-media-image[data-fit="cover"] {
-    scale: 1.045;
-  }
-
-  .residence-media-button:hover .residence-media-expand,
   .residence-media-button:focus-visible .residence-media-expand {
     opacity: 1;
   }
@@ -1076,6 +1068,36 @@
 
   .residence-lightbox-step {
     pointer-events: auto;
+  }
+}
+
+@media (min-width: 992px) and (hover: hover) and (pointer: fine) {
+  .residence-card-item:hover {
+    z-index: 2;
+  }
+
+  .residence-card:hover {
+    translate: 0 calc(-8vw / var(--type-scale-ratio));
+    border-color: color-mix(in oklab, currentColor 32%, transparent);
+    box-shadow: 0 calc(24vw / var(--type-scale-ratio)) calc(48vw / var(--type-scale-ratio))
+      color-mix(in oklab, currentColor 16%, transparent);
+  }
+
+  .residence-card:hover .residence-card-schematic {
+    scale: 1.03;
+  }
+
+  .residence-similar-card:hover {
+    translate: 0 calc(-6vw / var(--type-scale-ratio));
+    border-color: color-mix(in oklab, currentColor 32%, transparent);
+  }
+
+  .residence-media-button:hover .residence-media-image[data-fit="cover"] {
+    scale: 1.045;
+  }
+
+  .residence-media-button:hover .residence-media-expand {
+    opacity: 1;
   }
 
   .residence-lightbox-step:hover {

@@ -10,8 +10,11 @@ export const storyArch: ArchRevealContent = {
   tone: "color",
   label: "Into the three reasons to return",
   curvedText: "Three reasons to return",
-  /** Raise to spread words further along the curve; lower to keep them tighter. */
-  curvedWordSpacing: 1.15,
+  /**
+   * The full spread: the words open across the rise until the line covers what
+   * the reference's does at the closed dome. Lower it to keep them tighter.
+   */
+  curvedWordSpacing: 1,
   leftCaption: "North",
   rightCaption: "Coast",
   tagline: ["A place to live —", "to return year after year"],

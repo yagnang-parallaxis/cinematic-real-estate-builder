@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 
 import { Reveal } from "../shared/Reveal";
 import { Section } from "../shared/Section";
+import { lockScroll } from "../shared/scroll-lock";
 import {
   clampRotationMs,
   cycleWordIndex,
@@ -98,13 +99,11 @@ export function Interiors({ content }: { content: InteriorsContent }) {
     }
 
     const trigger = triggerRef.current;
-    const { body } = document;
-    const previousOverflow = body.style.overflow;
-    body.style.overflow = "hidden";
+    const unlock = lockScroll();
     closeRef.current?.focus();
 
     return () => {
-      body.style.overflow = previousOverflow;
+      unlock();
       trigger?.focus();
     };
   }, [isOpen]);
@@ -201,7 +200,7 @@ export function Interiors({ content }: { content: InteriorsContent }) {
           </Reveal>
 
           <div ref={headingRef} className="interiors-heading-wrap">
-            <Reveal as="h2" variant="mask" className="t-display interiors-heading">
+            <Reveal as="h2" variant="mask" className="t-h1 interiors-heading">
               {content.headingPrefix}{" "}
               <span className="interiors-word">
                 {content.rotatingWords.map((word, index) => (

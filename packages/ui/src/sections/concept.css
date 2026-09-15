@@ -133,7 +133,7 @@
   justify-content: center;
   gap: var(--space-24);
   width: 100%;
-  padding-inline: var(--nav-offset);
+  padding-inline: max(var(--nav-offset), var(--gutter-x));
   scroll-snap-align: center;
   scroll-snap-stop: always;
 }
@@ -144,10 +144,12 @@
 
 .concept-heading {
   max-width: 22ch;
+  min-width: 0;
 }
 
 .concept-copy {
   width: min(100%, calc(560vw / var(--type-scale-ratio)));
+  min-width: 0;
 }
 
 .concept-aside {
@@ -340,6 +342,8 @@
     height: 100vh;
     overflow: hidden;
     padding-block: var(--nav-offset);
+    /* Copy and labels cannot paint into the chrome columns as the track slides. */
+    clip-path: inset(0 var(--gutter-x));
   }
 
   /* Brow overlays the full-viewport slides so floral corners can sit on
@@ -357,8 +361,9 @@
   }
 
   .concept-floral[data-place="intro-top-left"] {
+    top: var(--gutter-top);
     width: clamp(38rem, 56vw, 54rem);
-    translate: -6% -12%;
+    translate: -6% 0;
   }
 
   /* Planted on the floor of each track join, centred so half reads on
@@ -383,9 +388,15 @@
     left: 200vw;
   }
 
+  /*
+   * The fixed nav rail owns this corner. The spray is seated below the chrome
+   * band instead of in it — dark ink on magenta petals was the one place on
+   * the page where the navigation stopped being readable.
+   */
   .concept-floral[data-place="route-top-right"] {
-    width: clamp(36rem, 50vw, 48rem);
-    translate: 8% -16%;
+    top: var(--gutter-top);
+    width: clamp(24rem, 30vw, 32rem);
+    translate: 34% 0;
   }
 
   /* The track fills the sticky screen; each panel is one viewport, so a
@@ -414,9 +425,15 @@
 
   /* Fade the copy, never the flowers — they stay at full strength as
      their panel slides through. */
-  .concept-panel[data-state="coming"] > *:not(.concept-floral),
+  .concept-panel[data-state="coming"] > *:not(.concept-floral) {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur-l) var(--ease-out);
+  }
+
   .concept-panel[data-state="past"] > *:not(.concept-floral) {
-    opacity: 0.4;
+    opacity: 0;
+    pointer-events: none;
     transition: opacity var(--dur-l) var(--ease-out);
   }
 
@@ -478,7 +495,8 @@
     left: 50%;
     display: block;
     width: max-content;
-    max-width: calc(220vw / var(--type-scale-ratio));
+    max-width: min(calc(220vw / var(--type-scale-ratio)), 42%);
+    overflow-wrap: anywhere;
     translate: -50% 0;
     text-align: center;
   }
@@ -543,6 +561,7 @@
     position: static;
     height: auto;
     overflow: visible;
+    clip-path: none;
   }
 
   .concept-track {

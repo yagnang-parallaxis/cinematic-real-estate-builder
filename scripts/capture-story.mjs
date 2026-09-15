@@ -25,7 +25,7 @@ async function prepare(page, band = "intro") {
     const story = document.querySelector("#story");
     const intro = document.querySelector(".story-intro");
     const browserEl = document.querySelector(".story-browser");
-    const node = target === "browser" ? browserEl : intro ?? story;
+    const node = target === "browser" ? browserEl : (intro ?? story);
     node?.scrollIntoView({ block: "start" });
   }, band);
   await page.waitForTimeout(800);

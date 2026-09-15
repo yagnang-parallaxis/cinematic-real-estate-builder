@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { fitScale, headingLines, shouldShowCta } from "./logic";
+import { headingLines, shouldShowCta } from "./logic";
 import type { ArchitectureContent } from "./types";
 
 const sample: ArchitectureContent = {
@@ -37,29 +37,6 @@ describe("headingLines", () => {
   it("falls back to the heading when headingLines is empty", () => {
     const emptyLines = { ...sample, headingLines: [] };
     expect(headingLines(emptyLines)).toEqual(["Stone that remembers the tide."]);
-  });
-});
-
-describe("fitScale", () => {
-  it("keeps a short line at full scale", () => {
-    expect(fitScale("Architecture")).toBe(1);
-  });
-
-  it("shrinks a long line proportionally to its length", () => {
-    const long = "Stone that remembers the tide and the years that came before it.";
-    const shorter = "Stone that remembers.";
-    expect(fitScale(long)).toBeLessThan(fitScale(shorter));
-    expect(fitScale(long)).toBeLessThan(1);
-  });
-
-  it("never shrinks past the minimum scale, however long the line", () => {
-    const veryLong = "A".repeat(400);
-    expect(fitScale(veryLong)).toBeGreaterThanOrEqual(0.55);
-  });
-
-  it("treats an empty or whitespace-only line as full scale", () => {
-    expect(fitScale("")).toBe(1);
-    expect(fitScale("   ")).toBe(1);
   });
 });
 

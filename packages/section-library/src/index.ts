@@ -96,6 +96,7 @@ export {
   resolveHref,
   routeAnnouncement,
   shouldInterceptNavigation,
+  shouldPlayPageTransition,
   TRANSITION_MS,
   transitionMs,
 } from "./transition/logic";
@@ -126,6 +127,8 @@ export type {
 
 /* Shared primitives */
 export { CircleCta } from "./shared/CircleCta";
+export { FIT_FLOOR, fitScale, quantiseScale } from "./shared/fit-text";
+export { useFitText } from "./shared/useFitText";
 export { Parallax } from "./shared/Parallax";
 export type { ParallaxRole } from "./shared/Parallax";
 export { Reveal, RevealLines } from "./shared/Reveal";

@@ -5,7 +5,7 @@ import { useRef, useState, type MouseEvent } from "react";
 
 import { magneticOffset } from "../hero/logic";
 import { HoverSlide } from "../shared/HoverSlide";
-import { fitScale, headingLines, shouldShowCta } from "./logic";
+import { headingLines, shouldShowCta } from "./logic";
 import type { ArchitectureContent } from "./types";
 
 export function Architecture({ content }: { content: ArchitectureContent }) {
@@ -26,7 +26,11 @@ export function Architecture({ content }: { content: ArchitectureContent }) {
 
   return (
     <section id="architecture" data-tone="media" data-nav-tone="on-media" className="architecture">
-      <Animated type="parallax" config={{ intensity: 0.6, direction: "up" }} className="architecture-media">
+      <Animated
+        type="parallax"
+        config={{ intensity: 0.6, direction: "up" }}
+        className="architecture-media"
+      >
         <img src={content.imageSrc} alt="" className="architecture-image" />
       </Animated>
       <div className="architecture-grade architecture-grade-top" />
@@ -45,14 +49,10 @@ export function Architecture({ content }: { content: ArchitectureContent }) {
           type="textReveal"
           as="h2"
           config={{ duration: 1, delay: 0.06, trigger: "on-load" }}
-          className="t-display architecture-heading"
+          className="t-h2 architecture-heading"
         >
           {lines.map((line) => (
-            <span
-              key={line}
-              className="architecture-heading-line"
-              style={{ fontSize: `calc(var(--text-display) * ${fitScale(line)})` }}
-            >
+            <span key={line} className="architecture-heading-line">
               {line}
             </span>
           ))}

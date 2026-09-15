@@ -1,6 +1,16 @@
 import { describe, expect, it } from "vitest";
 
-import { brandLeaveProgress, clampHotspots, lockupChars, magneticOffset, resolveHeroMedia } from "./logic";
+import {
+  brandLeaveProgress,
+  clampHotspots,
+  heroFocusPercent,
+  heroIntroReady,
+  heroNavTone,
+  heroRunwaySvh,
+  lockupChars,
+  magneticOffset,
+  resolveHeroMedia,
+} from "./logic";
 import type { HeroContent } from "./types";
 
 const sample: HeroContent = {
@@ -106,6 +116,52 @@ describe("clampHotspots", () => {
   });
 });
 
+describe("heroRunwaySvh", () => {
+  const framing = { subject: 0.55, land: { desktop: 0.99, compact: 0.77 } };
+
+  it("lands the subject where the author asked on each breakpoint", () => {
+    /* subject × runway is the subject's distance down the section. */
+    expect((0.55 * heroRunwaySvh(framing, "desktop")) / 100).toBeCloseTo(0.99, 2);
+    expect((0.55 * heroRunwaySvh(framing, "compact")) / 100).toBeCloseTo(0.77, 2);
+  });
+
+  it("shortens the travel when the subject sits low in the photograph", () => {
+    const low = heroRunwaySvh({ subject: 0.8, land: { desktop: 0.9 } }, "desktop");
+    const high = heroRunwaySvh({ subject: 0.4, land: { desktop: 0.9 } }, "desktop");
+    expect(low).toBeLessThan(high);
+  });
+
+  it("keeps the three stations viable however the framing is authored", () => {
+    expect(heroRunwaySvh({ subject: 1, land: { desktop: 0.05 } }, "desktop")).toBe(120);
+    expect(heroRunwaySvh({ subject: 0.05, land: { desktop: 1 } }, "desktop")).toBe(220);
+    expect(heroRunwaySvh({ subject: 0 }, "desktop")).toBe(220);
+  });
+
+  it("falls back to the authored default when a photograph says nothing", () => {
+    expect(heroRunwaySvh(undefined, "desktop")).toBe(180);
+    expect(heroRunwaySvh(undefined, "compact")).toBe(140);
+    expect(heroRunwaySvh({ subject: Number.NaN }, "compact")).toBe(140);
+  });
+});
+
+describe("heroFocusPercent", () => {
+  it("keeps the authored column of the crop", () => {
+    expect(heroFocusPercent({ focus: { compact: 0.72 } }, "compact")).toBe(72);
+  });
+
+  it("centers the crop when nothing is authored", () => {
+    expect(heroFocusPercent(undefined, "desktop")).toBe(50);
+    expect(heroFocusPercent({ focus: { desktop: 0.3 } }, "compact")).toBe(50);
+  });
+});
+
+describe("heroNavTone", () => {
+  it("scrims the chrome by day and lets it breathe by night", () => {
+    expect(heroNavTone("day")).toBe("on-media");
+    expect(heroNavTone("night")).toBe("on-media-night");
+  });
+});
+
 describe("brandLeaveProgress", () => {
   it("is fully present at the top of the page", () => {
     expect(brandLeaveProgress(0, 800)).toBe(0);
@@ -136,5 +192,12 @@ describe("magneticOffset", () => {
   it("clamps the pull to the maximum radius", () => {
     const offset = magneticOffset(400, 100, rect, 1, 12);
     expect(Math.hypot(offset.x, offset.y)).toBeLessThanOrEqual(12);
+  });
+});
+
+describe("heroIntroReady", () => {
+  it("holds the lockup until the opening gate is spent", () => {
+    expect(heroIntroReady(true)).toBe(false);
+    expect(heroIntroReady(false)).toBe(true);
   });
 });

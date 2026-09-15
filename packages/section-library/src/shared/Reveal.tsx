@@ -1,17 +1,23 @@
 "use client";
 
-import { cn } from "@cinematic/ui";
+import { cn, type FitTier } from "@cinematic/ui";
 import {
+  useCallback,
   useEffect,
   useRef,
   type CSSProperties,
   type ElementType,
   type ReactNode,
+  type RefObject,
 } from "react";
+
+import { useFitText } from "./useFitText";
 
 export type RevealVariant =
   /** Text unmasks upward from behind a clip edge. */
   | "mask"
+  /** A multi-line heading unmasks a line at a time; see `RevealLines`. */
+  | "lines"
   /** Block fades and rises as one unit. */
   | "block"
   /** A rule draws itself along its own length. */
@@ -32,6 +38,13 @@ export interface RevealProps {
   immediate?: boolean;
   className?: string;
   style?: CSSProperties;
+  /**
+   * Handle on the rendered element, for callers that have to measure it. The
+   * reveal keeps its own reference either way, so this only adds a second one.
+   */
+  elementRef?: RefObject<HTMLElement | null>;
+  /** Fitted headings stay hidden until the first measure after fonts land. */
+  fitReady?: boolean;
   children: ReactNode;
 }
 
@@ -53,9 +66,21 @@ export function Reveal({
   immediate = false,
   className,
   style,
+  elementRef,
+  fitReady,
   children,
 }: RevealProps) {
   const ref = useRef<HTMLElement | null>(null);
+
+  const attach = useCallback(
+    (node: HTMLElement | null) => {
+      ref.current = node;
+      if (elementRef) {
+        elementRef.current = node;
+      }
+    },
+    [elementRef],
+  );
 
   useEffect(() => {
     const element = ref.current;
@@ -92,10 +117,11 @@ export function Reveal({
 
   return (
     <Component
-      ref={ref}
+      ref={attach}
       className={cn("reveal", className)}
       data-reveal={variant}
       data-reveal-stagger={stagger ? "true" : undefined}
+      data-fit-ready={fitReady ? "true" : undefined}
       style={
         {
           ...style,
@@ -105,24 +131,17 @@ export function Reveal({
         } as CSSProperties
       }
     >
-      {children}
+      {/*
+       * The mask's clip edge is carried by an inner box rather than by the
+       * observed element, because an element clipped to nothing reports an
+       * empty intersection rect and would never be told it had arrived.
+       */}
+      {variant === "mask" ? <span className="reveal-mask">{children}</span> : children}
     </Component>
   );
 }
 
-/**
- * Convenience wrapper for a multi-line heading: each line unmasks in turn,
- * which reads as the line-level reveal used across the reference category.
- */
-export function RevealLines({
-  lines,
-  as: Component = "h2",
-  className,
-  lineClassName,
-  delay = 0,
-  stagger = 0.08,
-  immediate = false,
-}: {
+export interface RevealLinesProps {
   lines: string[];
   as?: ElementType;
   className?: string;
@@ -130,21 +149,97 @@ export function RevealLines({
   delay?: number;
   stagger?: number;
   immediate?: boolean;
-}) {
+  /**
+   * Size the lines to span the measure at this tier rather than taking the tier
+   * verbatim. Clone copy is arbitrary, so a display heading that fits one
+   * development name will not fit the next; fitting makes the tier an aspiration
+   * the heading is pulled back from only as far as the copy needs.
+   */
+  fit?: FitTier;
+}
+
+function Lines({ lines, lineClassName }: Pick<RevealLinesProps, "lines" | "lineClassName">) {
   return (
-    <Reveal
-      as={Component}
-      variant="mask"
-      stagger={stagger}
-      delay={delay}
-      immediate={immediate}
-      className={cn("reveal-lines", className)}
-    >
+    <>
       {lines.map((line, index) => (
         <span key={`${line}-${index}`} className={cn("reveal-line", lineClassName)}>
           <span className="reveal-line-inner">{line}</span>
         </span>
       ))}
+    </>
+  );
+}
+
+/**
+ * Convenience wrapper for a multi-line heading: each line unmasks in turn,
+ * which reads as the line-level reveal used across the reference category.
+ */
+export function RevealLines({ fit, ...props }: RevealLinesProps) {
+  /*
+   * The fitted variant is a separate component because it carries a measuring
+   * hook, and only the call sites that ask for a fit should pay for one. `fit`
+   * is a property of the call site, so the branch never flips at runtime.
+   */
+  if (fit) {
+    return <FittedRevealLines fit={fit} {...props} />;
+  }
+
+  return <PlainRevealLines {...props} />;
+}
+
+function PlainRevealLines({
+  lines,
+  as: Component = "h2",
+  className,
+  lineClassName,
+  delay = 0,
+  stagger = 0.08,
+  immediate = false,
+}: Omit<RevealLinesProps, "fit">) {
+  return (
+    <Reveal
+      as={Component}
+      variant="lines"
+      stagger={stagger}
+      delay={delay}
+      immediate={immediate}
+      className={cn("reveal-lines", className)}
+    >
+      <Lines lines={lines} lineClassName={lineClassName} />
+    </Reveal>
+  );
+}
+
+function FittedRevealLines({
+  lines,
+  as: Component = "h2",
+  className,
+  lineClassName,
+  delay = 0,
+  stagger = 0.08,
+  immediate = false,
+  fit,
+}: RevealLinesProps & { fit: FitTier }) {
+  const [ref, scale, ready] = useFitText<HTMLElement>(".reveal-line-inner", lines.join("|"));
+
+  return (
+    <Reveal
+      as={Component}
+      variant="lines"
+      stagger={stagger}
+      delay={delay}
+      immediate={immediate}
+      elementRef={ref}
+      /*
+       * The tier is a class, not an inline custom property: a section still has
+       * to be able to step the tier down at a breakpoint, and an inline value
+       * would outrank every stylesheet rule that tried.
+       */
+      className={cn("reveal-lines", "fit-heading", `fit-tier-${fit}`, className)}
+      style={{ "--fit": scale } as CSSProperties}
+      fitReady={ready}
+    >
+      <Lines lines={lines} lineClassName={lineClassName} />
     </Reveal>
   );
 }

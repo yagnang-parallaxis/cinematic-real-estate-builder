@@ -38,9 +38,14 @@
 }
 
 .location .location-plaque {
+  --fit: 1;
+  /* Tier the plaque's place name and its script are both derived from. */
+  --location-tier: var(--text-h3);
   position: absolute;
   top: calc(var(--gutter-top) + var(--space-16));
   left: var(--gutter-x);
+  /* Both insets, so the plaque's own width is the measure the fit works to. */
+  right: var(--nav-offset);
   bottom: auto;
   z-index: 2;
   display: grid;
@@ -54,8 +59,8 @@
   margin: 0;
   max-width: none;
   color: var(--paper);
-  font-size: calc(48vw / var(--type-scale-ratio));
-  letter-spacing: -0.03em;
+  font-size: calc(var(--location-tier) * var(--fit));
+  letter-spacing: -0.016em;
   line-height: 0.96;
   text-transform: none;
   text-shadow:
@@ -63,12 +68,17 @@
     0 8px 28px rgb(6 18 32 / 0.28);
 }
 
+.location .location-place .reveal-line-inner {
+  white-space: nowrap;
+}
+
 .location .location-shore {
   display: block;
   width: max-content;
   margin: 0.08em 0 0 0.2em;
   padding-block: 0.18em 0.08em;
-  font-size: calc(32vw / var(--type-scale-ratio));
+  /* Script annotating the place name: a fraction of it, fitted with it. */
+  font-size: calc(var(--location-tier) * var(--fit) * var(--accent-companion));
   line-height: 1;
   white-space: nowrap;
   rotate: -4deg;
@@ -81,7 +91,8 @@
 .location .location-region {
   margin: var(--space-16) 0 0;
   padding-top: 0;
-  font-size: calc(13vw / var(--type-scale-ratio));
+  /* Caps at body weight, so it takes the body size rather than the label cut. */
+  font-size: var(--text-body);
   font-weight: 400;
   letter-spacing: 0.14em;
   opacity: 0.92;
@@ -206,26 +217,22 @@
   }
 
   .location .location-plaque {
+    /* Desktop gives the plaque the full frame, so it steps up a tier. */
+    --location-tier: var(--text-h2);
     top: auto;
     left: calc(var(--gutter-x) + 1.5vw);
-    right: auto;
+    right: var(--gutter-x);
     bottom: 5.5%;
     opacity: clamp(0, calc((var(--location-pan) - 0.58) / 0.22), 1);
-  }
-
-  .location .location-place {
-    font-size: calc(80vw / var(--type-scale-ratio));
   }
 
   .location .location-shore {
     margin-top: 0.06em;
     margin-left: 0.55em;
-    font-size: calc(44vw / var(--type-scale-ratio));
   }
 
   .location .location-region {
     margin-top: var(--space-24);
-    font-size: calc(16vw / var(--type-scale-ratio));
   }
 
   .location-edge {
